@@ -331,6 +331,39 @@
 \end{proof}
 \end{example}
 
+\begin{example}
+证明：\(\lim_{(x,y)\to(0,0)} \frac{x^3+y^3}{x^2+y^2} = 0\).
+\begin{proof}
+\begin{proof}[证法一]
+极坐标法.
+令\(
+	x = r \cos\theta,
+	y = r \sin\theta
+\)，
+则\begin{align*}
+	&\hspace{-20pt}
+	\lim_{(x,y)\to(0,0)} \frac{x^3+y^3}{x^2+y^2}
+	&= \lim_{r\to0} \frac{(r \cos\theta)^3+(r \sin\theta)^3}{(r \cos\theta)^2+(r \sin\theta)^2} \\
+	&= \lim_{r\to0} r (\cos^3\theta + \sin^3\theta)
+	= 0.
+\end{align*}
+\end{proof}
+\begin{proof}[证法二]
+放缩法.
+因为\begin{align*}
+	0 &\leq \abs{\frac{x^3+y^3}{x^2+y^2}}
+	\leq \frac{\abs{x^3}+\abs{y^3}}{x^2+y^2}
+	= \frac{\abs{x}x^2+\abs{y}y^2}{x^2+y^2}
+	= \frac{\sqrt{x^2}x^2+\sqrt{y^2}y^2}{x^2+y^2} \\
+	&\leq \frac{\sqrt{x^2+y^2}x^2+\sqrt{x^2+y^2}y^2}{x^2+y^2}
+	= \sqrt{x^2+y^2},
+\end{align*}
+又因为\(\lim_{(x,y)\to(0,0)} \sqrt{x^2+y^2} = 0\)，
+所以由夹逼准则可得\(\lim_{(x,y)\to(0,0)} \frac{x^3+y^3}{x^2+y^2} = 0\).
+\end{proof}
+\end{proof}
+\end{example}
+
 必须注意，所谓二重极限存在，
 是指\(P(x,y)\)以任何方式趋于\(P_0(x_0,y_0)\)时，\(f(x,y)\)都无限接近于\(A\).
 因此，如果\(P(x,y)\)以某一特殊方式，
