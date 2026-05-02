@@ -21,7 +21,7 @@
 我们把使得\(xFy\)成立的\(y\)称为“\(x\)（在映射\(F\)下）的\DefineConcept{像}”
 或“映射\(F\)在\(x\)的\DefineConcept{值}（the \emph{value} of \(F\) at \(x\)）”，
 记为\(F(x)\)，即\begin{equation*}
-	y = f(x);
+	y = F(x);
 \end{equation*}
 称\(x\)为“\(y\)（在映射\(F\)下）的一个\DefineConcept{原像}”.
 这里用的\(F(x)\)符号是欧拉提出的，
@@ -29,7 +29,10 @@
 不过，我们也可以定义：\begin{equation*}
 	F(x) \defeq \bigcup\Set{ y \given \opair{x,y} \in F }.
 \end{equation*}
-它对于任意\(F\)和\(x\)都有意义.
+作为集合表达式，
+右侧对任意\(F\)和\(x\)都有意义；
+但本节涉及映射值的论断仍在\(F\)是映射且\(x\in\dom F\)的条件下使用\(F(x)\)，
+不能用这个扩展约定代替一般关系的像或原像.
 
 映射是如此重要，以至于各家对用于描述映射的术语没有达成统一.
 以下是两种最常采用的术语.
@@ -133,119 +136,215 @@
 \end{definition}
 
 \begin{example}\label{example:映射.定义域中的元素在映射下的像一定属于值域}
-设\(G\)是映射.
-证明：\begin{equation*}
-	x \in \dom G
-	\implies
-	G(x) \in \ran G.
-\end{equation*}
-\begin{proof}
-由定义有\begin{align*}
-	\text{$G$是映射},
-	x \in \dom G
-	&\iff
-	(\exists!y)[\opair{x,y} \in G] \\
-	&\implies
-	G(x) = \bigcup\Set{ y \given \opair{x,y} \in G }
-	= y \in \ran G.
-	\qedhere
-\end{align*}
-\end{proof}
+    设\(G\)是映射.
+    证明：
+    \begin{equation*}
+        x \in \dom G
+        \implies
+        G(x) \in \ran G.
+    \end{equation*}
+    \begin{proof}
+        由\(x\in\dom G\)，
+        存在唯一的\(y\)满足\(\opair{x,y}\in G\).
+        这个\(y\)就是\(G(x)\).
+        因此\(\opair{x,G(x)}\in G\)，
+        由值域的定义可知\(G(x)\in\ran G\).
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P52 Exercise 11
-设\(F,G\)都是映射，
-\(\dom F = \dom G = X\)，且\begin{equation*}
-	(\forall x \in X)[F(x) = G(x)].
-\end{equation*}
-证明：\(F=G\).
-\begin{proof}
-显然有
-\begin{align*}
-	F=G
-	&\iff (\forall x \in X)(\exists!y)[
-		\opair{x,y} \in F
-		\iff
-		\opair{x,y} \in G
-	] \\
-	&\iff (\forall x \in X)(\exists!y)[
-		y = F(x) = G(x)
-	] \\
-	&\iff (\forall x \in X)[F(x) = G(x)].
-	\qedhere
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P52 Exercise 11
+    设\(F,G\)都是映射，
+    \(\dom F = \dom G = X\)，且
+    \begin{equation*}
+        (\forall x \in X)[F(x) = G(x)].
+    \end{equation*}
+    证明：\(F=G\).
+    \begin{proof}
+        任取\(\opair{x,y}\in F\).
+        由\(\dom F=X\)可知\(x\in X\)，
+        并且\(y=F(x)=G(x)\)，
+        所以\(\opair{x,y}\in G\).
+        因此\(F\subseteq G\).
+        交换\(F\)与\(G\)的地位，
+        同理得到\(G\subseteq F\).
+        两个映射都只含有序对，
+        故由外延公理可得\(F=G\).
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P52 Exercise 12
-设\(f,g\)都是映射.
-证明：\begin{equation*}
-	f \subseteq g
-	\iff
-	\dom f \subseteq \dom g
-	\land
-	(\forall x \in \dom f)
-	[f(x) = g(x)].
-\end{equation*}
-\begin{proof}
-直接有
-\begin{align*}
-	f \subseteq g
-	&\iff (\forall x)(\exists!y)[\opair{x,y} \in f \implies \opair{x,y} \in g] \\
-	&\iff (\forall x \in \dom f)[x \in \dom g]\land(\forall x \in \dom f)(\exists!y)[y=f(x)=g(x)] \\
-	&\iff [\dom f \subseteq \dom g]\land(\forall x \in \dom f)[f(x)=g(x)].
-	\qedhere
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P52 Exercise 12
+    设\(f,g\)都是映射.
+    证明：
+    \begin{equation*}
+        f \subseteq g
+        \iff
+        \dom f \subseteq \dom g
+        \land
+        (\forall x \in \dom f)
+        [f(x) = g(x)].
+    \end{equation*}
+    \begin{proof}
+        先证必要性.
+        设\(f\subseteq g\)，
+        任取\(x\in\dom f\).
+        因为\(\opair{x,f(x)}\in f\subseteq g\)，
+        所以\(x\in\dom g\).
+        由\(g\)的单值性得\(g(x)=f(x)\).
+        因此\(\dom f\subseteq\dom g\)，
+        并且两个映射在\(\dom f\)上逐点相等.
+
+        再证充分性.
+        设右侧的两个条件成立，
+        任取\(\opair{x,y}\in f\).
+        于是\(x\in\dom f\subseteq\dom g\)，
+        且\(y=f(x)=g(x)\)，
+        故\(\opair{x,y}\in g\).
+        这就证明了\(f\subseteq g\).
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 13
-设\(f,g\)都是映射，\(f \subseteq g\)且\(\dom g \subseteq \dom f\).
-证明：\(f=g\).
-%TODO
+    %@see: 《Elements of Set Theory》 P53 Exercise 13
+    设\(f,g\)都是映射，\(f \subseteq g\)且\(\dom g \subseteq \dom f\).
+    证明：\(f=g\).
+    \begin{proof}
+        由\(f\subseteq g\)及上一例可知
+        \begin{align*}
+            \dom f &\subseteq\dom g, \\
+            f(x) &=g(x)\quad(x\in\dom f).
+        \end{align*}
+        结合假设\(\dom g\subseteq\dom f\)，
+        得到\(\dom f=\dom g\).
+        两个映射具有相同的定义域并且逐点相等，
+        故\(f=g\).
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 14
-设\(f,g\)都是映射.
-证明：
-\begin{enumerate}
-	\item \(f \cap g\)是映射.
-	\item \(f \cup g\)是映射的充分必要条件是\begin{equation*}
-		(\forall x \in (\dom f)\cap(\dom g))[f(x)=g(x)].
-	\end{equation*}
-\end{enumerate}
-%TODO
+    %@see: 《Elements of Set Theory》 P53 Exercise 14
+    设\(f,g\)都是映射.
+    证明：
+    \begin{enumerate}
+        \item \(f \cap g\)是映射.
+        \item \(f \cup g\)是映射的充分必要条件是
+        \begin{equation*}
+            (\forall x \in (\dom f)\cap(\dom g))[f(x)=g(x)].
+        \end{equation*}
+    \end{enumerate}
+    \begin{proof}
+        首先，
+        \(f\cap g\)是关系.
+        若\(\opair{x,y},\opair{x,z}\in f\cap g\)，
+        则这两个有序对都属于\(f\)，
+        由\(f\)的单值性可得\(y=z\).
+        而对\(f\cap g\)的定义域中的每个元素，
+        相应的像按定义存在，
+        故\(f\cap g\)是映射.
+
+        其次，
+        假设\(f\cup g\)是映射.
+        若\(x\in\dom f\cap\dom g\)，
+        则\(\opair{x,f(x)}\)与\(\opair{x,g(x)}\)都属于\(f\cup g\).
+        由单值性可得\(f(x)=g(x)\)，
+        所以题给条件必要.
+
+        反之，
+        假设\(f\)与\(g\)在公共定义域上逐点相等.
+        任取\(\opair{x,y},\opair{x,z}\in f\cup g\).
+        若两者同属于\(f\)或同属于\(g\)，
+        则由该映射的单值性得\(y=z\).
+        否则交换\(y,z\)的名称后，
+        可设\(\opair{x,y}\in f\)、\(\opair{x,z}\in g\).
+        这时\(x\in\dom f\cap\dom g\)，
+        从而\(y=f(x)=g(x)=z\).
+        因此关系\(f\cup g\)是单值的，
+        也就是映射.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 15
-\def\A{\mathscr{A}}%
-设\(\A\)是一组映射，且\begin{equation*}
-	(\forall f,g\in\A)[f \subseteq g \lor g \subseteq f].
-\end{equation*}
-证明：\(\bigcup\A\)也是映射.
-%TODO
+    %@see: 《Elements of Set Theory》 P53 Exercise 15
+    设\(\mathscr{A}\)是一组映射，且
+    \begin{equation*}
+        (\forall f,g\in\mathscr{A})[f \subseteq g \lor g \subseteq f].
+    \end{equation*}
+    证明：\(\bigcup\mathscr{A}\)也是映射.
+    \begin{proof}
+        令\(H=\bigcup\mathscr{A}\).
+        \(H\)的每个元素都属于某个映射，
+        因而都是有序对，
+        所以\(H\)是关系.
+        若\(\opair{x,y},\opair{x,z}\in H\)，
+        则存在\(f,g\in\mathscr{A}\)，
+        使得\(\opair{x,y}\in f\)、\(\opair{x,z}\in g\).
+        由假设，
+        \(f\subseteq g\)或\(g\subseteq f\).
+        因此这两个有序对同属于其中较大的那个映射，
+        由其单值性可得\(y=z\).
+        所以\(H\)是映射.
+        当\(\mathscr{A}=\emptyset\)时，
+        上述单值性条件真空成立，
+        此时\(H=\emptyset\)是空映射.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 16
-证明：不存在一个集合，使得每个映射都属于它.
-%TODO
+    %@see: 《Elements of Set Theory》 P53 Exercise 16
+    证明：不存在一个集合，使得每个映射都属于它.
+    \begin{proof}
+        反设存在集合\(M\)包含每个映射.
+        对任意集合\(a\)，
+        由对集公理可以构造映射\(f_a=\Set{\opair{a,a}}\)，
+        于是\(f_a\in M\).
+        按有序对的定义，
+        \(\opair{a,a}=\Set{\Set{a}}\)，
+        故
+        \begin{align*}
+            \opair{a,a} &\in\bigcup M, \\
+            \Set{a} &\in\bigcup\bigcup M, \\
+            a &\in\bigcup\bigcup\bigcup M.
+        \end{align*}
+        令\(U=\bigcup\bigcup\bigcup M\)，
+        则\(U\)是集合且包含每个集合.
+        由子集公理构造\(D=\Set{x\in U\given x\notin x}\).
+        因为\(D\)也是集合，
+        所以\(D\in U\)，
+        从而
+        \begin{align*}
+            D\in D &\iff D\in U\land D\notin D \\
+            &\iff D\notin D.
+        \end{align*}
+        这与排中律和矛盾律相矛盾，
+        所以这样的\(M\)不存在.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《实变函数论（第三版）》（周民强） P14 思考题5.
-设\(f\colon X \to Y,
-g\colon Y \to X\).
-证明：若\begin{equation*}
-	(\forall x \in X)[g(f(x)) = x],
-\end{equation*}
-则\(f\)是单射，\(g\)是满射.
-%TODO
+    %@see: 《实变函数论（第三版）》（周民强） P14 思考题5.
+    设\(f\colon X \to Y,
+    g\colon Y \to X\).
+    证明：若
+    \begin{equation*}
+        (\forall x \in X)[g(f(x)) = x],
+    \end{equation*}
+    则\(f\)是单射，\(g\)是满射.
+    \begin{proof}
+        若\(x_1,x_2\in X\)且\(f(x_1)=f(x_2)\)，
+        则
+        \begin{align*}
+            x_1 &=g(f(x_1))=g(f(x_2))=x_2.
+        \end{align*}
+        故\(f\)是单射.
+        另一方面，
+        对任意\(x\in X\)，
+        \(f(x)\in Y\)且\(g(f(x))=x\).
+        所以\(x\in\ran g\)，
+        进而\(X\subseteq\ran g\).
+        结合\(g\colon Y\to X\)可得\(\ran g=X\)，
+        故\(g\)是满射.
+    \end{proof}
 \end{example}
 
 \subsection{逆，复合，限制，像，原像}
@@ -259,7 +358,7 @@ g\colon Y \to X\).
 	（the \emph{inverse} of \(F\)）”，
 	记作\(F^{-1}\).
 
-	特别地，如果\(F^{-1}\)是映射，
+	特别地，如果\(F\)和\(F^{-1}\)都是映射，
 	则称“\(F^{-1}\)是\(F\)的\DefineConcept{逆映射}”.
 
 	\item 称集合\begin{equation*}
@@ -320,566 +419,510 @@ g\colon Y \to X\).
 \end{definition}
 
 \begin{theorem}
-\(F \SetRestrict \emptyset = \emptyset\).
+    \(F \SetRestrict \emptyset = \emptyset\).
+    \begin{proof}
+        按限制的定义，
+        \(F\SetRestrict\emptyset\)中的有序对\(\opair{x,y}\)
+        必须满足\(x\in\emptyset\).
+        这样的\(x\)不存在，
+        因此该限制没有元素，
+        也就是\(F\SetRestrict\emptyset=\emptyset\).
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
-\(F\ImageOfSetUnderRelation{A} = \ran(F \SetRestrict A)\).
-\begin{proof}
-根据值域的定义有\begin{align*}
-	v \in \ran(F \SetRestrict A)
-	&\iff
-	(\exists u)[\opair{u,v} \in F \SetRestrict A] \\
-	&\iff
-	(\exists u)[\opair{u,v} \in F \land u \in A] \\
-	&\iff
-	v \in F\ImageOfSetUnderRelation{A}.
-	\qedhere
-\end{align*}
-\end{proof}
+    \(F\ImageOfSetUnderRelation{A} = \ran(F \SetRestrict A)\).
+    \begin{proof}
+        任取\(y\)，
+        由值域、限制和像的定义可得
+        \begin{align*}
+            y\in\ran(F\SetRestrict A)
+            &\iff(\exists x)[\opair{x,y}\in F\SetRestrict A] \\
+            &\iff(\exists x\in A)[\opair{x,y}\in F] \\
+            &\iff y\in F\ImageOfSetUnderRelation{A}.
+        \end{align*}
+        由外延公理得到所需等式.
+    \end{proof}
 \end{theorem}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 18.
-设\begin{equation*}
-	R = \Set{
-		\opair{0,1},
-		\opair{0,2},
-		\opair{0,3},
-		\opair{1,2},
-		\opair{1,3},
-		\opair{2,3}
-	}.
-\end{equation*}
-计算\(R \circ R,
-R \SetRestrict \{1\},
-R^{-1} \SetRestrict \{1\},
-R\ImageOfSetUnderRelation{\{1\}},
-R^{-1}\ImageOfSetUnderRelation{\{1\}}\).
-\begin{solution}
-由题意有\begin{gather*}
-	R \circ R
-	= \Set{
-		\opair{0,2},
-		\opair{0,3},
-		\opair{1,3}
-	}, \\
-	R \SetRestrict \{1\}
-	= \Set{
-		\opair{1,2},
-		\opair{1,3}
-	}, \\
-	R^{-1} \SetRestrict \{1\}
-	= \Set{
-		\opair{1,0}
-	}, \\
-	R\ImageOfSetUnderRelation{\{1\}}
-	= \Set{
-		2,
-		3
-	}, \\
-	R^{-1}\ImageOfSetUnderRelation{\{1\}}
-	= \Set{
-		0
-	}.
-\end{gather*}
-\end{solution}
+    %@see: 《Elements of Set Theory》 P53 Exercise 18.
+    设
+    \begin{equation*}
+        R = \Set{
+        \opair{0,1},
+        \opair{0,2},
+        \opair{0,3},
+        \opair{1,2},
+        \opair{1,3},
+        \opair{2,3}
+        }.
+    \end{equation*}
+    计算\(R \circ R,
+    R \SetRestrict \{1\},
+    R^{-1} \SetRestrict \{1\},
+    R\ImageOfSetUnderRelation{\{1\}},
+    R^{-1}\ImageOfSetUnderRelation{\{1\}}\).
+    \begin{solution}
+        在复合\(R\circ R\)中，
+        中间元素可以是\(1\)或\(2\).
+        中间元素为\(1\)时得到\(\opair{0,2},\opair{0,3}\)；
+        中间元素为\(2\)时得到\(\opair{0,3},\opair{1,3}\).
+        去除重复的有序对，
+        并分别按首坐标取限制、按末坐标取像，
+        得到
+        \begin{align*}
+            R\circ R &=\Set{\opair{0,2},\opair{0,3},\opair{1,3}}, \\
+            R\SetRestrict\Set{1} &=\Set{\opair{1,2},\opair{1,3}}, \\
+            R^{-1}\SetRestrict\Set{1} &=\Set{\opair{1,0}}, \\
+            R\ImageOfSetUnderRelation{\Set{1}} &=\Set{2,3}, \\
+            R^{-1}\ImageOfSetUnderRelation{\Set{1}} &=\Set{0}.
+        \end{align*}
+        % 精确有限集合核算见随本次改动提供的 Python 与 Mathematica 验证脚本.
+    \end{solution}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 19.
-设\begin{equation*}
-	A = \Set{
-		\opair{\emptyset,\{\emptyset,\{\emptyset\}\}},
-		\opair{\{\emptyset\},\emptyset}
-	}.
-\end{equation*}
-计算\(A(\emptyset),
-A\ImageOfSetUnderRelation{\emptyset},
-A\ImageOfSetUnderRelation{\{\emptyset\}},
-A\ImageOfSetUnderRelation{\{\emptyset,\{\emptyset\}\}},
-A^{-1},
-A \circ A,
-A \SetRestrict \emptyset,
-A \SetRestrict \{\emptyset\},
-A \SetRestrict \{\emptyset,\{\emptyset\}\},
-\bigcup\bigcup A\).
-\begin{solution}
-由题意有\begin{gather*}
-	A(\emptyset)
-	= \{\emptyset,\{\emptyset\}\}, \\
-	A\ImageOfSetUnderRelation{\emptyset}
-	% 易错点！
-	% 我的错误答案：
-	% = \{\{\emptyset,\{\emptyset\}\}\}, \\
-	% 正确答案是：
-	= \emptyset, \\
-	A\ImageOfSetUnderRelation{\{\emptyset\}}
-	% 易错点！
-	% 我的错误答案：
-	% = \{\emptyset\}, \\
-	% 正确答案是：
-	% = \{A(\emptyset)\}
-	= \{\{\emptyset,\{\emptyset\}\}\}, \\
-	A\ImageOfSetUnderRelation{\{\emptyset,\{\emptyset\}\}}
-	% 易错点！
-	% 我的错误答案：
-	% = \emptyset, \\
-	% 正确答案是：
-	% = \{A(\emptyset),A(\{\emptyset\})\}
-	= \{\{\emptyset,\{\emptyset\}\},\emptyset\}, \\
-	A^{-1}
-	= \Set{
-		\opair{\{\emptyset,\{\emptyset\}\},\emptyset},
-		\opair{\emptyset,\{\emptyset\}}
-	}, \\
-	A \circ A
-	= \Set{
-		\opair{\{\emptyset\},\{\emptyset,\{\emptyset\}\}}
-	}, \\
-	A \SetRestrict \emptyset
-	= \emptyset, \\
-	A \SetRestrict \{\emptyset\}
-	= \Set{
-		\opair{\emptyset,\{\emptyset,\{\emptyset\}\}}
-	}, \\
-	A \SetRestrict \{\emptyset,\{\emptyset\}\}
-	= A, \\
-	\bigcup\bigcup A
-	% = \bigcup(
-	% 	\opair{\emptyset,\{\emptyset,\{\emptyset\}\}}
-	% 	\cup
-	% 	\opair{\{\emptyset\},\emptyset}
-	% )
-	% = \bigcup(
-	% 	\{\{\emptyset\},\{\emptyset,\{\emptyset,\{\emptyset\}\}\}\}
-	% 	\cup
-	% 	\{\{\{\emptyset\}\},\{\emptyset,\{\emptyset\}\}\}
-	% )
-	% = \bigcap\{
-	% 	\{\emptyset\},
-	% 	\{\emptyset,\{\emptyset,\{\emptyset\}\}\},
-	% 	\{\{\emptyset\}\},
-	% 	\{\emptyset,\{\emptyset\}\}
-	% \}
-	% = \{\emptyset\}
-	% \cup
-	% \{\emptyset,\{\emptyset,\{\emptyset\}\}\}
-	% \cup
-	% \{\{\emptyset\}\}
-	% \cup
-	% \{\emptyset,\{\emptyset\}\}
-	= \{
-		\emptyset,
-		\{\emptyset\},
-		\{\emptyset,\{\emptyset\}\}
-	\}.
-\end{gather*}
-\end{solution}
+    %@see: 《Elements of Set Theory》 P53 Exercise 19.
+    设
+    \begin{equation*}
+        A = \Set{
+        \opair{\emptyset,\{\emptyset,\{\emptyset\}\}},
+        \opair{\{\emptyset\},\emptyset}
+        }.
+    \end{equation*}
+    计算\(A(\emptyset),
+    A\ImageOfSetUnderRelation{\emptyset},
+    A\ImageOfSetUnderRelation{\{\emptyset\}},
+    A\ImageOfSetUnderRelation{\{\emptyset,\{\emptyset\}\}},
+    A^{-1},
+    A \circ A,
+    A \SetRestrict \emptyset,
+    A \SetRestrict \{\emptyset\},
+    A \SetRestrict \{\emptyset,\{\emptyset\}\},
+    \bigcup\bigcup A\).
+    \begin{solution}
+        为清楚区分元素与单元素集，
+        暂记\(e=\emptyset\)、\(s=\Set{\emptyset}\)、\(t=\Set{\emptyset,\Set{\emptyset}}\).
+        这三个集合两两不同，
+        而题给映射就是\(A=\Set{\opair{e,t},\opair{s,e}}\).
+        因此\(\dom A=\Set{e,s}\)，
+        且\(A(e)=t\)、\(A(s)=e\).
+        由于\(t\notin\dom A\)，
+        复合\(A\circ A\)仅在\(s\)处有定义，
+        其值为\(A(A(s))=A(e)=t\).
+        逐项计算得到
+        \begin{align*}
+            A(\emptyset) &=t, \\
+            A\ImageOfSetUnderRelation{\emptyset} &=\emptyset, \\
+            A\ImageOfSetUnderRelation{\Set{\emptyset}} &=\Set{t}, \\
+            A\ImageOfSetUnderRelation{\Set{\emptyset,\Set{\emptyset}}} &=\Set{t,e}, \\
+            A^{-1} &=\Set{\opair{t,e},\opair{e,s}}, \\
+            A\circ A &=\Set{\opair{s,t}}, \\
+            A\SetRestrict\emptyset &=\emptyset, \\
+            A\SetRestrict\Set{\emptyset} &=\Set{\opair{e,t}}, \\
+            A\SetRestrict\Set{\emptyset,\Set{\emptyset}} &=A.
+        \end{align*}
+        最后，
+        按\(\opair{u,v}=\Set{\Set{u},\Set{u,v}}\)展开，
+        可得
+        \begin{align*}
+            \bigcup A &=\Set{\Set{e},\Set{e,t},\Set{s},\Set{s,e}}, \\
+            \bigcup\bigcup A &=\Set{e,s,t} \\
+            &=\Set{\emptyset,\Set{\emptyset},\Set{\emptyset,\Set{\emptyset}}}.
+        \end{align*}
+        特别地，
+        \(A\ImageOfSetUnderRelation{\emptyset}\)没有元素，
+        而\(A\ImageOfSetUnderRelation{\Set{\emptyset}}=\Set{A(\emptyset)}\)是单元素集，
+        二者不能混淆.
+    \end{solution}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 20.
-证明：\(F \SetRestrict A = F \cap (A \times \ran F)\).
-\begin{proof}
-由定义有\begin{align*}
-	F \SetRestrict A
-	&= \Set{
-		\opair{u,v}
-		\given
-		\opair{u,v} \in F,
-		u \in A
-	} \\
-	&= \Set{
-		\opair{u,v} \in F
-		\given
-		u \in A,
-		(\exists t)[\opair{t,v} \in F]
-	} \\
-	&= \Set{
-		\opair{u,v} \in F
-		\given
-		u \in A,
-		v \in \ran F
-	} \\
-	&= F \cap (A \times \ran F).
-	\qedhere
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P53 Exercise 20.
+    证明：\(F \SetRestrict A = F \cap (A \times \ran F)\).
+    \begin{proof}
+        等式两边都是只含有序对的关系.
+        对任意\(x,y\)，
+        若\(\opair{x,y}\in F\)，
+        则\(y\in\ran F\).
+        因此
+        \begin{align*}
+            \opair{x,y}\in F\SetRestrict A
+            &\iff\opair{x,y}\in F\land x\in A \\
+            &\iff\opair{x,y}\in F\land x\in A\land y\in\ran F \\
+            &\iff\opair{x,y}\in F\cap(A\times\ran F).
+        \end{align*}
+        由外延公理可得结论，
+        此处不要求\(F\)本身是映射.
+    \end{proof}
 \end{example}
 
 \begin{definition}
-设\(F\)是关系，\(A\)是集合，那么称集合\begin{equation*}
-	\Set*{ x \in \dom F \given F(x) \in A }
-\end{equation*}为“集合\(A\)在关系\(F\)下的\DefineConcept{原像}%
-（the \emph{inverse image} of \(A\) under \(F\)）”，
-记作\(F^{-1}\ImageOfSetUnderRelation{A}\).
+    设\(F\)是关系，
+    \(A\)是集合.
+    称集合
+    \begin{align*}
+        F^{-1}\ImageOfSetUnderRelation{A}
+        &\defeq\Set{x\in\dom F\given(\exists y\in A)[\opair{x,y}\in F]},
+    \end{align*}
+    为“集合\(A\)在关系\(F\)下的\DefineConcept{原像}%
+    （the \emph{inverse image} of \(A\) under \(F\)）”.
+    这正是\(A\)在逆关系\(F^{-1}\)下的像.
+    当\(F\)是映射时，
+    单值性才使上述定义化为
+    \begin{align*}
+        F^{-1}\ImageOfSetUnderRelation{A}
+        &=\Set{x\in\dom F\given F(x)\in A}.
+    \end{align*}
 \end{definition}
 
-一般来说，一个映射的逆不一定是映射.
-例如，\(F=\Set{ \opair{1,1},\opair{2,1} }\)是一个映射，
-但它的逆\(F^{-1}=\Set{ \opair{1,1},\opair{1,2} }\)不是映射.
+一般来说，
+一个映射的逆不一定是映射.
+例如，
+取
+\begin{align*}
+    F &=\Set{\opair{1,1},\opair{2,1}}, \\
+    F^{-1} &=\Set{\opair{1,1},\opair{1,2}}.
+\end{align*}
+\(F\)是映射，
+但\(F^{-1}\)将同一个元素\(1\)对应到不同的元素\(1,2\)，
+所以\(F^{-1}\)不是映射.
 
 \begin{theorem}\label{theorem:集合论.关系的逆的定义域值域以及关系的二重逆}
-%@see: 《Elements of Set Theory》 P46 Theorem 3E
-设\(F\)是集合，则有\begin{gather}
-	\dom F^{-1} = \ran F, \\
-	\ran F^{-1} = \dom F.
-\end{gather}
+    %@see: 《Elements of Set Theory》 P46 Theorem 3E
+    设\(F\)是集合，则有
+    \begin{gather}
+        \dom F^{-1} = \ran F, \\
+        \ran F^{-1} = \dom F.
+    \end{gather}
 
-如果\(F\)是关系，则有\begin{equation}
-	(F^{-1})^{-1} = F.
-\end{equation}
-\begin{proof}
-因为\begin{equation*}
-	y \in \dom F^{-1}
-	\iff
-	(\exists x)[yF^{-1}x]
-	\iff
-	(\exists x)[xFy]
-	\iff
-	y \in \ran F,
-\end{equation*}
-所以\(\dom F^{-1} = \ran F\).
+    如果\(F\)是关系，则有
+    \begin{equation}
+        (F^{-1})^{-1} = F.
+    \end{equation}
+    \begin{proof}
+        对任意\(y\)与\(x\)，
+        分别有
+        \begin{align*}
+            y\in\dom F^{-1}
+            &\iff(\exists u)[\opair{y,u}\in F^{-1}] \\
+            &\iff(\exists u)[\opair{u,y}\in F] \\
+            &\iff y\in\ran F, \\
+            x\in\ran F^{-1}
+            &\iff(\exists v)[\opair{v,x}\in F^{-1}] \\
+            &\iff(\exists v)[\opair{x,v}\in F] \\
+            &\iff x\in\dom F.
+        \end{align*}
+        由外延公理得到前两个等式.
 
-因为\begin{equation*}
-	x \in \ran F^{-1}
-	\iff
-	(\exists y)[yF^{-1}x]
-	\iff
-	(\exists y)[xFy]
-	\iff
-	x \in \dom F,
-\end{equation*}
-所以\(\ran F^{-1} = \dom F\).
-
-因为\begin{equation*}
-	\opair{x,y} \in (F^{-1})^{-1}
-	\iff
-	\opair{y,x} \in F^{-1}
-	\iff
-	\opair{x,y} \in F,
-\end{equation*}
-所以\((F^{-1})^{-1} = F\).
-\end{proof}
+        若\(F\)是关系，
+        则\(F\)与\((F^{-1})^{-1}\)都只含有序对.
+        对任意\(x,y\)，
+        有
+        \begin{align*}
+            \opair{x,y}\in(F^{-1})^{-1}
+            &\iff\opair{y,x}\in F^{-1} \\
+            &\iff\opair{x,y}\in F.
+        \end{align*}
+        故\((F^{-1})^{-1}=F\).
+        对一般集合，
+        二重取逆只保留其中的有序对，
+        因此最后这个等式不能无条件推广.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}\label{theorem:集合论.关系及其逆是映射的充分必要条件}
-%@see: 《Elements of Set Theory》 P46 Theorem 3F
-设\(F\)是集合，则“\(F^{-1}\)是映射”的充分必要条件是：\(F\)是单根的.
+    %@see: 《Elements of Set Theory》 P46 Theorem 3F
+    设\(F\)是集合，则“\(F^{-1}\)是映射”的充分必要条件是：\(F\)是单根的.
 
-设\(F\)是关系，则“\(F\)是映射”的充分必要条件是：\(F^{-1}\)是单根的.
-\begin{proof}
-容易看出\begin{align*}
-	\text{\(F^{-1}\)是映射}
-	&\iff
-	\text{\(F^{-1}\)是单值的} \\
-	&\iff
-	(\forall x \in \dom F^{-1})(\exists! y)[xF^{-1}y] \\
-	&\iff
-	(\forall x \in \ran F)(\exists! y)[yFx] \\
-	&\iff
-	\text{\(F\)是单根的}, \\
-	\text{\(F\)是映射}
-	&\iff
-	\text{\(F\)是单值的} \\
-	&\iff
-	(\forall x \in \dom F)(\exists! y)[xFy] \\
-	&\iff
-	(\forall x \in \ran F^{-1})(\exists! y)[yF^{-1}x] \\
-	&\iff
-	\text{\(F^{-1}\)是单根的}.
-	\qedhere
-\end{align*}
-\end{proof}
+    设\(F\)是关系，则“\(F\)是映射”的充分必要条件是：\(F^{-1}\)是单根的.
+    \begin{proof}
+        对任意集合\(F\)，
+        其逆\(F^{-1}\)总是关系，
+        并且\(\dom F^{-1}=\ran F\).
+        由定义可得
+        \begin{align*}
+            F^{-1}\text{是映射}
+            &\iff(\forall y\in\ran F)(\exists!x)[\opair{y,x}\in F^{-1}] \\
+            &\iff(\forall y\in\ran F)(\exists!x)[\opair{x,y}\in F] \\
+            &\iff F\text{是单根的}.
+        \end{align*}
+
+        若\(F\)还是关系，
+        则\(F=(F^{-1})^{-1}\).
+        在刚证明的等价关系中以\(F^{-1}\)代替\(F\)，
+        得到
+        \begin{align*}
+            F\text{是映射}
+            &\iff(F^{-1})^{-1}\text{是映射} \\
+            &\iff F^{-1}\text{是单根的}.
+        \end{align*}
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}\label{theorem:集合论.逆映射的计算}
-%@see: 《Elements of Set Theory》 P46 Theorem 3G
-设\(F\)是单射.
-\begin{enumerate}
-	\item 如果\(x \in \dom F\)，那么\begin{equation*}
-		F^{-1}(F(x)) = x.
-	\end{equation*}
+    %@see: 《Elements of Set Theory》 P46 Theorem 3G
+    设\(F\)是单射.
+    \begin{enumerate}
+        \item 如果\(x \in \dom F\)，那么
+        \begin{equation*}
+            F^{-1}(F(x)) = x.
+        \end{equation*}
 
-	\item 如果\(y \in \ran F\)，那么\begin{equation*}
-		F(F^{-1}(y)) = y.
-	\end{equation*}
-\end{enumerate}
-\begin{proof}
-假设\(x \in \dom F\)，
-那么\(\opair{x,F(x)} \in F\)，且\(\opair{F(x),x} \in F^{-1}\)，
-于是\(F(x) \in \dom F^{-1}\).
-因为\(F\)是单射，是单根的，
-所以由\cref{theorem:集合论.关系及其逆是映射的充分必要条件}
-可知\(F^{-1}\)是映射，
-从而\(x = F^{-1}(F(x))\).
+        \item 如果\(y \in \ran F\)，那么
+        \begin{equation*}
+            F(F^{-1}(y)) = y.
+        \end{equation*}
+    \end{enumerate}
+    \begin{proof}
+        由于\(F\)是单射，
+        它既是单值的又是单根的，
+        所以\(F^{-1}\)也是映射，
+        且\(\dom F^{-1}=\ran F\).
 
-如果\(y \in \ran F\)，
-那么根据本定理第1条，以及\((F^{-1})^{-1} = F\)，可知\begin{equation*}
-	F(F^{-1}(y)) = (F^{-1})^{-1}(F^{-1}(y)) = y.
-	\qedhere
-\end{equation*}
-\end{proof}
+        若\(x\in\dom F\)，
+        则\(\opair{x,F(x)}\in F\)，
+        从而\(\opair{F(x),x}\in F^{-1}\).
+        由\(F^{-1}\)的单值性可得\(F^{-1}(F(x))=x\).
+
+        若\(y\in\ran F\)，
+        则\(\opair{y,F^{-1}(y)}\in F^{-1}\)，
+        从而\(\opair{F^{-1}(y),y}\in F\).
+        由\(F\)的单值性可得\(F(F^{-1}(y))=y\).
+        这也同时验证了两式中每次求值均在相应的定义域内.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}\label{theorem:集合论.映射的复合也是映射}
-%@see: 《Elements of Set Theory》 P47 Theorem 3H
-设\(F,G\)都是映射，则\(F \circ G\)是映射，且\begin{gather*}
-	\dom(F \circ G)
-	= \Set*{ x \in \dom G \given G(x) \in \dom F }, \\
-	(\forall x \in \dom(F \circ G))
-	[(F \circ G)(x) = F(G(x))].
-\end{gather*}
-\begin{proof}
-要证\(F \circ G\)是一个映射，
-假设有\(\opair{x,y} \in F \circ G\)和\(\opair{x,z} \in F \circ G\)同时成立.
-那么，\begin{equation*}
-	(\exists p)[\opair{x,p} \in G \land \opair{p,y} \in F]
-	\quad\text{和}\quad
-	(\exists q)[\opair{x,q} \in G \land \opair{q,z} \in F]
-\end{equation*}同时成立.
-既然\(G\)是映射，必有\(p = q\).
-同理，\(F\)是映射，必有\(y = z\).
-因此\(F \circ G\)是映射.
+    %@see: 《Elements of Set Theory》 P47 Theorem 3H
+    设\(F,G\)都是映射，则\(F \circ G\)是映射，且
+    \begin{gather*}
+        \dom(F \circ G)
+        = \Set*{ x \in \dom G \given G(x) \in \dom F }, \\
+        (\forall x \in \dom(F \circ G))
+        [(F \circ G)(x) = F(G(x))].
+    \end{gather*}
+    \begin{proof}
+        \(F\circ G\)按定义是关系.
+        若\(\opair{x,y},\opair{x,z}\in F\circ G\)，
+        则存在\(p,q\)满足
+        \begin{align*}
+            \opair{x,p}\in G &\land\opair{p,y}\in F, \\
+            \opair{x,q}\in G &\land\opair{q,z}\in F.
+        \end{align*}
+        由\(G\)的单值性可得\(p=q\)，
+        再由\(F\)的单值性可得\(y=z\).
+        因此\(F\circ G\)是映射.
 
-现在再假设\(x \in \dom G\)且\(G(x) \in \dom F\).
-我们必须证明\begin{equation*}
-	x \in \dom(F \circ G)
-	\quad\text{和}\quad
-	(F \circ G)(x) = F(G(x)).
-\end{equation*}
-我们知道\begin{equation*}
-	\opair{x,G(x)} \in G,
-	\qquad
-	\opair{G(x),F(G(x))} \in F.
-\end{equation*}
-因此\(\opair{x,F(G(x))} \in F \circ G\).
-
-反过来说，如果\(x \in \dom(F \circ G)\)，
-那么就有\begin{equation*}
-	(\exists y)(\exists t)
-	[\opair{x,t} \in G \land \opair{t,y} \in F].
-\end{equation*}
-于是就有\(x \in \dom G\)和\(t = G(x) \in \dom F\).
-\end{proof}
+        若\(x\in\dom(F\circ G)\)，
+        则存在\(t,y\)使得\(\opair{x,t}\in G\)且\(\opair{t,y}\in F\).
+        故\(x\in\dom G\)，
+        且\(G(x)=t\in\dom F\).
+        反之，
+        若\(x\in\dom G\)且\(G(x)\in\dom F\)，
+        则
+        \begin{align*}
+            \opair{x,G(x)} &\in G, \\
+            \opair{G(x),F(G(x))} &\in F.
+        \end{align*}
+        于是\(\opair{x,F(G(x))}\in F\circ G\).
+        这既证明了所述定义域等式，
+        也证明了\((F\circ G)(x)=F(G(x))\).
+    \end{proof}
 \end{theorem}
 
-容易看出，映射的复合是有顺序的，
-\(f \circ g\)有意义并不代表\(g \circ f\)也有意义.
-即便两者都有意义，它们也未必相同.
+映射的复合有顺序之分.
+按照本节的关系运算定义，
+\(f\circ g\)与\(g\circ f\)总能构成关系，
+并且当\(f,g\)是映射时两者也都是映射，
+但它们的定义域可能缩小甚至为空.
+若要求\(f\circ g\)定义在整个\(\dom g\)上，
+还需要\(\ran g\subseteq\dom f\)；
+反向复合则需要检查\(\ran f\subseteq\dom g\).
+即便两个条件都满足，
+两种复合也未必相同.
 
 \begin{example}\label{example:映射.映射的复合适合结合律}
-%@see: 《Elements of Set Theory》 P53 Exercise 21.
-设\(R,S,T\)都是集合.
-证明：\((R \circ S) \circ T = R \circ (S \circ T)\).
-\begin{proof}
-直接有\begin{align*}
-	\opair{x,y} \in (R \circ S) \circ T
-	&\iff
-	(\exists t_1)
-	[
-		\opair{x,t_1} \in T,
-		\opair{t_1,y} \in R \circ S
-	] \\
-	&\iff
-	(\exists t_1)
-	(\exists t_2)
-	[
-		\opair{x,t_1} \in T,
-		\opair{t_1,t_2} \in S,
-		\opair{t_2,y} \in R
-	] \\
-	&\iff
-	(\exists t_2)
-	[
-		\opair{x,t_2} \in S \circ T,
-		\opair{t_2,y} \in R
-	] \\
-	&\iff
-	\opair{x,y} \in R \circ (S \circ T).
-	\qedhere
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P53 Exercise 21.
+    设\(R,S,T\)都是集合.
+    证明：\((R \circ S) \circ T = R \circ (S \circ T)\).
+    \begin{proof}
+        两边都是关系，
+        对任意有序对\(\opair{x,y}\)，
+        有
+        \begin{align*}
+            \opair{x,y}\in(R\circ S)\circ T
+            &\iff(\exists u)[\opair{x,u}\in T\land\opair{u,y}\in R\circ S] \\
+            &\iff(\exists u)(\exists v)
+            [\opair{x,u}\in T\land\opair{u,v}\in S\land\opair{v,y}\in R] \\
+            &\iff(\exists v)[\opair{x,v}\in S\circ T\land\opair{v,y}\in R] \\
+            &\iff\opair{x,y}\in R\circ(S\circ T).
+        \end{align*}
+        由外延公理得到结合律.
+    \end{proof}
 \end{example}
 
 \begin{example}\label{example:映射.逆映射与映射的复合}
-%@see: 《Elements of Set Theory》 P47 Example
-设\(G\)是单射，
-\(I_{\dom G}\)是\(\dom G\)上的恒等映射.
-证明：\(G^{-1} \circ G = I_{\dom G}\).
-\begin{proof}
-既然\(G\)是单射，
-由\cref{theorem:集合论.关系及其逆是映射的充分必要条件} 可知
-\(G^{-1}\)是映射.
-因为\(G^{-1}\)和\(G\)都是映射，
-所以由\cref{theorem:集合论.映射的复合也是映射} 可知
-它们的复合\(G^{-1} \circ G\)也是一个映射，
-且\(G^{-1} \circ G\)的定义域为\begin{equation*}
-	\dom(G^{-1} \circ G)
-	= \Set{ x \in \dom G \given G(x) \in \dom G^{-1} }.
-\end{equation*}
-又因为\begin{align*}
-	x \in \dom G
-	&\iff G(x) \in \ran G
-		\tag{\cref{example:映射.定义域中的元素在映射下的像一定属于值域}} \\
-	&\iff G(x) \in \dom G^{-1},
-		\tag{\hyperref[theorem:集合论.关系的逆的定义域值域以及关系的二重逆]{$\dom G^{-1} = \ran G$}}
-\end{align*}
-所以\(\dom(G^{-1} \circ G)
-= \dom G\).
-
-并且，对于\(\forall x \in \dom(G^{-1} \circ G)\)，
-有\begin{align*}
-	(G^{-1} \circ G)(x) &= G^{-1}(G(x)) \\
-	&= x. \tag{\cref{theorem:集合论.逆映射的计算}}
-\end{align*}
-因此，\(G^{-1} \circ G = I_{\dom G}\).
-\end{proof}
+    %@see: 《Elements of Set Theory》 P47 Example
+    设\(G\)是单射，
+    \(I_{\dom G}\)是\(\dom G\)上的恒等映射.
+    证明：\(G^{-1} \circ G = I_{\dom G}\).
+    \begin{proof}
+        由于\(G\)是单射，
+        \(G^{-1}\)是映射，
+        其定义域为\(\ran G\).
+        对每个\(x\in\dom G\)，
+        都有\(G(x)\in\ran G=\dom G^{-1}\).
+        由\cref{theorem:集合论.映射的复合也是映射}可得
+        \begin{align*}
+            \dom(G^{-1}\circ G)
+            &=\Set{x\in\dom G\given G(x)\in\dom G^{-1}} \\
+            &=\dom G.
+        \end{align*}
+        再由\cref{theorem:集合论.逆映射的计算}，
+        对每个\(x\in\dom G\)有
+        \begin{align*}
+            (G^{-1}\circ G)(x) &=G^{-1}(G(x))=x=I_{\dom G}(x).
+        \end{align*}
+        所以两个映射具有相同的定义域和相同的值，
+        故\(G^{-1}\circ G=I_{\dom G}\).
+    \end{proof}
 \end{example}
 \begin{example}\label{example:映射.映射与逆映射的复合}
-%@see: 《Elements of Set Theory》 P53 Exercise 25.
-设\(G\)是映射，
-\(I_{\ran G}\)是\(\ran G\)上的恒等映射.
-证明：\(G \circ G^{-1} = I_{\ran G}\).
-%TODO
-\begin{proof}
-由于\(G\)是映射，
-所以根据映射的定义可知\begin{equation*}
-	(\forall x \in \dom G)(\exists! y)[\opair{x,y} \in G],
-\end{equation*}
-于是\begin{align*}
-	G \circ G^{-1}
-	&= \Set{
-		\opair{u,v}
-		\given
-		(\exists t)
-		[
-			\opair{u,t} \in G^{-1},
-			\opair{t,v} \in G
-		]
-	}
-		\tag{\hyperref[definition:映射.逆-复合-限制-像]{复合的定义}} \\
-	&= \Set{
-		\opair{u,v}
-		\given
-		(\exists t)
-		[
-			\opair{t,u} \in G,
-			\opair{t,v} \in G
-		]
-	}
-		\tag{\hyperref[definition:映射.逆-复合-限制-像]{逆的定义}} \\
-	&= \Set{
-		\opair{u,v}
-		\given
-		u=v \in \ran G
-	}
-	= I_{\ran G}.
-		\tag*{\qedhere}
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P53 Exercise 25.
+    设\(G\)是映射，
+    \(I_{\ran G}\)是\(\ran G\)上的恒等映射.
+    证明：\(G \circ G^{-1} = I_{\ran G}\).
+    \begin{proof}
+        这里不要求\(G^{-1}\)是映射，
+        只需使用关系的复合.
+        对任意\(u,v\)，
+        有
+        \begin{align*}
+            \opair{u,v}\in G\circ G^{-1}
+            &\iff(\exists t)[\opair{u,t}\in G^{-1}\land\opair{t,v}\in G] \\
+            &\iff(\exists t)[\opair{t,u}\in G\land\opair{t,v}\in G] \\
+            &\iff u=v\land u\in\ran G \\
+            &\iff\opair{u,v}\in I_{\ran G}.
+        \end{align*}
+        第三个等价的正向由\(G\)的单值性得到；
+        反向则由\(u\in\ran G\)选取满足\(\opair{t,u}\in G\)的一个\(t\)，
+        再利用\(u=v\)得到.
+        两边都是关系，
+        故由外延公理得到结论.
+    \end{proof}
 \end{example}
 \begin{example}\label{example:映射.可逆映射是双射}
-%@see: 《高等代数学（第四版）》（谢启鸿 姚慕生 吴泉水） P184 命题4.1.1
-设映射\(f\colon A \to B\)，
-\(I_A\)是\(A\)上的恒等映射，
-\(I_B\)是\(B\)上的恒等映射.
-证明：如果存在映射\(g\colon B \to A\)满足\begin{equation*}
-	g \circ f = I_A,
-	\qquad
-	f \circ g = I_B,
-\end{equation*}
-则\(f\)是双射，且\(g = f^{-1}\).
-\begin{proof}
-先证\(f\)是单射.
-假设\(a_1,a_2 \in A\)满足\(f(a_1) = f(a_2)\)，
-则\begin{equation*}
-	(g \circ f)(a_1)
-	= I_A(a_1)
-	= a_1,
-	\qquad
-	(g \circ f)(a_2)
-	= I_A(a_2)
-	= a_2,
-\end{equation*}
-从而有\(a_1 = a_2\)，
-这就说明\(f\)是单射.
+    %@see: 《高等代数学（第四版）》（谢启鸿 姚慕生 吴泉水） P184 命题4.1.1
+    设映射\(f\colon A \to B\)，
+    \(I_A\)是\(A\)上的恒等映射，
+    \(I_B\)是\(B\)上的恒等映射.
+    证明：如果存在映射\(g\colon B \to A\)满足
+    \begin{equation*}
+        g \circ f = I_A,
+        \qquad
+        f \circ g = I_B,
+    \end{equation*}
+    则\(f\)是双射，且\(g = f^{-1}\).
+    \begin{proof}
+        若\(a_1,a_2\in A\)且\(f(a_1)=f(a_2)\)，
+        则
+        \begin{align*}
+            a_1 &=g(f(a_1))=g(f(a_2))=a_2.
+        \end{align*}
+        因此\(f\)是单射.
+        对任意\(b\in B\)，
+        \(g(b)\in A\)且\(f(g(b))=b\)，
+        所以\(b\in\ran f\).
+        结合\(\ran f\subseteq B\)，
+        可知\(f\)是满射，
+        因而是双射.
 
-再证\(f\)是满射.
-假设\(b \in B\)满足\(g(b) \in A\)且\((f \circ g)(b) = I_B(b) = b\)，
-那么\(g(b)\)是\(b\)在\(f\)下的原像，
-这就说明\(f\)是满射.
-\end{proof}
+        最后证明\(g=f^{-1}\).
+        任取\(b\in B\)，
+        由\(f(g(b))=b\)可得\(\opair{g(b),b}\in f\)，
+        于是\(\opair{b,g(b)}\in f^{-1}\).
+        由于\(f\)是单射，
+        \(f^{-1}\)是定义在\(B\)上的映射，
+        故其单值性给出\(g(b)=f^{-1}(b)\).
+        两个映射的定义域均为\(B\)且逐点相等，
+        因此\(g=f^{-1}\).
+    \end{proof}
 \end{example}
 
 \begin{theorem}
-%@see: 《Elements of Set Theory》 P65 Exercise 53.
-设\(R,S\)是集合，那么\begin{gather}
-	(R \cup S)^{-1} = R^{-1} \cup S^{-1},
-	\label{equation:集合论.并的逆等于逆的并} \\
-	(R \cap S)^{-1} = R^{-1} \cap S^{-1},
-	\label{equation:集合论.交的逆等于逆的交} \\
-	(R - S)^{-1} = R^{-1} - S^{-1}.
-	\label{equation:集合论.差的逆等于逆的差}
-\end{gather}
-\begin{proof}
-对\cref{equation:集合论.并的逆等于逆的并} 证明如下：
-\begin{align*}
-	\opair{x,y} \in (R \cup S)^{-1}
-	&\iff \opair{y,x} \in R \cup S \\
-	&\iff \opair{y,x} \in R \lor \opair{y,x} \in S \\
-	&\iff \opair{x,y} \in R^{-1} \lor \opair{x,y} \in S^{-1} \\
-	&\iff \opair{x,y} \in R^{-1} \cup S^{-1}.
-\end{align*}
-
-对\cref{equation:集合论.交的逆等于逆的交} 证明如下：
-\begin{align*}
-	\opair{x,y} \in (R \cap S)^{-1}
-	&\iff \opair{y,x} \in R \cap S \\
-	&\iff \opair{y,x} \in R \land \opair{y,x} \in S \\
-	&\iff \opair{x,y} \in R^{-1} \land \opair{x,y} \in S^{-1} \\
-	&\iff \opair{x,y} \in R^{-1} \cap S^{-1}.
-\end{align*}
-
-对\cref{equation:集合论.差的逆等于逆的差} 证明如下：
-\begin{align*}
-	\opair{x,y} \in (R - S)^{-1}
-	&\iff \opair{y,x} \in R - S \\
-	&\iff \opair{y,x} \in R \land \opair{y,x} \notin S \\
-	&\iff \opair{x,y} \in R^{-1} \land \opair{x,y} \notin S^{-1} \\
-	&\iff \opair{x,y} \in R^{-1} - S^{-1}.
-	\qedhere
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P65 Exercise 53.
+    设\(R,S\)是集合，那么
+    \begin{gather}
+        (R \cup S)^{-1} = R^{-1} \cup S^{-1},
+        \label{equation:集合论.并的逆等于逆的并} \\
+        (R \cap S)^{-1} = R^{-1} \cap S^{-1},
+        \label{equation:集合论.交的逆等于逆的交} \\
+        (R - S)^{-1} = R^{-1} - S^{-1}.
+        \label{equation:集合论.差的逆等于逆的差}
+    \end{gather}
+    \begin{proof}
+        每个等式的两边都只含有序对.
+        对任意\(x,y\)，
+        由取逆的定义分别得到
+        \begin{align*}
+            \opair{x,y}\in(R\cup S)^{-1}
+            &\iff\opair{y,x}\in R\lor\opair{y,x}\in S \\
+            &\iff\opair{x,y}\in R^{-1}\cup S^{-1}, \\
+            \opair{x,y}\in(R\cap S)^{-1}
+            &\iff\opair{y,x}\in R\land\opair{y,x}\in S \\
+            &\iff\opair{x,y}\in R^{-1}\cap S^{-1}, \\
+            \opair{x,y}\in(R-S)^{-1}
+            &\iff\opair{y,x}\in R\land\opair{y,x}\notin S \\
+            &\iff\opair{x,y}\in R^{-1}-S^{-1}.
+        \end{align*}
+        由外延公理可得三个等式.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}\label{theorem:集合论.复合的逆}
-%@see: 《Elements of Set Theory》 P47 Theorem 3I
-设\(F,G\)都是集合，那么\begin{equation*}
-	(F \circ G)^{-1} = G^{-1} \circ F^{-1}.
-\end{equation*}
-\begin{proof}
-易知\((F \circ G)^{-1}\)和\(G^{-1} \circ F^{-1}\)都是关系，且\begin{align*}
-	\opair{x,y} \in (F \circ G)^{-1}
-	&\iff
-	\opair{y,x} \in F \circ G \\
-	&\iff
-	(\exists t)[\opair{y,t} \in G \land \opair{t,x} \in F] \\
-	&\iff
-	(\exists t)[\opair{x,t} \in F^{-1} \land \opair{t,y} \in G^{-1}] \\
-	&\iff
-	\opair{x,y} \in G^{-1} \circ F^{-1}.
-	\qedhere
-\end{align*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P47 Theorem 3I
+    设\(F,G\)都是集合，那么
+    \begin{equation*}
+        (F \circ G)^{-1} = G^{-1} \circ F^{-1}.
+    \end{equation*}
+    \begin{proof}
+        两边都是关系，
+        并且对任意\(x,y\)有
+        \begin{align*}
+            \opair{x,y}\in(F\circ G)^{-1}
+            &\iff\opair{y,x}\in F\circ G \\
+            &\iff(\exists t)[\opair{y,t}\in G\land\opair{t,x}\in F] \\
+            &\iff(\exists t)[\opair{x,t}\in F^{-1}\land\opair{t,y}\in G^{-1}] \\
+            &\iff\opair{x,y}\in G^{-1}\circ F^{-1}.
+        \end{align*}
+        由外延公理得到结论.
+    \end{proof}
 \end{theorem}
 
-由\cref{theorem:集合论.复合的逆} 立即可得如下推论.
+下面的结论对任意集合都成立，
+可以直接从复合与取逆的定义证明.
 \begin{proposition}\label{theorem:集合论.复合的逆.推论1}
-设\(F\)是集合，那么\begin{equation*}
-	(F^{-1} \circ F)^{-1} = F^{-1} \circ F.
-\end{equation*}
+    设\(F\)是集合，那么
+    \begin{equation*}
+        (F^{-1} \circ F)^{-1} = F^{-1} \circ F.
+    \end{equation*}
+    \begin{proof}
+        对任意集合\(F\)，
+        \(F^{-1}\circ F\)都是关系.
+        由定义可得
+        \begin{align*}
+            \opair{x,y}\in(F^{-1}\circ F)^{-1}
+            &\iff\opair{y,x}\in F^{-1}\circ F \\
+            &\iff(\exists t)[\opair{y,t}\in F\land\opair{x,t}\in F] \\
+            &\iff(\exists t)[\opair{x,t}\in F\land\opair{y,t}\in F] \\
+            &\iff\opair{x,y}\in F^{-1}\circ F.
+        \end{align*}
+        由外延公理可得等式.
+        这里直接使用有序对，
+        没有对一般集合\(F\)误用\((F^{-1})^{-1}=F\).
+    \end{proof}
 \end{proposition}
 
 \begin{axiom}[选择公理(第一种形式)]
@@ -892,326 +935,383 @@ A \SetRestrict \{\emptyset,\{\emptyset\}\},
 \end{axiom}
 
 \begin{theorem}
-%@see: 《Elements of Set Theory》 P48 Theorem 3J
-设映射\(F\colon A \to B\)，其中\(A\)是非空集合.
-\begin{enumerate}
-	\item “存在映射\(G\colon B \to A\)（称其为\DefineConcept{左逆}），
-	使得\(G \circ F\)是\(A\)上的恒等映射\(I_A\)”是“\(F\)是单射”的充分必要条件.
+    %@see: 《Elements of Set Theory》 P48 Theorem 3J
+    设映射\(F\colon A \to B\)，其中\(A\)是非空集合.
+    \begin{enumerate}
+        \item “存在映射\(G\colon B \to A\)（称其为\DefineConcept{左逆}），
+        使得\(G \circ F\)是\(A\)上的恒等映射\(I_A\)”是“\(F\)是单射”的充分必要条件.
 
-	\item “存在映射\(H\colon B \to A\)（称其为\DefineConcept{右逆}），
-	使得\(F \circ H\)是\(B\)上的恒等映射\(I_B\)”是“\(F\)是满射”的充分必要条件.
-\end{enumerate}
-\begin{proof}
-\begin{enumerate}
-	\item
-	先证充分性.
-	我们假设存在映射\(G\)使得\(G \circ F = I_A\).
-	如果\(F(x) = F(y)\)，那么\begin{equation*}
-		x = G(F(x)) = G(F(y)) = y,
-	\end{equation*}
-	于是\(F\)是单射.
+        \item “存在映射\(H\colon B \to A\)（称其为\DefineConcept{右逆}），
+        使得\(F \circ H\)是\(B\)上的恒等映射\(I_B\)”是“\(F\)是满射”的充分必要条件.
+    \end{enumerate}
+    \begin{proof}
+        首先证明关于左逆的断言.
+        若存在\(G\colon B\to A\)满足\(G\circ F=I_A\)，
+        则对满足\(F(x)=F(y)\)的\(x,y\in A\)有
+        \begin{align*}
+            x &=G(F(x))=G(F(y))=y.
+        \end{align*}
+        所以\(F\)是单射.
+        反之，
+        若\(F\)是单射，
+        则\(F^{-1}\colon\ran F\to A\)是映射.
+        利用\(A\neq\emptyset\)取定\(a_0\in A\)，
+        构造
+        \begin{align*}
+            G &=F^{-1}\cup\bigl((B-\ran F)\times\Set{a_0}\bigr).
+        \end{align*}
+        右边的两个映射具有不相交的定义域，
+        其并是定义在\(B\)上的映射，
+        且值均属于\(A\).
+        对每个\(x\in A\)有
+        \begin{align*}
+            G(F(x)) &=F^{-1}(F(x))=x.
+        \end{align*}
+        因此\(G\circ F=I_A\).
+        这个构造只选取一个固定元素，
+        不需要选择公理.
 
-	再证必要性.
-	假设\(F\)是单射，
-	那么根据\cref{theorem:集合论.关系的逆的定义域值域以及关系的二重逆,theorem:集合论.关系及其逆是映射的充分必要条件}，
-	\(F^{-1}\)是一个从\(\ran F\)到\(A\)上的映射.
-	现在我们需要将\(F^{-1}\)延拓为以\(B\)为定义域的映射\(G\).
-	因为\(A\)是非空集合，
-	于是我们可以取定\(a \in A\)，
-	然后令\begin{equation*}
-		G(x) = \left\{ \begin{array}{ll}
-			F^{-1}(x), & x \in \ran F, \\
-			a, & x \in B - \ran F,
-		\end{array} \right.
-	\end{equation*}或者令\begin{equation*}
-		G = F^{-1} \cup (B - \ran F) \times \Set{a}.
-	\end{equation*}
-	这个构造出来的映射\(G\)是一个从\(B\)到\(A\)里的映射，
-	且满足\begin{equation*}
-		\dom(G \circ F) = A,
-	\end{equation*}
-	以及\begin{equation*}
-		(\forall x \in A)[G(F(x)) = F^{-1}(F(x)) = x],
-	\end{equation*}
-	于是\(G \circ F = I_A\)成立.
-
-	\item
-	我们还是先证充分性.
-	假设存在映射\(H\)使得\(F \circ H = I_B\).
-	那么\begin{equation*}
-		(\forall y \in B)[y = F(H(y))],
-	\end{equation*}
-	从而\(y \in \ran F\)，
-	于是\(\ran F = B\).
-
-	必要性的证明稍显困难.
-	我们不能直接取\(H = F^{-1}\)，
-	因为一般而言\(F\)不会是单射，
-	\(F^{-1}\)也不会是一个映射.
-	假设\(F\)将\(A\)映射到\(B\)上，\(\ran F = B\).
-	现在我们需要为每个\(y \in B\)选择某个\(x\)，使得\(F(x) = y\)，然后令\(H(y) = x\)；
-	考虑到\(y \in \ran F\)，这样的\(x\)必定存在.
-	虽然我们知道对于每个\(y\)，存在一个合适的\(x\)，
-	但是我们无法据此构造所求映射\(H\).
-	因此，我们需要引入选择公理.
-	借助选择公理，我们可以令映射\(H\)满足\(H \subseteq F^{-1}\)且\(\dom H = \dom F^{-1} = B\).
-	于是\(H\)满足\begin{equation*}
-		(\forall y \in B)
-		[
-			\opair{y,H(y)} \in F^{-1}
-			\iff
-			\opair{H(y),y} \in F
-			\iff
-			F(H(y)) = y
-		].
-		\qedhere
-	\end{equation*}
-\end{enumerate}
-\end{proof}
+        其次证明关于右逆的断言.
+        若存在\(H\colon B\to A\)满足\(F\circ H=I_B\)，
+        则对任意\(y\in B\)，
+        \(H(y)\in A\)且\(F(H(y))=y\).
+        所以\(B\subseteq\ran F\)，
+        结合\(\ran F\subseteq B\)可知\(F\)是满射.
+        反之，
+        设\(\ran F=B\).
+        对关系\(F^{-1}\)应用选择公理，
+        得到映射\(H\)满足
+        \begin{align*}
+            H &\subseteq F^{-1}, \\
+            \dom H &=\dom F^{-1}=B.
+        \end{align*}
+        又有\(\ran H\subseteq\ran F^{-1}=A\)，
+        故\(H\colon B\to A\).
+        对任意\(y\in B\)，
+        \(\opair{y,H(y)}\in H\subseteq F^{-1}\)，
+        所以\(\opair{H(y),y}\in F\)，
+        进而\(F(H(y))=y\).
+        因此\(F\circ H=I_B\).
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
-%@see: 《Elements of Set Theory》 P48 Theorem 3K
-设\(A,B,F\)都是集合.
-\def\F#1{F\ImageOfSetUnderRelation{#1}}
-\begin{enumerate}
-	\item 并的像是像的并：\begin{gather}
-		\F{A \cup B}
-		= \F{A} \cup \F{B},
-		\label{equation:集合论.并的像与像的并的关系1} \\
-		\F{\bigcup A}
-		= \bigcup\Set{ \F{a} \given a \in A }.
-		\label{equation:集合论.并的像与像的并的关系2}
-	\end{gather}
+    %@see: 《Elements of Set Theory》 P48 Theorem 3K
+    设\(A,B,F\)都是集合.
+    \begin{enumerate}
+        \item 并的像是像的并：
+        \begin{gather}
+            F\ImageOfSetUnderRelation{A \cup B}
+            = F\ImageOfSetUnderRelation{A} \cup F\ImageOfSetUnderRelation{B},
+            \label{equation:集合论.并的像与像的并的关系1} \\
+            F\ImageOfSetUnderRelation{\bigcup A}
+            = \bigcup\Set{ F\ImageOfSetUnderRelation{a} \given a \in A }.
+            \label{equation:集合论.并的像与像的并的关系2}
+        \end{gather}
 
-	\item 交的像包含于像的交：\begin{gather}
-		\F{A \cap B}
-		\subseteq \F{A} \cap \F{B},
-		\label{equation:集合论.交的像与像的交的关系1} \\
-		\F{\bigcap A}
-		\subseteq \bigcap\Set{ \F{a} \given a \in A }.
-		\label{equation:集合论.交的像与像的交的关系2}
-		\quad(A \neq \emptyset)
-	\end{gather}
-	若\(F\)是单根的，则以上两式取“=”号.
+        \item 交的像包含于像的交：
+        \begin{gather}
+            F\ImageOfSetUnderRelation{A \cap B}
+            \subseteq F\ImageOfSetUnderRelation{A} \cap F\ImageOfSetUnderRelation{B},
+            \label{equation:集合论.交的像与像的交的关系1} \\
+            F\ImageOfSetUnderRelation{\bigcap A}
+            \subseteq \bigcap\Set{ F\ImageOfSetUnderRelation{a} \given a \in A }.
+            \label{equation:集合论.交的像与像的交的关系2}
+            \quad(A \neq \emptyset)
+        \end{gather}
+        若\(F\)是单根的，则以上两式取“=”号.
 
-	\item 差的像包含像的差：\begin{equation}
-		\F{A} - \F{B}
-		\subseteq \F{A-B}.
-		\label{equation:集合论.差的像与像的差的关系}
-	\end{equation}
-	若\(F\)是单根的，则上式取“=”号.
-\end{enumerate}
-\begin{proof}
-\cref{equation:集合论.并的像与像的并的关系1} 证明如下：
-\begin{align*}
-	y \in \F{A \cup B}
-	&\iff (\exists x \in A \cup B)[\opair{x,y} \in F] \\
-	&\iff (\exists x \in A)[\opair{x,y} \in F]
-			\lor (\exists x \in B)[\opair{x,y} \in F] \\
-	&\iff y \in \F{A} \lor y \in \F{B}.
-\end{align*}
+        \item 差的像包含像的差：
+        \begin{equation}
+            F\ImageOfSetUnderRelation{A} - F\ImageOfSetUnderRelation{B}
+            \subseteq F\ImageOfSetUnderRelation{A-B}.
+            \label{equation:集合论.差的像与像的差的关系}
+        \end{equation}
+        若\(F\)是单根的，则上式取“=”号.
+    \end{enumerate}
+    \begin{proof}
+        所出现的像族都可以从\(\Powerset(\ran F)\)中用子集公理分离得到，
+        因而确实是集合.
+        下面分别验证各式.
 
-\cref{equation:集合论.交的像与像的交的关系1} 证明如下：
-\begin{align*}
-	y \in \F{A \cap B}
-	&\iff (\exists x \in A \cap B)[\opair{x,y} \in F] \\
-	&\implies (\exists x \in A)[\opair{x,y} \in F]
-		\land (\exists x \in B)[\opair{x,y} \in F] \\
-	&\iff y \in \F{A} \land y \in \F{B}.
-\end{align*}
-注意到中间步骤的\(\implies\)不总是可逆的，
-这时因为虽然有\begin{equation*}
-	(\exists x_1 \in A)[\opair{x_1,y} \in F], \qquad
-	(\exists x_2 \in B)[\opair{x_2,y} \in F],
-\end{equation*}
-但是可能\begin{equation*}
-	(\forall x \in A \cap B)[\opair{x,y} \notin F].
-\end{equation*}
-不过，如果\(F\)是单根的，那么必有\(x_1 = x_2 \in A \cap B\)，
-这时候中间步骤的\(\implies\)是可逆的，可以改为\(\iff\).
+        对于两个集合的并，
+        任取\(y\)，
+        有
+        \begin{align*}
+            y\in F\ImageOfSetUnderRelation{A\cup B}
+            &\iff(\exists x\in A\cup B)[\opair{x,y}\in F] \\
+            &\iff(\exists x\in A)[\opair{x,y}\in F]
+            \lor(\exists x\in B)[\opair{x,y}\in F] \\
+            &\iff y\in F\ImageOfSetUnderRelation{A}\cup F\ImageOfSetUnderRelation{B}.
+        \end{align*}
+        对于任意集合族的并，
+        同样有
+        \begin{align*}
+            y\in F\ImageOfSetUnderRelation{\bigcup A}
+            &\iff(\exists x)[x\in\bigcup A\land\opair{x,y}\in F] \\
+            &\iff(\exists a\in A)(\exists x\in a)[\opair{x,y}\in F] \\
+            &\iff y\in\bigcup\Set{F\ImageOfSetUnderRelation{a}\given a\in A}.
+        \end{align*}
+        由外延公理得到两个并的等式.
+        后一式在\(A=\emptyset\)时也成立，
+        此时两边均为空集.
 
-\cref{equation:集合论.并的像与像的并的关系2,equation:集合论.交的像与像的交的关系2} 分别是%
-\cref{equation:集合论.并的像与像的并的关系1,equation:集合论.交的像与像的交的关系1} 的简单推广，
-故略去证明.
+        对于两个集合的交，
+        若\(y\in F\ImageOfSetUnderRelation{A\cap B}\)，
+        则存在\(x\in A\cap B\)满足\(\opair{x,y}\in F\).
+        同一个\(x\)分别见证\(y\in F\ImageOfSetUnderRelation{A}\)
+        和\(y\in F\ImageOfSetUnderRelation{B}\)，
+        故所述包含关系成立.
+        若\(F\)是单根的，
+        反过来设\(y\)属于这两个像的交，
+        则存在\(u\in A\)、\(v\in B\)使得\(\opair{u,y},\opair{v,y}\in F\).
+        单根性给出\(u=v\in A\cap B\)，
+        故\(y\in F\ImageOfSetUnderRelation{A\cap B}\)，
+        从而得到等式.
 
-\cref{equation:集合论.差的像与像的差的关系} 证明如下：
-\begin{align*}
-	y \in \F{A} - \F{B}
-	&\iff (\exists x \in A)[\opair{x,y} \in F]
-		\land \neg[(\exists t \in B)[\opair{t,y} \in F]] \\
-	&\implies (\exists x \in A - B)[\opair{x,y} \in F] \\
-	&\iff y \in \F{A - B}.
-\end{align*}
-若\(F\)是单根的，则\begin{equation*}
-	(\exists! x)[\opair{x,y} \in F].
-\end{equation*}
-这种情况下，中间步骤的\(\implies\)可以改为\(\iff\).
-\end{proof}
+        现在设\(A\neq\emptyset\).
+        若\(y\in F\ImageOfSetUnderRelation{\bigcap A}\)，
+        取\(x\in\bigcap A\)使得\(\opair{x,y}\in F\).
+        对每个\(a\in A\)，
+        都有\(x\in a\)，
+        从而\(y\in F\ImageOfSetUnderRelation{a}\).
+        于是\(y\in\bigcap\Set{F\ImageOfSetUnderRelation{a}\given a\in A}\).
+        若\(F\)单根，
+        反过来设\(y\)属于右侧的交.
+        取定一个\(a_0\in A\)，
+        再取\(x_0\in a_0\)满足\(\opair{x_0,y}\in F\).
+        对任意\(a\in A\)，
+        由\(y\in F\ImageOfSetUnderRelation{a}\)存在\(x\in a\)满足\(\opair{x,y}\in F\).
+        单根性保证\(x=x_0\)，
+        所以\(x_0\in a\).
+        因此\(x_0\in\bigcap A\)，
+        从而\(y\in F\ImageOfSetUnderRelation{\bigcap A}\).
+        这里使用一个固定的原像\(x_0\)，
+        不需要对各个\(a\)同时作选择.
+
+        最后，
+        若\(y\in F\ImageOfSetUnderRelation{A}-F\ImageOfSetUnderRelation{B}\)，
+        则存在\(x\in A\)满足\(\opair{x,y}\in F\).
+        若\(x\in B\)，
+        就会推出\(y\in F\ImageOfSetUnderRelation{B}\)，
+        与假设矛盾.
+        故\(x\in A-B\)，
+        于是\(y\in F\ImageOfSetUnderRelation{A-B}\).
+        若\(F\)单根，
+        反过来设\(y\in F\ImageOfSetUnderRelation{A-B}\)，
+        取\(x\in A-B\)满足\(\opair{x,y}\in F\).
+        这已经给出\(y\in F\ImageOfSetUnderRelation{A}\).
+        若还存在\(u\in B\)满足\(\opair{u,y}\in F\)，
+        则单根性给出\(u=x\)，
+        与\(x\notin B\)矛盾.
+        故\(y\notin F\ImageOfSetUnderRelation{B}\)，
+        从而差的包含关系也成为等式.
+    \end{proof}
 \end{theorem}
 
 \begin{corollary}
-%@see: 《Elements of Set Theory》 P48 Corollary 3L
-设\(G\)是映射，\(A,B\)都是集合.
-\def\G#1{G^{-1}\ImageOfSetUnderRelation{#1}}
-\begin{gather}
-	\G{\bigcup A} = \bigcup\Set*{ \G{a} \given a \in A },
-	\label{equation:集合论.并的原像与原像的并的关系} \\
-	\G{\bigcap A} = \bigcap\Set*{ \G{a} \given a \in A }, \quad A \neq \emptyset,
-	\label{equation:集合论.交的原像与原像的交的关系} \\
-	\G{A - B} = \G{A} - \G{B}.
-	\label{equation:集合论.差的原像与原像的差的关系}
-\end{gather}
+    %@see: 《Elements of Set Theory》 P48 Corollary 3L
+    设\(G\)是映射，\(A,B\)都是集合.
+    \begin{gather}
+        G^{-1}\ImageOfSetUnderRelation{\bigcup A} = \bigcup\Set*{ G^{-1}\ImageOfSetUnderRelation{a} \given a \in A },
+        \label{equation:集合论.并的原像与原像的并的关系} \\
+        G^{-1}\ImageOfSetUnderRelation{\bigcap A} = \bigcap\Set*{ G^{-1}\ImageOfSetUnderRelation{a} \given a \in A }, \quad A \neq \emptyset,
+        \label{equation:集合论.交的原像与原像的交的关系} \\
+        G^{-1}\ImageOfSetUnderRelation{A - B} = G^{-1}\ImageOfSetUnderRelation{A} - G^{-1}\ImageOfSetUnderRelation{B}.
+        \label{equation:集合论.差的原像与原像的差的关系}
+    \end{gather}
+    \begin{proof}
+        由\cref{theorem:集合论.关系及其逆是映射的充分必要条件}，
+        映射\(G\)的逆关系\(G^{-1}\)是单根的.
+        把上一条定理中的\(F\)替换为\(G^{-1}\)，
+        并的像的等式直接给出\cref{equation:集合论.并的原像与原像的并的关系}；
+        当\(A\neq\emptyset\)时，
+        交的像的等式给出\cref{equation:集合论.交的原像与原像的交的关系}；
+        差的像的等式给出\cref{equation:集合论.差的原像与原像的差的关系}.
+        这里的\(G^{-1}\ImageOfSetUnderRelation{C}\)表示逆关系作用于集合\(C\)的像，
+        不要求\(G^{-1}\)是逆映射，
+        也不要求\(G\)是单射或满射.
+    \end{proof}
 \end{corollary}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 22.(a)
-\def\F#1{F\ImageOfSetUnderRelation{#1}}
-证明：\begin{equation}
-	A \subseteq B \implies \F{A} \subseteq \F{B}.
-\end{equation}
-\begin{proof}
-因为\(A \subseteq B\)，所以\(A \cap B = A\)，
-那么由\cref{equation:集合论.交的像与像的交的关系1} 可知，\begin{equation*}
-	\F{A} = \F{A \cap B} \subseteq \F{A} \cap \F{B} \subseteq \F{B}.
-	\qedhere
-\end{equation*}
-\end{proof}
+    %@see: 《Elements of Set Theory》 P53 Exercise 22.(a)
+    证明：
+    \begin{equation}
+        A \subseteq B \implies F\ImageOfSetUnderRelation{A} \subseteq F\ImageOfSetUnderRelation{B}.
+    \end{equation}
+    \begin{proof}
+        任取\(y\in F\ImageOfSetUnderRelation{A}\)，
+        则存在\(x\in A\)满足\(\opair{x,y}\in F\).
+        由\(A\subseteq B\)可知\(x\in B\)，
+        所以同一个\(x\)见证\(y\in F\ImageOfSetUnderRelation{B}\).
+        因此\(F\ImageOfSetUnderRelation{A}\subseteq F\ImageOfSetUnderRelation{B}\).
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 22.(b)
-证明：\begin{equation}
-	(F \circ G)\ImageOfSetUnderRelation{A}
-	= F\ImageOfSetUnderRelation{G\ImageOfSetUnderRelation{A}}.
-\end{equation}
-%TODO
+    %@see: 《Elements of Set Theory》 P53 Exercise 22.(b)
+    证明：
+    \begin{equation}
+        (F \circ G)\ImageOfSetUnderRelation{A}
+        = F\ImageOfSetUnderRelation{G\ImageOfSetUnderRelation{A}}.
+    \end{equation}
+    \begin{proof}
+        任取\(y\)，
+        由像与复合的定义可得
+        \begin{align*}
+            y\in(F\circ G)\ImageOfSetUnderRelation{A}
+            &\iff(\exists x\in A)[\opair{x,y}\in F\circ G] \\
+            &\iff(\exists x\in A)(\exists t)
+            [\opair{x,t}\in G\land\opair{t,y}\in F] \\
+            &\iff(\exists t\in G\ImageOfSetUnderRelation{A})[\opair{t,y}\in F] \\
+            &\iff y\in F\ImageOfSetUnderRelation{G\ImageOfSetUnderRelation{A}}.
+        \end{align*}
+        由外延公理得到等式.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P53 Exercise 22.(c)
-证明：\begin{equation}
-	Q \SetRestrict (A \cup B)
-	= (Q \SetRestrict A)\cup(Q \SetRestrict B).
-\end{equation}
-%TODO
+    %@see: 《Elements of Set Theory》 P53 Exercise 22.(c)
+    证明：
+    \begin{equation}
+        Q \SetRestrict (A \cup B)
+        = (Q \SetRestrict A)\cup(Q \SetRestrict B).
+    \end{equation}
+    \begin{proof}
+        两边都是关系，
+        并且
+        \begin{align*}
+            \opair{x,y}\in Q\SetRestrict(A\cup B)
+            &\iff\opair{x,y}\in Q\land(x\in A\lor x\in B) \\
+            &\iff(\opair{x,y}\in Q\land x\in A)
+            \lor(\opair{x,y}\in Q\land x\in B) \\
+            &\iff\opair{x,y}\in(Q\SetRestrict A)\cup(Q\SetRestrict B).
+        \end{align*}
+        由外延公理得到结论.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P65 Exercise 59.
-设\(A,B,Q\)是集合.
-证明：\begin{gather}
-	Q \SetRestrict (A \cap B)
-	= (Q \SetRestrict A) \cap (Q \SetRestrict B), \\
-	Q \SetRestrict (A - B)
-	= (Q \SetRestrict A)
-	- (Q \SetRestrict B).
-\end{gather}
-%TODO
+    %@see: 《Elements of Set Theory》 P65 Exercise 59.
+    设\(A,B,Q\)是集合.
+    证明：
+    \begin{gather}
+        Q \SetRestrict (A \cap B)
+        = (Q \SetRestrict A) \cap (Q \SetRestrict B), \\
+        Q \SetRestrict (A - B)
+        = (Q \SetRestrict A)
+        - (Q \SetRestrict B).
+    \end{gather}
+    \begin{proof}
+        对任意\(x,y\)，
+        由限制的定义有
+        \begin{align*}
+            \opair{x,y}\in Q\SetRestrict(A\cap B)
+            &\iff\opair{x,y}\in Q\land x\in A\land x\in B \\
+            &\iff\opair{x,y}\in(Q\SetRestrict A)\cap(Q\SetRestrict B), \\
+            \opair{x,y}\in Q\SetRestrict(A-B)
+            &\iff\opair{x,y}\in Q\land x\in A\land x\notin B \\
+            &\iff\opair{x,y}\in Q\SetRestrict A
+            \land\opair{x,y}\notin Q\SetRestrict B \\
+            &\iff\opair{x,y}\in(Q\SetRestrict A)-(Q\SetRestrict B).
+        \end{align*}
+        各式两边都只含有序对，
+        故由外延公理得到所需等式.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P65 Exercise 60.
-设\(A,R,S\)是集合.
-证明：\begin{equation}
-	(R \circ S) \SetRestrict A = R \circ (S \SetRestrict A).
-\end{equation}
-%TODO
+    %@see: 《Elements of Set Theory》 P65 Exercise 60.
+    设\(A,R,S\)是集合.
+    证明：
+    \begin{equation}
+        (R \circ S) \SetRestrict A = R \circ (S \SetRestrict A).
+    \end{equation}
+    \begin{proof}
+        两边都是关系，
+        并且对任意\(x,y\)有
+        \begin{align*}
+            \opair{x,y}\in(R\circ S)\SetRestrict A
+            &\iff x\in A\land(\exists t)[\opair{x,t}\in S\land\opair{t,y}\in R] \\
+            &\iff(\exists t)[\opair{x,t}\in S\SetRestrict A\land\opair{t,y}\in R] \\
+            &\iff\opair{x,y}\in R\circ(S\SetRestrict A).
+        \end{align*}
+        由外延公理得到结论.
+    \end{proof}
 \end{example}
 
 \begin{proposition}\label{theorem:集合论.与逆相等的充分必要条件}
-设\(R\)是集合，
-则\(R^{-1} \subseteq R
-\iff R^{-1} = R
-\iff R \subseteq R^{-1}\).
-\begin{proof}
-容易看出\begin{align*}
-	R^{-1} \subseteq R
-	&\iff
-	(\forall x)(\forall y)[xR^{-1}y \implies xRy] \\
-	&\iff
-	(\forall x)(\forall y)[yRx \implies xRy] \\
-	&\iff
-	(\forall u)(\forall v)[uRv \implies vRu] \\
-	&\iff
-	(\forall u)(\forall v)[uRv \implies uR^{-1}v] \\
-	&\iff
-	R \subseteq R^{-1},
-\end{align*}
-再由\(R^{-1} \subseteq R \land R \subseteq R^{-1}\)
-便得\(R = R^{-1}\).
-\end{proof}
+    设\(R\)是关系，
+    则\(R^{-1} \subseteq R
+    \iff R^{-1} = R
+    \iff R \subseteq R^{-1}\).
+    \begin{proof}
+        先设\(R^{-1}\subseteq R\).
+        任取\(\opair{x,y}\in R\)，
+        则\(\opair{y,x}\in R^{-1}\subseteq R\)，
+        进而\(\opair{x,y}\in R^{-1}\).
+        由于\(R\)只含有序对，
+        这就证明了\(R\subseteq R^{-1}\)，
+        所以\(R=R^{-1}\).
+
+        再设\(R\subseteq R^{-1}\).
+        任取\(\opair{x,y}\in R^{-1}\)，
+        则\(\opair{y,x}\in R\subseteq R^{-1}\)，
+        进而\(\opair{x,y}\in R\).
+        因此\(R^{-1}\subseteq R\)，
+        仍有\(R=R^{-1}\).
+
+        反过来，
+        由\(R=R^{-1}\)立即得到两个方向的包含关系，
+        故三个条件等价.
+    \end{proof}
 \end{proposition}
 
+\begin{example}
+    举例说明：在上一个命题中，
+    不能把“\(R\)是关系”改成“\(R\)是任意集合”.
+    \begin{solution}
+        取\(R=\Set{\emptyset}\).
+        按有序对的定义，
+        \(\opair{x,y}=\Set{\Set{x},\Set{x,y}}\)至少含有元素\(\Set{x}\)，
+        所以空集不是有序对.
+        因而\(R\)不含任何有序对，
+        其逆为\(R^{-1}=\emptyset\).
+        于是
+        \begin{align*}
+            R^{-1} &=\emptyset\subseteq R, \\
+            R^{-1} &\neq R, \\
+            R &\nsubseteq R^{-1}.
+        \end{align*}
+        这就给出了原条件过宽时的反例.
+    \end{solution}
+\end{example}
+
 \begin{example}\label{example:集合论.两个单根集的复合是单根的}
-%@see: 《Elements of Set Theory》 P53 Exercise 17.
-证明：两个单根集的复合还是单根的.
-%TODO 不能确定这个证明是完全正确的
-\begin{proof}
-设\(A,B\)都是单根集，
-下面证明它们的复合\(C = A \circ B\)也是单根的.
-注意到\begin{equation*}
-	(\forall y)
-	[
-		y \in \ran C
-		\implies
-		(\exists x)
-		(\exists t)
-		[
-			\opair{x,t} \in B,
-			\opair{t,y} \in A
-		]
-	].
-\end{equation*}
+    %@see: 《Elements of Set Theory》 P53 Exercise 17.
+    证明：两个单根集的复合还是单根的.
+    \begin{proof}
+        设\(A,B\)是单根集，
+        令\(C=A\circ B\).
+        任取\(y\in\ran C\)，
+        至少存在一个\(x\)满足\(\opair{x,y}\in C\).
+        下面验证这样的\(x\)唯一.
 
-因为\(A\)是单根的，
-所以\begin{equation*}
-	(\forall y)
-	[
-		y \in \ran C
-		\implies
-		y \in \ran A
-		\implies
-		(\exists! t)
-		[\opair{t,y} \in A]
-	].
-	\eqno(1)
-\end{equation*}
-
-又因为\(B\)是单根的，
-所以\begin{equation*}
-	(\forall y)
-	(\forall t)
-	[
-		y \in \ran C,
-		\opair{t,y} \in A
-		\implies
-		t \in \ran B
-		\implies
-		(\exists! x)
-		[\opair{x,t} \in B]
-	].
-	\eqno(2)
-\end{equation*}
-
-由(1)(2)两式可得\begin{equation*}
-	(\forall y \in \ran C)
-	(\exists! x)
-	(\exists! t)
-	[
-		\opair{x,t} \in B,
-		\opair{t,y} \in A
-	],
-\end{equation*}
-亦即\begin{equation*}
-	(\forall y \in \ran C)
-	(\exists! x)
-	[
-		\opair{x,y} \in C
-	].
-	\qedhere
-\end{equation*}
-\end{proof}
+        设\(\opair{x_1,y},\opair{x_2,y}\in C\).
+        由复合的定义，
+        存在\(t_1,t_2\)满足
+        \begin{align*}
+            \opair{x_1,t_1}\in B &\land\opair{t_1,y}\in A, \\
+            \opair{x_2,t_2}\in B &\land\opair{t_2,y}\in A.
+        \end{align*}
+        由\(A\)的单根性可得\(t_1=t_2\)，
+        再由\(B\)的单根性可得\(x_1=x_2\).
+        因此每个\(y\in\ran C\)恰有一个原像，
+        故\(C\)单根.
+        证明只涉及\(A,B\)中的有序对，
+        不需要假设它们是映射.
+    \end{proof}
 \end{example}
 
 \subsection{有标集族，指标集，子集族}\label{section:集合论.指标集}
@@ -1243,16 +1343,38 @@ A \SetRestrict \{\emptyset,\{\emptyset\}\},
 \end{definition}
 
 \begin{example}
-当我们谈到有标集族\(\{R\}_{i \in I}\)时，
-我们指的就是映射\(F = I \times \{R\}\)，
-即对于每一个\(i \in I\)都指定同一个集合\(F(i) = R\).
+    当我们谈到有标集族\(\{R\}_{i \in I}\)时，
+    我们指的就是映射\(F = I \times \{R\}\)，
+    即对于每一个\(i \in I\)都指定同一个集合\(F(i) = R\).
+    \begin{proof}
+        按笛卡尔积的定义，
+        对任意\(i\in I\)有\(\opair{i,R}\in I\times\Set{R}\).
+        若\(\opair{i,y}\in I\times\Set{R}\)，
+        则\(y\in\Set{R}\)，
+        从而\(y=R\).
+        因此\(I\times\Set{R}\)是定义域为\(I\)的映射，
+        且\(F(i)=R\)对每个\(i\in I\)成立.
+        当\(I=\emptyset\)时，
+        该映射就是空映射，
+        此时值域为空集而不是\(\Set{R}\).
+    \end{proof}
 \end{example}
 
 \begin{example}
-设\(\mathscr{A}\)是一个集族，
-那么恒同映射\(\{A\}_{A \in \mathscr{A}} = \Set{ \opair{A,A} \given A \in \mathscr{A} }\)
-就是一个以\(\mathscr{A}\)为指标集的有标集族.
-有时候我们会把\(\{A\}_{A \in \mathscr{A}}\)简记为“有标集族\(\mathscr{A}\)”.
+    设\(\mathscr{A}\)是一个集族，
+    那么恒同映射\(\{A\}_{A \in \mathscr{A}} = \Set{ \opair{A,A} \given A \in \mathscr{A} }\)
+    就是一个以\(\mathscr{A}\)为指标集的有标集族.
+    有时候我们会把\(\{A\}_{A \in \mathscr{A}}\)简记为“有标集族\(\mathscr{A}\)”.
+    \begin{proof}
+        对每个\(A\in\mathscr{A}\)，
+        题给关系中以\(A\)为第一坐标的有序对恰为\(\opair{A,A}\).
+        因此它是定义域为\(\mathscr{A}\)、在\(A\)处取值为\(A\)的映射，
+        也就是\(I_{\mathscr{A}}\).
+        按有标集族的定义，
+        以\(\mathscr{A}\)为指标集时，
+        其第\(A\)个值恰是集合\(A\)，
+        所以它确实表示有标集族\(\{A\}_{A\in\mathscr{A}}\).
+    \end{proof}
 \end{example}
 
 \begin{definition}
@@ -1280,43 +1402,101 @@ A \SetRestrict \{\emptyset,\{\emptyset\}\},
 而\(\bigcap_{i \in \emptyset} F_i\)没有定义.
 
 \begin{theorem}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P26 定理1.6.1
-设\(\{A_i\}_{i \in I}\)和\(\{B_j\}_{j \in J}\)是两个非空有标集族.
-如果\begin{equation*}
-	\Set{ A_i \given i \in I }
-	= \Set{ B_j \given j \in J },
-\end{equation*}
-则有\begin{gather}
-	\bigcup_{i \in I} A_i = \bigcup_{j \in J} B_j, \\
-	\bigcap_{i \in I} A_i = \bigcap_{j \in J} B_j.
-\end{gather}
-%TODO
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P26 定理1.6.1
+    设\(\{A_i\}_{i \in I}\)和\(\{B_j\}_{j \in J}\)是两个非空有标集族.
+    如果
+    \begin{equation*}
+        \Set{ A_i \given i \in I }
+        = \Set{ B_j \given j \in J },
+    \end{equation*}
+    则有
+    \begin{gather}
+        \bigcup_{i \in I} A_i = \bigcup_{j \in J} B_j, \\
+        \bigcap_{i \in I} A_i = \bigcap_{j \in J} B_j.
+    \end{gather}
+    \begin{proof}
+        令\(\mathscr{C}=\Set{A_i\given i\in I}=\Set{B_j\given j\in J}\).
+        由于\(I,J\)非空，
+        \(\mathscr{C}\)也非空.
+        对任意\(x\)，
+        有
+        \begin{align*}
+            x\in\bigcup_{i\in I}A_i
+            &\iff(\exists C\in\mathscr{C})[x\in C] \\
+            &\iff x\in\bigcup_{j\in J}B_j, \\
+            x\in\bigcap_{i\in I}A_i
+            &\iff(\forall C\in\mathscr{C})[x\in C] \\
+            &\iff x\in\bigcap_{j\in J}B_j.
+        \end{align*}
+        由外延公理得到两个等式.
+        因此指标的名称及同一个集合被重复列出的次数，
+        都不影响并与交.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P27 定理1.6.2
-设\(\{A_i\}_{i \in I}\)是一个非空有标集族，
-\(B\)是一个集合，
-则\begin{itemize}
-	\item 对于任意\(i_0 \in I\)，有\begin{equation*}
-		\bigcap_{i \in I} A_i \subseteq A_{i_0} \subseteq \bigcup_{i \in I} A_i;
-	\end{equation*}
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P27 定理1.6.2
+    设\(\{A_i\}_{i \in I}\)是一个非空有标集族，
+    \(B\)是一个集合，
+    则
+    \begin{itemize}
+        \item 对于任意\(i_0 \in I\)，有
+        \begin{equation*}
+            \bigcap_{i \in I} A_i \subseteq A_{i_0} \subseteq \bigcup_{i \in I} A_i;
+        \end{equation*}
 
-	\item {\rm\bf 分配律}\begin{gather*}
-		B \cap \left( \bigcup_{i \in I} A_i \right)
-		= \bigcup_{i \in I} \left( B \cap A_i \right), \\
-		B \cup \left( \bigcap_{i \in I} A_i \right)
-		= \bigcap_{i \in I} \left( B \cup A_i \right);
-	\end{gather*}
+        \item {\rm\bf 分配律}
+        \begin{gather*}
+            B \cap \left( \bigcup_{i \in I} A_i \right)
+            = \bigcup_{i \in I} \left( B \cap A_i \right), \\
+            B \cup \left( \bigcap_{i \in I} A_i \right)
+            = \bigcap_{i \in I} \left( B \cup A_i \right);
+        \end{gather*}
 
-	\item {\rm\bf 对偶律}\begin{gather*}
-		B - \left( \bigcup_{i \in I} A_i \right)
-		= \bigcap_{i \in I} \left( B - A_i \right), \\
-		B - \left( \bigcap_{i \in I} A_i \right)
-		= \bigcup_{i \in I} \left( B - A_i \right).
-	\end{gather*}
-\end{itemize}
-%TODO
+        \item {\rm\bf 对偶律}
+        \begin{gather*}
+            B - \left( \bigcup_{i \in I} A_i \right)
+            = \bigcap_{i \in I} \left( B - A_i \right), \\
+            B - \left( \bigcap_{i \in I} A_i \right)
+            = \bigcup_{i \in I} \left( B - A_i \right).
+        \end{gather*}
+    \end{itemize}
+    \begin{proof}
+        对固定的\(i_0\in I\)，
+        若\(x\in\bigcap_{i\in I}A_i\)，
+        则\(x\)属于每个\(A_i\)，
+        特别地属于\(A_{i_0}\).
+        若\(x\in A_{i_0}\)，
+        则\(i_0\)见证\(x\in\bigcup_{i\in I}A_i\).
+        所以第一项的两个包含关系成立.
+
+        对任意\(x\)，
+        两条分配律分别由下列等价关系得到：
+        \begin{align*}
+            x\in B\cap\bigcup_{i\in I}A_i
+            &\iff x\in B\land(\exists i\in I)[x\in A_i] \\
+            &\iff(\exists i\in I)[x\in B\land x\in A_i] \\
+            &\iff x\in\bigcup_{i\in I}(B\cap A_i), \\
+            x\in B\cup\bigcap_{i\in I}A_i
+            &\iff x\in B\lor(\forall i\in I)[x\in A_i] \\
+            &\iff(\forall i\in I)[x\in B\lor x\in A_i] \\
+            &\iff x\in\bigcap_{i\in I}(B\cup A_i).
+        \end{align*}
+        两条对偶律分别由量词的否定规则得到：
+        \begin{align*}
+            x\in B-\bigcup_{i\in I}A_i
+            &\iff x\in B\land(\forall i\in I)[x\notin A_i] \\
+            &\iff(\forall i\in I)[x\in B\land x\notin A_i] \\
+            &\iff x\in\bigcap_{i\in I}(B-A_i), \\
+            x\in B-\bigcap_{i\in I}A_i
+            &\iff x\in B\land(\exists i\in I)[x\notin A_i] \\
+            &\iff(\exists i\in I)[x\in B\land x\notin A_i] \\
+            &\iff x\in\bigcup_{i\in I}(B-A_i).
+        \end{align*}
+        其中第一条对偶律把\(x\in B\)移入全称量词时，
+        使用了\(I\neq\emptyset\).
+        最后分别应用外延公理即可.
+    \end{proof}
 \end{theorem}
 
 \begin{definition}
@@ -1331,29 +1511,68 @@ A \SetRestrict \{\emptyset,\{\emptyset\}\},
 \end{definition}
 
 \begin{theorem}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P28 定理1.6.3
-设\(R\)是集合\(X\)与集合\(Y\)之间的一个关系，
-则对于集合\(X\)的任何一个非空子集族\(\{A_i\}_{i \in I}\)，
-有\begin{gather*}
-	R\left( \bigcup_{i \in I} A_i \right)
-	= \bigcup_{i \in I} R(A_i), \\
-	R\left( \bigcap_{i \in I} A_i \right)
-	\subseteq \bigcap_{i \in I} R(A_i).
-\end{gather*}
-%TODO
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P28 定理1.6.3
+    设\(R\)是集合\(X\)与集合\(Y\)之间的一个关系，
+    则对于集合\(X\)的任何一个非空子集族\(\{A_i\}_{i \in I}\)，
+    有
+    \begin{gather*}
+        R\ImageOfSetUnderRelation{\bigcup_{i \in I} A_i}
+        = \bigcup_{i \in I} R\ImageOfSetUnderRelation{A_i}, \\
+        R\ImageOfSetUnderRelation{\bigcap_{i \in I} A_i}
+        \subseteq \bigcap_{i \in I} R\ImageOfSetUnderRelation{A_i}.
+    \end{gather*}
+    \begin{proof}
+        任取\(y\in Y\)，
+        由关系的像的定义可得
+        \begin{align*}
+            y\in R\ImageOfSetUnderRelation{\bigcup_{i\in I}A_i}
+            &\iff(\exists x\in\bigcup_{i\in I}A_i)[\opair{x,y}\in R] \\
+            &\iff(\exists i\in I)(\exists x\in A_i)[\opair{x,y}\in R] \\
+            &\iff y\in\bigcup_{i\in I}R\ImageOfSetUnderRelation{A_i}.
+        \end{align*}
+        两边均为\(Y\)的子集，
+        因此并的等式成立.
+
+        若\(y\in R\ImageOfSetUnderRelation{\bigcap_{i\in I}A_i}\)，
+        取\(x\in\bigcap_{i\in I}A_i\)满足\(\opair{x,y}\in R\).
+        对每个\(i\in I\)，
+        这个\(x\)都属于\(A_i\)，
+        从而\(y\in R\ImageOfSetUnderRelation{A_i}\).
+        因此\(y\in\bigcap_{i\in I}R\ImageOfSetUnderRelation{A_i}\)，
+        得到交的包含关系.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P28 定理1.6.4
-设\(X\)和\(Y\)是两个集合，映射\(f\colon X \to Y\)，
-则对于集合\(Y\)的任何一个非空子集族\(\{B_j\}_{j \in J}\)，
-有\begin{gather*}
-	f^{-1}\left( \bigcup_{j \in J} B_j \right)
-	= \bigcup_{j \in J} f^{-1}(B_j), \\
-	f^{-1}\left( \bigcap_{j \in J} B_j \right)
-	= \bigcap_{j \in J} f^{-1}(B_j).
-\end{gather*}
-%TODO
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P28 定理1.6.4
+    设\(X\)和\(Y\)是两个集合，映射\(f\colon X \to Y\)，
+    则对于集合\(Y\)的任何一个非空子集族\(\{B_j\}_{j \in J}\)，
+    有
+    \begin{gather*}
+        f^{-1}\ImageOfSetUnderRelation{\bigcup_{j \in J} B_j}
+        = \bigcup_{j \in J} f^{-1}\ImageOfSetUnderRelation{B_j}, \\
+        f^{-1}\ImageOfSetUnderRelation{\bigcap_{j \in J} B_j}
+        = \bigcap_{j \in J} f^{-1}\ImageOfSetUnderRelation{B_j}.
+    \end{gather*}
+    \begin{proof}
+        下列等式两边均为\(X\)的子集，
+        所以只需检验任意\(x\in X\)的归属.
+        由原像的定义可得
+        \begin{align*}
+            x\in f^{-1}\ImageOfSetUnderRelation{\bigcup_{j\in J}B_j}
+            &\iff f(x)\in\bigcup_{j\in J}B_j \\
+            &\iff(\exists j\in J)[f(x)\in B_j] \\
+            &\iff x\in\bigcup_{j\in J}f^{-1}\ImageOfSetUnderRelation{B_j}, \\
+            x\in f^{-1}\ImageOfSetUnderRelation{\bigcap_{j\in J}B_j}
+            &\iff f(x)\in\bigcap_{j\in J}B_j \\
+            &\iff(\forall j\in J)[f(x)\in B_j] \\
+            &\iff x\in\bigcap_{j\in J}f^{-1}\ImageOfSetUnderRelation{B_j}.
+        \end{align*}
+        由外延公理得到两个等式.
+        这里\(f^{-1}\ImageOfSetUnderRelation{B_j}\)是集合的原像，
+        不是对\(B_j\)作逆映射求值，
+        所以无需假设\(f\)可逆.
+    \end{proof}
 \end{theorem}
 
 \subsection{映射空间}
@@ -1378,7 +1597,10 @@ A \SetRestrict \{\emptyset,\{\emptyset\}\},
 
 \subsection{映射的四则运算}
 \begin{definition}
-设\(F,G\)都是同一个映射空间中的映射，\(k \in \ran F\).
+设\(D\)是集合，
+\(\mathbb{K}\)为\(\mathbb{R}\)或\(\mathbb{C}\)，
+\(F,G\colon D\to\mathbb{K}\)，
+\(k\in\mathbb{K}\).
 \begin{itemize}
 	\item 把\begin{equation*}
 		\Set{ \opair{u,kv} \given \opair{u,v} \in F }
@@ -1393,8 +1615,11 @@ A \SetRestrict \{\emptyset,\{\emptyset\}\},
 	\end{equation*}称为“\(F\)和\(G\)的\DefineConcept{积}”，
 	记作\(F G\).
 	\item 把\begin{equation*}
-		\Set{ \opair{u,v/w} \given \opair{u,v} \in F, \opair{u,w} \in G }
+		\Set{ \opair{u,v/w} \given \opair{u,v} \in F, \opair{u,w} \in G,\ w\neq0 }
 	\end{equation*}为“\(F\)和\(G\)的\DefineConcept{商}”，
 	记作\(F/G\)或\(\frac{F}{G}\).
 \end{itemize}
+商映射的定义域是\(\Set{u\in D\given G(u)\neq0}\).
+只有当\(G\)在\(D\)上恒不为零时，
+商映射才与\(F,G\)具有同一个定义域.
 \end{definition}
