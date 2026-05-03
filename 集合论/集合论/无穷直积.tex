@@ -1,143 +1,509 @@
 \section{无穷直积}
 %@see: 《Elements of Set Theory》 P54 INFINITE CARTESIAN PRODUCTS
 我们在前面学习了有限个集合的直积，
-但让我们更好奇的是：
-存不存在无限个集合的直积呢？
+现在利用映射统一表示任意指标集上的直积.
 取集合\(I\)作为指标集，
-设\(H\)是一个映射，
-\(\dom H \supseteq I\)，
-那么对于\(I\)中的每个指标\(i\)，总可得集合\(H(i)\).
-我们定义：\begin{equation*}
-	\BigTimes_{i \in I} H(i)
-	\defeq
-	\Set{
-		\text{以\(I\)为定义域的映射}~f
-		\given
-		(\forall i \in I)
-		[f(i) \in H(i)]
-	}.
-\end{equation*}
-易见\(\BigTimes_{i \in I} H(i)\)的元素都是“\(I\)元组（\(I\)-tuples）”（即以\(I\)为定义域的映射），
-这些“元组”的“第\(i\)坐标”（即\(i\)在这些映射下的像）是\(H(i)\)中的元素.
+设\(H\)是映射且\(I\subseteq\dom H\).
+定义
+\begin{align*}
+    \BigTimes_{i\in I}H(i)
+    &\defeq\Set{f\given f\text{是映射}\land\dom f=I
+    \land(\forall i\in I)[f(i)\in H(i)]}.
+\end{align*}
+其元素称为\(I\)元组（\(I\)-tuple），
+第\(i\)个坐标就是\(f(i)\).
+这里不要求\(I\)是无穷集.
 
-注意到\(\BigTimes_{i \in I} H(i)\)的元素都是从\(I\)到\(\bigcup_{i \in I} H(i)\)的映射，
-显然这些元素也都是映射空间\begin{equation*}
-	\mathcal{H} = \left[ \kern2pt \bigcup_{i \in I} H(i) \right]^I
-\end{equation*}的元素，
-于是集合\(\BigTimes_{i \in I} H(i)\)可以通过对映射空间\(\mathcal{H}\)使用子集公理构造得到.
+\begin{proposition}
+    对任意集合\(I\)和满足\(I\subseteq\dom H\)的映射\(H\)，
+    上述直积是一个集合.
+    \begin{proof}
+        由子集公理在\(\ran H\)中构造
+        \begin{align*}
+            \mathscr{B}&\defeq\Set{Y\in\ran H\given(\exists i\in I)[Y=H(i)]},\\
+            U&\defeq\bigcup\mathscr{B}.
+        \end{align*}
+        任意属于该直积的映射\(f\)都是\(I\times U\)的子集.
+        因此直积可以写成
+        \begin{align*}
+            \BigTimes_{i\in I}H(i)
+            &=\Set{f\in\Powerset(I\times U)\given
+            f\text{是映射}\land\dom f=I
+            \land(\forall i\in I)[f(i)\in H(i)]}.
+        \end{align*}
+        由直积存在定理、幂集公理和子集公理，
+        右侧是集合.
+        这个论证只证明直积的存在性，
+        不声称它非空，
+        因而不需要选择公理.
+    \end{proof}
+\end{proposition}
 
 \begin{example}
-设\(A\)是一个集合，
-映射\(H = I \times \{A\}\)，
-那么\begin{equation*}
-	\BigTimes_{i \in I} H(i) = A^I.
-\end{equation*}
+    设\(A,I\)是集合，
+    \(H=I\times\{A\}\)是以\(I\)为定义域的常值映射.
+    证明：
+    \begin{align*}
+        \BigTimes_{i\in I}H(i)&=A^I.
+    \end{align*}
+    \begin{proof}
+        对每个\(i\in I\)都有\(H(i)=A\).
+        因而一个映射\(f\)属于左侧，
+        当且仅当\(\dom f=I\)且对所有\(i\in I\)都有\(f(i)\in A\)，
+        也就是\(f\colon I\to A\).
+        这恰好是\(f\in A^I\)的定义，
+        所以两集合相等.
+    \end{proof}
 \end{example}
 
-%@see: 《Elements of Set Theory》 P55
-应该注意到，
-如果某个\(H(i)\)是空集，
-那么无穷直积\(\BigTimes_{i \in I} H(i)\)也将是空集.
-反过来说，假设\((\forall i \in I)[H(i) \neq \emptyset]\)，
-我们能不能说\(\BigTimes_{i \in I} H(i) \neq \emptyset\)呢？
-为了得到这个无穷直积的一个元素\(f\)，
-我们需要从每个\(H(i)\)中选择一些元素，
-令\(f(i)\)等于这些选定的元素.
-这就需要用到选择公理，
-而且实际上这也是选择公理的若干等价表述方式之一.
+\begin{property}
+    若存在\(i_0\in I\)使\(H(i_0)=\emptyset\)，
+    则\(\BigTimes_{i\in I}H(i)=\emptyset\).
+    若\(I=\emptyset\)，
+    则\(\BigTimes_{i\in I}H(i)=\{\emptyset\}\).
+    \begin{proof}
+        在第一种情形中，
+        若\(f\)属于直积，
+        就必须有\(f(i_0)\in\emptyset\)，
+        矛盾，所以直积为空集.
+        在第二种情形中，
+        唯一以\(\emptyset\)为定义域的映射是空映射\(\emptyset\).
+        条件\((\forall i\in\emptyset)[f(i)\in H(i)]\)成立，
+        所以空映射属于直积，
+        且没有其他元素.
+        特别地，\(A^{\emptyset}=\{\emptyset\}\)，
+        即使\(A=\emptyset\)也如此.
+    \end{proof}
+\end{property}
 
+%@see: 《Elements of Set Theory》 P55
+反过来，若每个\(H(i)\)都非空，
+要得到直积中的一个元素，
+就必须给出一个同时为每个指标选择一个元素的映射.
+对于任意指标集的这项断言，
+选择公理给出如下保证.
 \begin{axiom}[选择公理(第二种形式)]
-%@see: 《Elements of Set Theory》 P55 Axiom of Choice (second form)
-对于任意集合\(I\)和任意以\(I\)为定义域的映射\(H\)，
-如果\((\forall i \in I)[H(i) \neq \emptyset]\)，
-那么\(\BigTimes_{i \in I} H(i) \neq \emptyset\).
+    %@see: 《Elements of Set Theory》 P55 Axiom of Choice (second form)
+    对任意集合\(I\)及以\(I\)为定义域的映射\(H\)，
+    如果\((\forall i\in I)[H(i)\neq\emptyset]\)，
+    那么\(\BigTimes_{i\in I}H(i)\neq\emptyset\).
 \end{axiom}
 
 \section{选择公理}
-%@see: [The Countable Reals](https://arxiv.org/abs/2404.01256)
-
 \begin{definition}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P36 定义1.8.1
-设\(X\)是一个集合.
-令\(\tilde{X} \defeq \Powerset X - \{\emptyset\}\).
-如果映射\(\epsilon\colon \tilde{X} \to X\)满足\begin{equation*}
-	(\forall A \in \tilde{X})
-	[\epsilon(A) \in A],
-\end{equation*}
-则称“映射\(\epsilon\)是集合\(X\)的一个\DefineConcept{选择函数}”.
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P36 定义1.8.1
+    设\(X\)是集合，
+    \(\tilde{X}\defeq\Powerset X-\{\emptyset\}\).
+    如果映射\(\epsilon\colon\tilde{X}\to X\)满足
+    \begin{align*}
+        (\forall A\in\tilde{X})[\epsilon(A)\in A],
+    \end{align*}
+    则称“\(\epsilon\)是集合\(X\)的一个\DefineConcept{选择函数}”.
 \end{definition}
 
 \begin{axiom}[选择公理(第三种形式)]
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P36 公理1.8.1
-%@see: 《Elements of Set Theory》 P151 Theorem 6M (3)
-任何一个集合都有选择函数.
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P36 公理1.8.1
+    %@see: 《Elements of Set Theory》 P151 Theorem 6M (3)
+    任何集合都有选择函数.
 \end{axiom}
 
 \begin{theorem}\label{theorem:选择公理.等价形式1}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定理1.8.2
-设\(\mathscr{A}\)是一个由非空集合构成的集族，
-则存在映射\(\nu\colon \mathscr{A} \to \bigcup \mathscr{A}\)
-使得\begin{equation*}
-	(\forall A \in \mathscr{A})
-	[\nu(A) \in A].
-\end{equation*}
-\end{theorem}
-\cref{theorem:选择公理.等价形式1} 与选择公理是等价的.%TODO proof
-
-\begin{definition}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定义1.8.2
-%@see: 《Elements of Set Theory》 P151 Theorem 6M (6) Zorn's lemma
-设\(\mathscr{F}\)是一个集族.
-如果\begin{equation*}
-	(\forall A,B\in\mathscr{F})
-	[A \subseteq B \lor B \subseteq A],
-\end{equation*}
-则称“\(\mathscr{F}\)是一个\DefineConcept{套}（chain）”.
-\end{definition}
-
-\begin{theorem}[佐恩引理]
-%@see: 《Elements of Set Theory》 P151 Theorem 6M (6) Zorn's lemma
-设集族\(\mathscr{A}\)满足
-包含于\(\mathscr{A}\)的任意一个套的并属于\(\mathscr{A}\)，
-即\begin{equation*}
-	(\forall \mathscr{B} \subseteq \mathscr{A})
-	\left[ \text{$\mathscr{B}$是一个套} \implies \bigcup \mathscr{B} \in \mathscr{A} \right],
-\end{equation*}
-则\(\mathscr{A}\)中必有关于\(\subseteq\)的最大元.
-%@see: https://mathworld.wolfram.com/ZornsLemma.html
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定理1.8.2
+    设\(\mathscr{A}\)是由非空集合构成的集族，
+    则存在映射\(\nu\colon\mathscr{A}\to\bigcup\mathscr{A}\)，
+    使得
+    \begin{align*}
+        (\forall A\in\mathscr{A})[\nu(A)\in A].
+    \end{align*}
+    \begin{proof}
+        令\(X=\bigcup\mathscr{A}\).
+        由选择公理的第三种形式，
+        取\(X\)的选择函数\(\epsilon\).
+        每个\(A\in\mathscr{A}\)都是\(X\)的非空子集，
+        因而\(\mathscr{A}\subseteq\dom\epsilon\).
+        令\(\nu\)为\(\epsilon\)在\(\mathscr{A}\)上的限制，
+        则\(\nu(A)=\epsilon(A)\in A\).
+        当\(\mathscr{A}=\emptyset\)时，
+        所得\(\nu\)为空映射，
+        同样满足条件.
+    \end{proof}
 \end{theorem}
 
+\begin{proposition}
+    \cref{theorem:选择公理.等价形式1}中的断言、选择公理的第二种形式和第三种形式互相等价.
+    \begin{proof}
+        第三种形式推出集族形式的证明已在上述定理中给出.
+
+        下面由集族形式推出第二种形式.
+        设\(H\)的定义域为\(I\)，
+        且每个\(H(i)\)都非空.
+        对集族\(\mathscr{A}=\Set{H(i)\given i\in I}\)应用集族形式，
+        得到\(\nu\)满足\(\nu(H(i))\in H(i)\).
+        定义映射
+        \begin{align*}
+            f\colon I\to\bigcup\mathscr{A},\quad
+            i&\mapsto\nu(H(i)).
+        \end{align*}
+        它的图像是\(I\times\bigcup\mathscr{A}\)的子集，
+        并且\(f(i)\in H(i)\)，
+        所以\(f\in\BigTimes_{i\in I}H(i)\).
+        即使不同指标对应同一个集合，
+        这个构造仍然成立，
+        因为各指标可以选取同一个元素.
+
+        最后由第二种形式推出第三种形式.
+        给定集合\(X\)，
+        令\(I=\Powerset X-\{\emptyset\}\)，
+        并令\(H\)为\(I\)上的恒等映射，
+        即\(H(B)=B\).
+        每个\(H(B)\)都非空，
+        所以存在\(\epsilon\in\BigTimes_{B\in I}H(B)\).
+        于是\(\dom\epsilon=I\)，
+        且\(\epsilon(B)\in B\subseteq X\)，
+        因此\(\epsilon\)就是\(X\)的选择函数.
+        当\(X=\emptyset\)时，
+        指标集为空，
+        其直积含有唯一的空映射，
+        因而结论仍成立.
+    \end{proof}
+\end{proposition}
+
 \begin{definition}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定义1.8.3
-%@see: 《Elements of Set Theory》 P151 Theorem 6M (6) Zorn's lemma
-设\(\mathscr{F}\)是一个集族.
-如果\begin{equation*}
-	F \in \mathscr{F}
-	\iff
-	\text{$F$的每一个有限子集都是$\mathscr{F}$的成员},
-\end{equation*}
-则称“\(\mathscr{F}\)是一个\DefineConcept{具有有限特征的}集族”.
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定义1.8.2
+    设\(\mathscr{F}\)是集族.
+    如果
+    \begin{align*}
+        (\forall A,B\in\mathscr{F})[A\subseteq B\lor B\subseteq A],
+    \end{align*}
+    则称“\(\mathscr{F}\)是一个\DefineConcept{套}（chain）”.
+    空集族也满足这个全称条件，
+    因而是一个套.
 \end{definition}
 
-\begin{lemma}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P37 引理1.8.3
-如果\(\mathscr{F}\)是一个具有有限特征的集族，
-则\begin{itemize}
-	\item \(\mathscr{F}\)中每一个成员的任何一个子集都是\(\mathscr{F}\)的成员；
-	\item \(\mathscr{F}\)中任何一个套的并都是\(\mathscr{F}\)的成员.
-\end{itemize}
+\begin{definition}
+    设\(M\in\mathscr{F}\).
+    若
+    \begin{align*}
+        (\forall B\in\mathscr{F})[M\subseteq B\implies B=M],
+    \end{align*}
+    则称\(M\)是\(\mathscr{F}\)关于\(\subseteq\)的\DefineConcept{极大元}.
+    若
+    \begin{align*}
+        (\forall B\in\mathscr{F})[B\subseteq M],
+    \end{align*}
+    则称\(M\)是\(\mathscr{F}\)关于\(\subseteq\)的\DefineConcept{最大元}.
+    极大元只排除自身的真扩张，
+    并不要求它与其他所有成员可比较.
+\end{definition}
+
+为避免在佐恩引理与图基引理之间循环论证，
+先直接由选择函数证明一个辅助结论.
+\begin{lemma}\label{lemma:无穷直积.单点扩张极大元}
+    设非空集族\(\mathscr{C}\)满足：
+    每个成员的任意子集仍属于\(\mathscr{C}\)，
+    且\(\mathscr{C}\)中每个套的并仍属于\(\mathscr{C}\).
+    则\(\mathscr{C}\)有关于\(\subseteq\)的极大元.
+    \begin{proof}
+        令\(U=\bigcup\mathscr{C}\)，
+        由选择公理取\(U\)的选择函数\(c\).
+        对每个\(B\in\mathscr{C}\)，令
+        \begin{align*}
+            E(B)&\defeq\Set{x\in U-B\given B\cup\{x\}\in\mathscr{C}}.
+        \end{align*}
+        当\(E(B)=\emptyset\)时令\(g(B)=B\)，
+        否则令\(g(B)=B\cup\{c(E(B))\}\).
+        于是\(g\colon\mathscr{C}\to\mathscr{C}\)，
+        \(B\subseteq g(B)\)，
+        且\(g(B)-B\)至多含一个元素.
+        由非空性和对子集的封闭性可知\(\emptyset\in\mathscr{C}\).
+
+        考虑满足以下三个条件的子族\(\mathscr{T}\subseteq\mathscr{C}\)：
+        \begin{enumerate}
+            \item \(\emptyset\in\mathscr{T}\)；
+            \item 若\(B\in\mathscr{T}\)，则\(g(B)\in\mathscr{T}\)；
+            \item 若\(\mathscr{D}\subseteq\mathscr{T}\)是套，
+            则\(\bigcup\mathscr{D}\in\mathscr{T}\).
+        \end{enumerate}
+        所有这样的子族构成\(\Powerset\mathscr{C}\)的一个非空子集，
+        因为\(\mathscr{C}\)本身满足三个条件.
+        令\(\mathscr{T}_0\)为这些子族的交.
+        每个参与求交的子族都含有\(\emptyset\)，
+        所以\(\emptyset\in\mathscr{T}_0\).
+        若\(B\in\mathscr{T}_0\)，
+        则\(B\)属于每个这样的子族，
+        故\(g(B)\)也属于每个这样的子族，
+        从而\(g(B)\in\mathscr{T}_0\).
+        若套\(\mathscr{D}\)包含于\(\mathscr{T}_0\)，
+        它就包含于每个参与求交的子族，
+        故\(\bigcup\mathscr{D}\)属于每个这样的子族，
+        从而\(\bigcup\mathscr{D}\in\mathscr{T}_0\).
+        因此\(\mathscr{T}_0\)仍满足三个条件，
+        并且包含于任何满足这三个条件的子族.
+
+        下面证明\(\mathscr{T}_0\)是套.
+        令
+        \begin{align*}
+            \mathscr{D}_0&\defeq\Set{C\in\mathscr{T}_0\given
+            (\forall B\in\mathscr{T}_0)[B\subseteq C\lor C\subseteq B]}.
+        \end{align*}
+        显然\(\emptyset\in\mathscr{D}_0\).
+        固定\(C\in\mathscr{D}_0\)，令
+        \begin{align*}
+            \mathscr{T}_C&\defeq\Set{B\in\mathscr{T}_0\given
+            B\subseteq C\lor g(C)\subseteq B}.
+        \end{align*}
+        我们验证\(\mathscr{T}_C\)满足上述三个条件.
+        首先\(\emptyset\in\mathscr{T}_C\).
+        对任意\(B\in\mathscr{T}_C\)，
+        若\(g(C)\subseteq B\)，
+        则\(g(C)\subseteq B\subseteq g(B)\)，
+        故\(g(B)\in\mathscr{T}_C\).
+        若\(B=C\)，结论也直接成立.
+        剩下的情形是\(B\subsetneq C\).
+        由于\(g(B)\in\mathscr{T}_0\)且\(C\in\mathscr{D}_0\)，
+        \(g(B)\)与\(C\)可比较.
+        若\(C\subseteq g(B)\)，
+        由\(B\subsetneq C\subseteq g(B)\)和\(g(B)-B\)至多含一个元素，
+        必有\(C=g(B)\).
+        因此无论哪一种比较关系成立，
+        都有\(g(B)\subseteq C\)，
+        所以\(g(B)\in\mathscr{T}_C\).
+        最后，若\(\mathscr{E}\subseteq\mathscr{T}_C\)是套，
+        要么其某个成员包含\(g(C)\)，
+        从而其并也包含\(g(C)\)；
+        要么其所有成员都包含于\(C\)，
+        从而其并包含于\(C\).
+        又因\(\mathscr{T}_0\)对套的并封闭，
+        可知\(\bigcup\mathscr{E}\in\mathscr{T}_C\).
+
+        根据\(\mathscr{T}_0\)的最小性，
+        有\(\mathscr{T}_0\subseteq\mathscr{T}_C\)，
+        从而\(\mathscr{T}_C=\mathscr{T}_0\).
+        因此每个\(B\in\mathscr{T}_0\)或者包含于\(C\subseteq g(C)\)，
+        或者包含\(g(C)\)，
+        这说明\(g(C)\in\mathscr{D}_0\).
+        故\(\mathscr{D}_0\)对\(g\)封闭.
+
+        若\(\mathscr{E}\subseteq\mathscr{D}_0\)是套，
+        则\(V=\bigcup\mathscr{E}\in\mathscr{T}_0\).
+        对任意\(B\in\mathscr{T}_0\)，
+        若存在\(C\in\mathscr{E}\)满足\(B\subseteq C\)，
+        则\(B\subseteq V\).
+        否则由每个\(C\in\mathscr{E}\)都与\(B\)可比较，
+        得到\(C\subseteq B\)，
+        从而\(V\subseteq B\).
+        因此\(V\in\mathscr{D}_0\)，
+        即\(\mathscr{D}_0\)也对套的并封闭.
+        由最小性再得\(\mathscr{T}_0\subseteq\mathscr{D}_0\)，
+        故\(\mathscr{D}_0=\mathscr{T}_0\)，
+        所以\(\mathscr{T}_0\)是套.
+
+        令\(M=\bigcup\mathscr{T}_0\).
+        由封闭性，\(M\in\mathscr{T}_0\)，
+        进而\(g(M)\in\mathscr{T}_0\)，
+        所以\(g(M)\subseteq M\).
+        结合\(M\subseteq g(M)\)可得\(g(M)=M\)，
+        因而\(E(M)=\emptyset\).
+        若存在\(B\in\mathscr{C}\)使\(M\subsetneq B\)，
+        取\(x\in B-M\).
+        因为\(M\cup\{x\}\subseteq B\)，
+        对子集的封闭性给出\(M\cup\{x\}\in\mathscr{C}\)，
+        于是\(x\in E(M)\)，矛盾.
+        所以\(M\)是\(\mathscr{C}\)的极大元.
+    \end{proof}
 \end{lemma}
 
+\begin{theorem}[佐恩引理]\label{theorem:无穷直积.佐恩引理}
+    %@see: 《Elements of Set Theory》 P151 Theorem 6M (6) Zorn's lemma
+    设集族\(\mathscr{A}\)满足：
+    每个包含于\(\mathscr{A}\)的套的并仍属于\(\mathscr{A}\)，
+    即
+    \begin{align*}
+        (\forall\mathscr{B}\subseteq\mathscr{A})
+        [\mathscr{B}\text{是套}\implies\bigcup\mathscr{B}\in\mathscr{A}],
+    \end{align*}
+    则\(\mathscr{A}\)中有关于\(\subseteq\)的极大元.
+    \begin{proof}
+        由于空集族是套，
+        假设已经保证\(\emptyset=\bigcup\emptyset\in\mathscr{A}\)，
+        特别地\(\mathscr{A}\neq\emptyset\).
+        令
+        \begin{align*}
+            \mathscr{C}&\defeq\Set{\mathscr{B}\in\Powerset\mathscr{A}\given
+            \mathscr{B}\text{是套}}.
+        \end{align*}
+        \(\mathscr{C}\)含有空集族，
+        并且它的每个成员的任意子集仍是套，
+        因而仍属于\(\mathscr{C}\).
+        若\(\mathscr{E}\subseteq\mathscr{C}\)本身关于包含关系构成套，
+        任取\(B_1,B_2\in\bigcup\mathscr{E}\)，
+        存在\(\mathscr{B}_1,\mathscr{B}_2\in\mathscr{E}\)分别包含\(B_1,B_2\).
+        两个子族中一个包含另一个，
+        所以\(B_1,B_2\)同属于其中较大的一个套，
+        从而\(B_1\subseteq B_2\)或\(B_2\subseteq B_1\).
+        因此\(\bigcup\mathscr{E}\)也是套，
+        即\(\bigcup\mathscr{E}\in\mathscr{C}\).
+
+        对\(\mathscr{C}\)应用\cref{lemma:无穷直积.单点扩张极大元}，
+        得到不能再扩大的套\(\mathscr{M}\subseteq\mathscr{A}\).
+        由题设，\(M=\bigcup\mathscr{M}\in\mathscr{A}\).
+        若\(B\in\mathscr{A}\)且\(M\subseteq B\)，
+        则对每个\(C\in\mathscr{M}\)都有\(C\subseteq M\subseteq B\)，
+        所以\(\mathscr{M}\cup\{B\}\)仍是\(\mathscr{A}\)中的套.
+        根据\(\mathscr{M}\)的极大性，
+        必有\(B\in\mathscr{M}\)，
+        从而\(B\subseteq\bigcup\mathscr{M}=M\).
+        于是\(B=M\)，
+        这就证明\(M\)是\(\mathscr{A}\)的极大元.
+    \end{proof}
+\end{theorem}
+
+\begin{definition}
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定义1.8.3
+    设\(\mathscr{F}\)是集族.
+    如果对于每个集合\(F\)都有
+    \begin{align*}
+        F\in\mathscr{F}
+        &\iff F\text{的每个有限子集均属于}\mathscr{F},
+    \end{align*}
+    则称“\(\mathscr{F}\)是\DefineConcept{具有有限特征的}集族”.
+    有限子集包括空集.
+\end{definition}
+
+\begin{example}
+    佐恩引理的结论能否把“极大元”加强为“最大元”？
+    \begin{solution}
+        不能.
+        取不同的元素\(a,b\)，令
+        \begin{align*}
+            \mathscr{A}&=\{\emptyset,\{a\},\{b\}\}.
+        \end{align*}
+        因为\(\{a\}\)与\(\{b\}\)不可比较，
+        \(\mathscr{A}\)中的套不能同时含有这两个成员.
+        因此每个套的并只能是\(\emptyset\)、\(\{a\}\)或\(\{b\}\)，
+        均属于\(\mathscr{A}\)，
+        所以它满足上述佐恩引理的假设.
+        \(\{a\}\)和\(\{b\}\)都是极大元，
+        但若有最大元，
+        它必须同时包含\(a,b\)，
+        而\(\mathscr{A}\)中没有这样的成员.
+        这个集族还具有有限特征.
+        若\(F\in\mathscr{A}\)，
+        则\(F\)的每个子集均属于\(\mathscr{A}\)，
+        特别地每个有限子集都属于\(\mathscr{A}\).
+        反之，若\(F\)的每个有限子集属于\(\mathscr{A}\)，
+        考察单元素子集可得\(F\subseteq\{a,b\}\).
+        \(F\)不能同时含有\(a,b\)，
+        否则有限子集\(\{a,b\}\)不属于\(\mathscr{A}\)，
+        矛盾.
+        所以\(F\)只能是\(\emptyset\)、\(\{a\}\)或\(\{b\}\)，
+        因而\(F\in\mathscr{A}\).
+        因此有限特征也不能保证最大元存在.
+        即使额外要求所求成员包含指定的\(\emptyset\)，
+        这个反例仍然适用.
+    \end{solution}
+\end{example}
+
+\begin{lemma}\label{lemma:无穷直积.有限特征封闭性}
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P37 引理1.8.3
+    如果\(\mathscr{F}\)具有有限特征，
+    则有：
+    \begin{enumerate}
+        \item \(\mathscr{F}\)的每个成员的任意子集都属于\(\mathscr{F}\)；
+        \item 若\(\mathscr{F}\neq\emptyset\)，
+        则\(\mathscr{F}\)中任意一个套的并都属于\(\mathscr{F}\).
+    \end{enumerate}
+    \begin{proof}
+        对第一条，设\(B\subseteq A\in\mathscr{F}\).
+        \(B\)的任意有限子集也是\(A\)的有限子集，
+        所以属于\(\mathscr{F}\).
+        再由有限特征的定义得到\(B\in\mathscr{F}\).
+
+        对第二条，由非空性取\(A\in\mathscr{F}\)，
+        再由第一条得到\(\emptyset\in\mathscr{F}\).
+        设\(\mathscr{B}\subseteq\mathscr{F}\)是套，
+        记\(V=\bigcup\mathscr{B}\).
+        任取\(V\)的有限子集\(K\).
+        若\(K=\emptyset\)，则\(K\in\mathscr{F}\).
+        若\(K\neq\emptyset\)，
+        将其元素列为\(x_1,\dotsc,x_n\)，
+        分别取\(B_1,\dotsc,B_n\in\mathscr{B}\)使\(x_j\in B_j\).
+        这只是有限次选取，
+        可逐次完成.
+        在套的这有限个成员中逐次比较包含关系，
+        得到一个包含其余所有成员的\(B_k\).
+        于是\(K\subseteq B_k\in\mathscr{F}\)，
+        由第一条可得\(K\in\mathscr{F}\).
+        因为\(V\)的每个有限子集都属于\(\mathscr{F}\)，
+        有限特征给出\(V\in\mathscr{F}\).
+        当\(\mathscr{B}=\emptyset\)时，
+        \(V=\emptyset\in\mathscr{F}\)，
+        因而空套也已包含在证明中.
+    \end{proof}
+\end{lemma}
+
+\begin{example}
+    在上条引理的第二项中，
+    能否去掉\(\mathscr{F}\neq\emptyset\)的条件？
+    \begin{solution}
+        不能.
+        空集族\(\mathscr{F}=\emptyset\)具有有限特征：
+        对任意集合\(F\)，
+        \(F\in\mathscr{F}\)为假，
+        而“\(F\)的每个有限子集属于\(\mathscr{F}\)”也为假，
+        因为\(\emptyset\)是\(F\)的有限子集且\(\emptyset\notin\mathscr{F}\).
+        因此定义中的等价式对每个\(F\)成立.
+        但是\(\mathscr{B}=\emptyset\)是包含于\(\mathscr{F}\)的套，
+        其并为\(\emptyset\)，
+        而\(\emptyset\notin\mathscr{F}\).
+        所以第二项若不加非空条件便不成立.
+    \end{solution}
+\end{example}
+
 \begin{theorem}[图基引理]
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P37 定义1.8.4
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P38 定理1.8.4
-非空的具有有限特征的集族中必有关于\(\subseteq\)的最大元.
-%@see: https://proofwiki.org/wiki/Tukey%27s_Lemma
-%@see: https://planetmath.org/tukeyslemma
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P38 定理1.8.4
+    非空的具有有限特征的集族中有关于\(\subseteq\)的极大元.
+    \begin{proof}
+        设\(\mathscr{F}\neq\emptyset\)具有有限特征.
+        由\cref{lemma:无穷直积.有限特征封闭性}，
+        \(\mathscr{F}\)中每个套的并仍属于\(\mathscr{F}\)，
+        包括空套的并.
+        因此\(\mathscr{F}\)满足\cref{theorem:无穷直积.佐恩引理}的假设，
+        故有关于\(\subseteq\)的极大元.
+    \end{proof}
 \end{theorem}
 
 \begin{corollary}
-%@see: 《点集拓扑讲义（第四版）》（熊金城） P40 推论1.8.5
-若\(\mathscr{F}\)是一个具有有限特征的集族，并且\(A \in \mathscr{F}\)，
-则\(\mathscr{F}\)中有一个包含\(A\)的关于\(\subseteq\)的最大元.
+    %@see: 《点集拓扑讲义（第四版）》（熊金城） P40 推论1.8.5
+    若\(\mathscr{F}\)具有有限特征且\(A\in\mathscr{F}\)，
+    则\(\mathscr{F}\)有一个包含\(A\)的关于\(\subseteq\)的极大元.
+    \begin{proof}
+        令\(U=\bigcup\mathscr{F}\)，并构造
+        \begin{align*}
+            \mathscr{G}&\defeq\Set{C\in\Powerset(U-A)\given A\cup C\in\mathscr{F}}.
+        \end{align*}
+        由于\(A\in\mathscr{F}\)，
+        有\(\emptyset\in\mathscr{G}\).
+        设\(\mathscr{B}\subseteq\mathscr{G}\)是套.
+        若\(\mathscr{B}=\emptyset\)，
+        则\(\bigcup\mathscr{B}=\emptyset\in\mathscr{G}\).
+        若\(\mathscr{B}\neq\emptyset\)，
+        则\(\Set{A\cup C\given C\in\mathscr{B}}\)是\(\mathscr{F}\)中的套，
+        由\cref{lemma:无穷直积.有限特征封闭性}可得
+        \begin{align*}
+            A\cup\bigcup\mathscr{B}
+            &=\bigcup\Set{A\cup C\given C\in\mathscr{B}}\in\mathscr{F}.
+        \end{align*}
+        同时\(\bigcup\mathscr{B}\subseteq U-A\)，
+        所以\(\bigcup\mathscr{B}\in\mathscr{G}\).
+        由\cref{theorem:无穷直积.佐恩引理}，
+        \(\mathscr{G}\)有极大元\(C_0\).
+        令\(M=A\cup C_0\)，
+        则\(A\subseteq M\in\mathscr{F}\).
+        若\(M\subseteq B\in\mathscr{F}\)，
+        则\(B-A\in\mathscr{G}\)且\(C_0\subseteq B-A\).
+        极大性给出\(B-A=C_0\)，
+        因而\(B=A\cup(B-A)=A\cup C_0=M\).
+        所以\(M\)就是所求的极大元.
+    \end{proof}
 \end{corollary}

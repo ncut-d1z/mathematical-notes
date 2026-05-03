@@ -1,512 +1,511 @@
 \section{等价关系}
 \subsection{关系的性质}
 \begin{definition}
-%@see: 《Elements of Set Theory》 P56
-设\(\rel{R}\)是集合\(A\)上的二元关系.
-\begin{enumerate}
-	\item 若\begin{equation*}
-		(\forall x \in A)
-		[x\rel{R}x],
-	\end{equation*}
-	则称“关系\(\rel{R}\)具有\DefineConcept{自反性}（\(\rel{R}\) is \emph{reflexive}）”；
-	否则称“关系\(\rel{R}\)不具有自反性（\(\rel{R}\) is \emph{irreflexive}）”
-	或“关系\(\rel{R}\)具有\DefineConcept{反自反性}”.
+    %@see: 《Elements of Set Theory》 P56
+    设\(\rel{R}\)是集合\(A\)上的二元关系.
+    \begin{enumerate}
+        \item 若
+        \begin{align*}
+            (\forall x\in A)[x\rel{R}x],
+        \end{align*}
+        则称“关系\(\rel{R}\)具有\DefineConcept{自反性}（reflexive）”.
+        不具有自反性是指\((\exists x\in A)[\neg(x\rel{R}x)]\).
+        若
+        \begin{align*}
+            (\forall x\in A)[\neg(x\rel{R}x)],
+        \end{align*}
+        则称“关系\(\rel{R}\)具有\DefineConcept{反自反性}（irreflexive）”.
+        反自反性不是自反性的简单否定.
 
-	\item 若\begin{equation*}
-		(\forall x,y \in A)
-		[x\rel{R}y \implies y\rel{R}x],
-	\end{equation*}
-	则称“关系\(\rel{R}\)具有\DefineConcept{对称性}（\(\rel{R}\) is \emph{symmetric}）”.
+        \item 若
+        \begin{align*}
+            (\forall x,y\in A)[x\rel{R}y\implies y\rel{R}x],
+        \end{align*}
+        则称“关系\(\rel{R}\)具有\DefineConcept{对称性}（symmetric）”.
 
-	\item 若\begin{equation*}
-		(\forall x,y \in A)
-		[x\rel{R}y \land y\rel{R}x \implies x = y],
-	\end{equation*}
-	则称“关系\(\rel{R}\)具有\DefineConcept{反对称性}（antisymmetric）”.
+        \item 若
+        \begin{align*}
+            (\forall x,y\in A)[x\rel{R}y\land y\rel{R}x\implies x=y],
+        \end{align*}
+        则称“关系\(\rel{R}\)具有\DefineConcept{反对称性}（antisymmetric）”.
 
-	\item 若\begin{equation*}
-		(\forall x,y,z \in A)
-		[x\rel{R}y \land y\rel{R}z \implies x\rel{R}z],
-	\end{equation*}
-	则称“关系\(\rel{R}\)具有\DefineConcept{传递性}（\(\rel{R}\) is \emph{transitive}）”.
-\end{enumerate}
+        \item 若
+        \begin{align*}
+            (\forall x,y,z\in A)[x\rel{R}y\land y\rel{R}z\implies x\rel{R}z],
+        \end{align*}
+        则称“关系\(\rel{R}\)具有\DefineConcept{传递性}（transitive）”.
+    \end{enumerate}
 \end{definition}
 
 \begin{proposition}
-设集合\(A\)上的二元关系\(\rel{R}\)同时具有对称性和传递性，
-则\(\rel{R}\)具有自反性.
-\begin{proof}
-假设\(x\rel{R}y\).
-由于\(\rel{R}\)具有对称性，
-所以\(y\rel{R}x\).
-又因为\(\rel{R}\)具有传递性，
-那么由\(x\rel{R}y\)和\(y\rel{R}x\)可以推得\(x\rel{R}x\)，
-这就说明\(\rel{R}\)具有自反性.
-\end{proof}
+    设集合\(A\)上的二元关系\(\rel{R}\)同时具有对称性和传递性.
+    则\(\rel{R}\)在\(A\)上具有自反性的充分必要条件是\(\fld\rel{R}=A\).
+    \begin{proof}
+        若\(\rel{R}\)在\(A\)上具有自反性，
+        则每个\(x\in A\)都满足\(x\rel{R}x\)，
+        从而\(A\subseteq\dom\rel{R}\subseteq\fld\rel{R}\).
+        又由\(\rel{R}\subseteq A\times A\)可得\(\fld\rel{R}\subseteq A\)，
+        因此\(\fld\rel{R}=A\).
+
+        反之，设\(\fld\rel{R}=A\)，
+        任取\(x\in A\).
+        由域的定义，存在\(y\in A\)，
+        使得\(x\rel{R}y\)或\(y\rel{R}x\).
+        对称性保证这两个关系同时成立，
+        再由传递性得到\(x\rel{R}x\).
+        因此\(\rel{R}\)在\(A\)上具有自反性.
+        当\(A=\emptyset\)时，
+        上述全称命题仍然成立.
+    \end{proof}
 \end{proposition}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P61 Exercise 32.
-设\(\rel{R}\)是集合\(A\)上的二元关系.
-证明：\begin{enumerate}
-	\item \(\rel{R}\)具有对称性的充分必要条件是
-	\(\rel{R}^{-1} \subseteq \rel{R}\).
-	\item \(\rel{R}\)具有传递性的充分必要条件是
-	\(\rel{R}\circ\rel{R} \subseteq \rel{R}\).
-	%@see: https://math.stackexchange.com/q/1386714/591741
-\end{enumerate}
-\begin{proof}
-易见
-\begin{align*}
-	\rel{R}^{-1} \subseteq \rel{R}
-	&\iff
-	(\forall x,y \in A)[
-		x\rel{R}^{-1}y \implies x\rel{R}y
-	] \\
-	&\iff
-	(\forall x,y \in A)[
-		y\rel{R}x \implies x\rel{R}y
-	] \\
-	&\iff
-	\text{\(\rel{R}\)具有对称性}. \\
-	\rel{R}\circ\rel{R} \subseteq \rel{R}
-	&\iff
-	(\forall x,z \in A)
-	[
-		x(\rel{R}\circ\rel{R})z
-		\implies
-		x\rel{R}z
-	] \\
-	&\iff
-	(\forall x,z \in A)
-	[
-		(\exists y \in A)[x\rel{R}y \land y\rel{R}z]
-		\implies
-		x\rel{R}z
-	] \\
-	&\iff%FIXME 这里我还不太理解怎样才能把(\exists y \in A)改写成(\forall y \in A)
-	(\forall x,y,z \in A)
-	[
-		x\rel{R}y \land y\rel{R}z
-		\implies
-		x\rel{R}z
-	] \\
-	&\iff
-	\text{\(\rel{R}\)具有传递性}.
-	\qedhere
-\end{align*}
-\end{proof}
+    判断下述断言是否成立：对称且传递的二元关系必在其底集上自反.
+    \begin{solution}
+        该断言不成立.
+        取两个不同的元素\(a,b\)，令
+        \begin{align*}
+            A&=\{a,b\},\\
+            \rel{R}&=\{\opair{a,a}\}.
+        \end{align*}
+        \(\rel{R}\)中唯一的有序对交换坐标后仍属于\(\rel{R}\)，
+        所以\(\rel{R}\)具有对称性.
+        若\(x\rel{R}y\)且\(y\rel{R}z\)，
+        则\(x=y=z=a\)，
+        从而\(x\rel{R}z\)，
+        所以\(\rel{R}\)也具有传递性.
+        但是\(\opair{b,b}\notin\rel{R}\)，
+        故它在\(A\)上不自反.
+        同时\(\opair{a,a}\in\rel{R}\)，
+        所以它也不反自反.
+        此例还说明“不自反”和“反自反”不能混为一谈.
+        原断言的问题在于：不能为任意\(x\in A\)直接假设存在\(y\)使\(x\rel{R}y\).
+    \end{solution}
 \end{example}
-实际上，由\cref{theorem:集合论.与逆相等的充分必要条件} 可知，
-\(\rel{R}^{-1} = \rel{R}\)也是\(\rel{R}\)具有对称性的充分必要条件.
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P61 Exercise 33.
-设\(\rel{R}\)是集合\(A\)上的二元关系.
-证明：\(\rel{R}\)同时具有对称性和传递性的充分必要条件是
-\(\rel{R} = \rel{R}^{-1}\circ\rel{R}\).
-\begin{proof}
-先证充分性.
-由\cref{theorem:集合论.复合的逆.推论1}
-可知\((\rel{R}^{-1}\circ\rel{R})^{-1}=\rel{R}^{-1}\circ\rel{R}\)，
-即\(\rel{R}^{-1}\circ\rel{R}\)具有对称性，
-那么由\(\rel{R}=\rel{R}^{-1}\circ\rel{R}\)
-推得\(\rel{R}\)具有对称性，
-从而有\(\rel{R}^{-1}=\rel{R}\)，
-所以\(\rel{R}=\rel{R}^{-1}\circ\rel{R}
-=\rel{R}\circ\rel{R}\)，
-这就说明\(\rel{R}\)还具有传递性.
+    %@see: 《Elements of Set Theory》 P61 Exercise 32.
+    设\(\rel{R}\)是集合\(A\)上的二元关系.
+    证明：
+    \begin{enumerate}
+        \item \(\rel{R}\)具有对称性的充分必要条件是\(\rel{R}^{-1}\subseteq\rel{R}\).
+        \item \(\rel{R}\)具有传递性的充分必要条件是\(\rel{R}\circ\rel{R}\subseteq\rel{R}\).
+    \end{enumerate}
+    \begin{proof}
+        对于第一条，由逆关系的定义可得
+        \begin{align*}
+            \rel{R}^{-1}\subseteq\rel{R}
+            &\iff(\forall x,y\in A)[y\rel{R}x\implies x\rel{R}y]\\
+            &\iff\text{\(\rel{R}\)具有对称性}.
+        \end{align*}
+        最后一步只是交换全称量词中变量\(x,y\)的名称.
 
-再证必要性.
-假设\(\rel{R}\)同时具有对称性和传递性，
-那么有\(\rel{R}^{-1}=\rel{R}\)且\(\rel{R}\circ\rel{R}\subseteq\rel{R}\)，
-于是有\(\rel{R}^{-1}\circ\rel{R}\subseteq\rel{R}\).
-接下来，任取\(\opair{x,y}\in\rel{R}\).
-因为\(\rel{R}\)具有对称性，
-所以\(y\rel{R}x\)，
-从而\(x\rel{R}^{-1}y\).
-又因为\(\rel{R}\)具有传递性，
-于是\(\rel{R}\)具有自反性，
-即\(y\rel{R}y\).
-于是由\(x\rel{R}^{-1}y\)和\(y\rel{R}y\)
-可得\(x(\rel{R}^{-1}\circ\rel{R})y\).
-根据外延公理可知\(\rel{R}\subseteq\rel{R}^{-1}\circ\rel{R}\).
-因此\(\rel{R}^{-1}\circ\rel{R}=\rel{R}\).
-\end{proof}
-%@see: https://math.stackexchange.com/a/3978349/591741
+        对于第二条，先设\(\rel{R}\circ\rel{R}\subseteq\rel{R}\).
+        任取\(x,y,z\in A\)，
+        若\(x\rel{R}y\)且\(y\rel{R}z\)，
+        则\(\opair{x,z}\in\rel{R}\circ\rel{R}\subseteq\rel{R}\).
+        因此\(\rel{R}\)具有传递性.
+        反之，设\(\rel{R}\)具有传递性，
+        任取\(\opair{x,z}\in\rel{R}\circ\rel{R}\).
+        存在\(y\in A\)使\(x\rel{R}y\)且\(y\rel{R}z\)，
+        从而\(x\rel{R}z\).
+        所以\(\rel{R}\circ\rel{R}\subseteq\rel{R}\).
+
+        这里的量词转换不是把存在量词直接换成全称量词，
+        而是利用下述逻辑等价式：当\(Q\)不含自由变量\(y\)时，
+        \begin{align*}
+            [((\exists y\in A)P(y))\implies Q]
+            &\iff(\forall y\in A)[P(y)\implies Q].
+        \end{align*}
+        左式成立时，每个满足\(P(y)\)的\(y\)都能给出存在性，
+        因而推出\(Q\).
+        右式成立且存在这样的\(y\)时，
+        把它代入全称命题即可推出\(Q\).
+        若不存在这样的\(y\)，
+        两边的蕴含命题均成立.
+        在本题中，固定\(x,z\)，
+        取\(P(y)\)为\(x\rel{R}y\land y\rel{R}z\)，
+        取\(Q\)为\(x\rel{R}z\)即可.
+    \end{proof}
+\end{example}
+实际上，由\cref{theorem:集合论.与逆相等的充分必要条件}可知，
+\(\rel{R}^{-1}=\rel{R}\)也是\(\rel{R}\)具有对称性的充分必要条件.
+
+\begin{example}
+    %@see: 《Elements of Set Theory》 P61 Exercise 33.
+    设\(\rel{R}\)是集合\(A\)上的二元关系.
+    证明：\(\rel{R}\)同时具有对称性和传递性的充分必要条件是
+    \(\rel{R}=\rel{R}^{-1}\circ\rel{R}\).
+    \begin{proof}
+        先证充分性.
+        根据复合关系的定义，
+        \(\opair{x,y}\in\rel{R}^{-1}\circ\rel{R}\)等价于存在\(z\in A\)，
+        使得\(x\rel{R}z\)且\(y\rel{R}z\).
+        这个条件对\(x,y\)对称，
+        因此\(\rel{R}=\rel{R}^{-1}\circ\rel{R}\)具有对称性.
+        于是\(\rel{R}^{-1}=\rel{R}\)，
+        进而
+        \begin{align*}
+            \rel{R}\circ\rel{R}
+            &=\rel{R}^{-1}\circ\rel{R}=\rel{R}.
+        \end{align*}
+        由上例可知\(\rel{R}\)具有传递性.
+
+        再证必要性.
+        由对称性和传递性可得
+        \begin{align*}
+            \rel{R}^{-1}\circ\rel{R}
+            &=\rel{R}\circ\rel{R}\subseteq\rel{R}.
+        \end{align*}
+        任取\(\opair{x,y}\in\rel{R}\).
+        对称性给出\(y\rel{R}x\)，
+        再由\(y\rel{R}x\)和\(x\rel{R}y\)得到\(y\rel{R}y\).
+        因此\(x\rel{R}y\)和\(y\rel{R}y\)以\(y\)为共同的第二坐标，
+        从而\(\opair{x,y}\in\rel{R}^{-1}\circ\rel{R}\).
+        所以反向包含也成立.
+        此处只证明已有关系中的坐标满足自反性，
+        没有假设\(\rel{R}\)在整个\(A\)上自反.
+    \end{proof}
 \end{example}
 
 \subsection{等价关系}
 \begin{definition}
-设\(\rel{R}\)是集合\(A\)上的二元关系，即\(\rel{R} \subseteq A^2\).
-如果\(\rel{R}\)同时具有自反性、对称性、传递性，
-则称“\(\rel{R}\)是\(A\)上的\DefineConcept{等价关系}（equivalence relation）”.
+    设\(\rel{R}\)是集合\(A\)上的二元关系，
+    即\(\rel{R}\subseteq A\times A\).
+    如果\(\rel{R}\)同时具有自反性、对称性、传递性，
+    则称“\(\rel{R}\)是\(A\)上的\DefineConcept{等价关系}（equivalence relation）”.
 \end{definition}
 
 \subsection{等价类划分}
 \begin{theorem}\label{theorem:集合论.划分集合获得等价关系}
-%@see: 《Elements of Set Theory》 P56 Theorem 3M
-如果关系\(\rel{R}\)具有对称性和传递性，
-那么\(\rel{R}\)是\(\fld \rel{R}\)上的等价关系.
-\begin{proof}
-任意关系\(\rel{R}\)（不论它是三元的还是四元的）都是它的域上的二元关系，
-这是因为\begin{equation*}
-	\rel{R}
-	\subseteq \dom \rel{R} \times \ran \rel{R}
-	\subseteq \fld \rel{R} \times \fld \rel{R}.
-\end{equation*}
-已知\(\rel{R}\)具有对称性和传递性，
-要证\(\rel{R}\)是\(\fld \rel{R}\)上的等价关系，
-只需证\(\rel{R}\)在\(\fld \rel{R}\)上具有自反性.
-由于\begin{align*}
-	x \in \dom \rel{R}
-	&\implies
-	(\exists y)[x\rel{R}y] \\
-	&\implies
-	(\exists y)[x\rel{R}y \land y\rel{R}x]
-		\tag{对称性} \\
-	&\implies
-	x \rel{R} x,
-		\tag{传递性}
-\end{align*}
-可知\(\rel{R}\)在\(\dom \rel{R}\)上具有自反性；
-同理，\(x \in \ran \rel{R} \implies x \rel{R} x\)，
-即\(\rel{R}\)在\(\ran \rel{R}\)上具有自反性；
-所以，\(\rel{R}\)在\(\dom \rel{R} \cup \ran \rel{R} = \fld \rel{R}\)上具有自反性.
-\end{proof}
+    %@see: 《Elements of Set Theory》 P56 Theorem 3M
+    如果关系\(\rel{R}\)具有对称性和传递性，
+    那么\(\rel{R}\)是\(\fld\rel{R}\)上的等价关系.
+    \begin{proof}
+        由定义域、值域和域的定义可得
+        \begin{align*}
+            \rel{R}
+            &\subseteq\dom\rel{R}\times\ran\rel{R}
+            \subseteq\fld\rel{R}\times\fld\rel{R}.
+        \end{align*}
+        因而\(\rel{R}\)是\(\fld\rel{R}\)上的二元关系.
+        任取\(x\in\fld\rel{R}\)，
+        存在\(y\)使\(x\rel{R}y\)或\(y\rel{R}x\).
+        对称性给出\(x\rel{R}y\)和\(y\rel{R}x\)，
+        传递性给出\(x\rel{R}x\).
+        所以\(\rel{R}\)在其域上自反，
+        再结合已有的对称性、传递性即得结论.
+        若\(\rel{R}=\emptyset\)，
+        则\(\fld\rel{R}=\emptyset\)，
+        三个全称条件均成立.
+    \end{proof}
 \end{theorem}
-一般而言，如果\(\rel{R}\)是一个在\(A\)上兼具对称性和传递性的关系，
-它可能不是在\(A\)上的等价关系.
-根据\cref{theorem:集合论.划分集合获得等价关系} 我们知道，
-这样的\(\rel{R}\)在\(\fld \rel{R}\)上具有自反性，
-但\(\fld \rel{R}\)可能只是\(A\)的一个小小的子集.
-
-利用\cref{theorem:集合论.划分集合获得等价关系}，
-我们学会通过对集合\(A\)的划分诱导出一个等价关系.
-接下来我们来研究怎么逆转这个过程，
-也就是说，已知\(A\)上的等价关系，求\(A\)的划分.
+一般而言，\(\fld\rel{R}\)可能是底集\(A\)的真子集，
+因此上述定理不能断言\(\rel{R}\)在整个\(A\)上自反.
+接下来研究如何由\(A\)上的等价关系得到\(A\)的划分.
 
 \begin{definition}
-%@see: 《Elements of Set Theory》 P57 Definition
-%@see: [Functional Analysis Lecture Notes - Quotient Spaces - Christopher Heil](https://heil.math.gatech.edu/handouts/quotient.pdf)
-已知\(\rel{R}\)是一个等价关系.
-对于\(x \in \fld \rel{R}\)，集合\begin{equation*}
-	\Set{ y \given x \rel{R} y }
-\end{equation*}
-称为“\(x\)（在关系\(\rel{R}\)下）的\DefineConcept{等价类}%
-（the \emph{equivalence class} of \(x\) (under the relation \(\rel{R}\))，
-the \emph{equivalence class} of \(x\) (modulo \(\rel{R}\))）”，
-记作\(\EquivalenceClassBH{x}[\rel{R}]\)
-或\(\EquivalenceClassBT{x}[\rel{R}]\).
-把等价类\(\EquivalenceClassBH{x}[\rel{R}]\)中的任意一个元素\(y\)
-称为“\(\EquivalenceClassBH{x}[\rel{R}]\)的\DefineConcept{代表}（representative）”.
-
-对不强调关系\(\rel{R}\)时，
-也可将上述等价类
-简记为\(\EquivalenceClassO{x}\)
-或\(\EquivalenceClassB{x}\).
+    %@see: 《Elements of Set Theory》 P57 Definition
+    已知\(\rel{R}\)是一个等价关系.
+    对于\(x\in\fld\rel{R}\)，集合
+    \begin{align*}
+        \EquivalenceClassBH{x}[\rel{R}]
+        &\defeq\Set{y\in\fld\rel{R}\given x\rel{R}y},
+    \end{align*}
+    称为“\(x\)在关系\(\rel{R}\)下的\DefineConcept{等价类}（equivalence class）”，
+    也记作\(\EquivalenceClassBT{x}[\rel{R}]\).
+    把该等价类中的任意元素称为它的\DefineConcept{代表}（representative）.
+    不强调关系\(\rel{R}\)时，
+    可简记为\(\EquivalenceClassO{x}\)或\(\EquivalenceClassB{x}\).
 \end{definition}
+虽然这里称作等价“类”，
+但上述集合可由子集公理在\(\fld\rel{R}\)中分离得到.
+若\(\rel{R}\)是\(A\)上的等价关系，
+那么\(\fld\rel{R}=A\)，
+各等价类都是\(A\)的子集.
+相应的等价类集族也可在\(\Powerset A\)中分离得到.
 
-虽然这里把\(\EquivalenceClassBH{x}[\rel{R}]\)叫做等价“类”，
-实际上它是实实在在的集合，
-这一地位可以由子集公理确保无虞，
-这是因为\(\EquivalenceClassBH{x}[\rel{R}] \subseteq \ran \rel{R}\).
-
-我们还可以进一步构造等价类的集合，例如\begin{equation*}
-	\Set{ \EquivalenceClassBH{x}[\rel{R}] \given x \in A },
-\end{equation*}
-因为这个集合包含于\(\Powerset(\ran \rel{R})\).
-
-根据等价类的定义，容易得到以下性质.
 \begin{property}
-设\(\rel{R}\)是\(A\)上的一个等价关系，则有：
-\begin{enumerate}
-	\item \(x \in A
-	\implies \EquivalenceClassBH{x}[\rel{R}] \neq \emptyset\).
+    设\(\rel{R}\)是\(A\)上的等价关系，
+    则有：
+    \begin{enumerate}
+        \item 对每个\(x\in A\)，
+        \(x\in\EquivalenceClassBH{x}[\rel{R}]\)，
+        从而\(\EquivalenceClassBH{x}[\rel{R}]\neq\emptyset\).
+        \item 对任意\(x,y\in A\)，
+        \(\EquivalenceClassBH{x}[\rel{R}]\)与\(\EquivalenceClassBH{y}[\rel{R}]\)相等或不相交.
+        \item 对任意\(x,y\in A\)，
+        \begin{align*}
+            \EquivalenceClassBH{x}[\rel{R}]=\EquivalenceClassBH{y}[\rel{R}]
+            &\implies x\rel{R}y\\
+            &\iff x\in\EquivalenceClassBH{y}[\rel{R}]
+            \land y\in\EquivalenceClassBH{x}[\rel{R}].
+        \end{align*}
+        \item 若\(\EquivalenceClassBH{x}[\rel{R}]\neq\EquivalenceClassBH{y}[\rel{R}]\)，
+        则\(\EquivalenceClassBH{x}[\rel{R}]\cap\EquivalenceClassBH{y}[\rel{R}]=\emptyset\).
+    \end{enumerate}
+    \begin{proof}
+        第一条直接来自自反性\(x\rel{R}x\)和等价类的定义.
 
-	\item \(x,y \in A
-	\implies \EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]
-	\lor \EquivalenceClassBH{x}[\rel{R}] \cap \rel{R}[y] = \emptyset\).
+        证明第二条.
+        若两个等价类有共同元素\(t\)，
+        则\(x\rel{R}t\)且\(y\rel{R}t\).
+        由对称性和传递性得到\(x\rel{R}y\)及\(y\rel{R}x\).
+        对任意\(z\in\EquivalenceClassBH{x}[\rel{R}]\)，
+        由\(y\rel{R}x\)和\(x\rel{R}z\)得到\(y\rel{R}z\)，
+        因而\(z\in\EquivalenceClassBH{y}[\rel{R}]\).
+        交换\(x,y\)后也得到反向包含，
+        所以两个等价类相等.
+        若没有共同元素，
+        则它们的交集为空集.
 
-	\item \((\forall x,y \in A)
-	[
-		\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]
-		\implies
-		x \rel{R} y
-		\iff
-		x \in \rel{R}[y] \land y \in \EquivalenceClassBH{x}[\rel{R}]
-	]\).
+        对于第三条，若两个等价类相等，
+        则由\(y\in\EquivalenceClassBH{y}[\rel{R}]\)得到\(y\in\EquivalenceClassBH{x}[\rel{R}]\)，
+        从而\(x\rel{R}y\).
+        而\(x\rel{R}y\)由对称性推出\(y\rel{R}x\)，
+        因此同时推出所写的两个属于关系.
+        反过来，\(y\in\EquivalenceClassBH{x}[\rel{R}]\)本身就推出\(x\rel{R}y\).
 
-	\item \((\forall x,y \in A)
-	[
-		\EquivalenceClassBH{x}[\rel{R}] \neq \rel{R}[y]
-		\implies
-		\EquivalenceClassBH{x}[\rel{R}] \cap \rel{R}[y] = \emptyset
-	]\).
-\end{enumerate}
+        第四条是第二条的直接推论：若两个等价类不相等，
+        就只能不相交.
+        这里各条均量化于\(A\)中的元素，
+        当\(A=\emptyset\)时同样成立.
+    \end{proof}
 \end{property}
 
 \begin{lemma}\label{theorem:集合论.相等的等价类的代表等价}
-%@see: 《Elements of Set Theory》 P57 Lemma 3N
-设\(\rel{R}\)是\(A\)上的一个等价关系，\(x,y \in A\)，
-那么\begin{equation*}
-	\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]
-	\iff
-	x \rel{R} y.
-\end{equation*}
-\begin{proof}
-先证“\(
-	\EquivalenceClassBH{x}[\rel{R}] = \EquivalenceClassBH{y}[\rel{R}]
-	\implies
-	x \rel{R} y
-\)”.
-首先，设\(\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]\).
-由于等价关系\(\rel{R}\)具有自反性，\(y \rel{R} y\)，\(y \in \rel{R}[y]\)；
-那么由\(\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]\)就有\(y \in \EquivalenceClassBH{x}[\rel{R}]\)；
-根据等价类\(\EquivalenceClassBH{x}[\rel{R}]\)的定义，便得\(x \rel{R} y\).
+    %@see: 《Elements of Set Theory》 P57 Lemma 3N
+    设\(\rel{R}\)是\(A\)上的等价关系，\(x,y\in A\)，
+    则
+    \begin{align*}
+        \EquivalenceClassBH{x}[\rel{R}]=\EquivalenceClassBH{y}[\rel{R}]
+        &\iff x\rel{R}y.
+    \end{align*}
+    \begin{proof}
+        若两个等价类相等，
+        由自反性\(y\in\EquivalenceClassBH{y}[\rel{R}]\)可得\(y\in\EquivalenceClassBH{x}[\rel{R}]\)，
+        即\(x\rel{R}y\).
 
-再证“\(
-	x \rel{R} y
-	\implies
-	\EquivalenceClassBH{x}[\rel{R}] = \EquivalenceClassBH{y}[\rel{R}]
-\)”.
-然后，设\(x \rel{R} y\).
-任取\(t\)，若有\(t \in \rel{R}[y]\)，
-根据等价类\(\rel{R}[y]\)的定义，
-必有\(y \rel{R} t\)；
-再根据假设条件\(x \rel{R} y\)，以及等价关系\(\rel{R}\)具有传递性，
-立即可得\(x \rel{R} t\)；
-那么根据等价类\(\EquivalenceClassBH{x}[\rel{R}]\)的定义，
-就有\(t \in \EquivalenceClassBH{x}[\rel{R}]\)；
-因此，\(\rel{R}[y] \subseteq \EquivalenceClassBH{x}[\rel{R}]\).
-又因为\(\rel{R}\)具有对称性，
-从\(x \rel{R} y\)还可得到\(y \rel{R} x\)，
-参照上面的推导过程，交换\(x\)和\(y\)符号，
-不难得到\(\EquivalenceClassBH{x}[\rel{R}] \subseteq \rel{R}[y]\)，
-所以\(\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]\).
-\end{proof}
+        反之，设\(x\rel{R}y\).
+        若\(t\in\EquivalenceClassBH{y}[\rel{R}]\)，
+        则\(y\rel{R}t\)，
+        由传递性得到\(x\rel{R}t\)，
+        所以\(t\in\EquivalenceClassBH{x}[\rel{R}]\).
+        若\(t\in\EquivalenceClassBH{x}[\rel{R}]\)，
+        则由对称性给出的\(y\rel{R}x\)和\(x\rel{R}t\)得到\(y\rel{R}t\)，
+        所以\(t\in\EquivalenceClassBH{y}[\rel{R}]\).
+        两个包含关系合起来即得等式.
+    \end{proof}
 \end{lemma}
-从\cref{theorem:集合论.相等的等价类的代表等价} 可以看出，
-相等等价类的代表等价，代表等价的等价类相等.
 
 \begin{definition}\label{definition:集合论.划分的定义}
-%@see: 《Elements of Set Theory》 P57 Definition
-设\(A,\Pi\)都是集合.
-若\begin{itemize}
-	\item \(\Pi\)中的元素都是\(A\)的非空子集，即\begin{equation*}
-		(\forall p \in \Pi)
-		[
-			p \neq \emptyset
-			\land
-			p \subseteq A
-		];
-	\end{equation*}
-
-	\item \(\Pi\)中的元素两两互斥，即\begin{equation*}
-		(\forall p,q \in \Pi)
-		[
-			p \cap q = \emptyset
-		];
-	\end{equation*}
-
-	\item \(A\)中的元素是\(\Pi\)中某个元素的元素，即\begin{equation*}
-		(\forall a \in A)
-		(\exists p \in \Pi)
-		[
-			a \in p
-		],
-		\quad\text{或}\quad
-		\bigcup\Pi = A,
-	\end{equation*}
-\end{itemize}
-则称“\(\Pi\)是\(A\)的一个\DefineConcept{划分}（partition）”.
+    %@see: 《Elements of Set Theory》 P57 Definition
+    设\(A,\Pi\)都是集合.
+    若满足以下三个条件，
+    则称“\(\Pi\)是\(A\)的一个\DefineConcept{划分}（partition）”：
+    \begin{enumerate}
+        \item \(\Pi\)的成员都是\(A\)的非空子集：
+        \begin{align*}
+            (\forall p\in\Pi)[p\neq\emptyset\land p\subseteq A];
+        \end{align*}
+        \item \(\Pi\)中不同的成员互不相交：
+        \begin{align*}
+            (\forall p,q\in\Pi)[p\neq q\implies p\cap q=\emptyset];
+        \end{align*}
+        \item \(\Pi\)的成员覆盖\(A\)：
+        \begin{align*}
+            \bigcup\Pi&=A.
+        \end{align*}
+    \end{enumerate}
+    第二条不能省略\(p\neq q\)，
+    否则取\(q=p\)将迫使每个成员都是空集.
 \end{definition}
 
 \begin{theorem}
-%@see: 《Elements of Set Theory》 P57 Theorem 3P
-设\(\rel{R}\)是\(A\)上的一个等价关系，
-那么由所有等价类组成的集合\begin{equation*}
-	\Pi \defeq \Set{ \EquivalenceClassBH{x}[\rel{R}] \given x \in A }
-\end{equation*}
-就是\(A\)的一个划分.
-\begin{proof}
-对于任一等价类\(\EquivalenceClassBH{x}[\rel{R}]\)，
-由于总有\(x \in \EquivalenceClassBH{x}[\rel{R}]\)，
-它永远不可能是空集；
-又因为\(\rel{R}\)是\(A\)上的二元关系，\(\rel{R} \subseteq A^2\)，
-\(\EquivalenceClassBH{x}[\rel{R}] \subseteq \ran \rel{R}\)，
-所以\(\EquivalenceClassBH{x}[\rel{R}]\)一定是\(A\)的子集.
-因此，\(\Pi\)满足\cref{definition:集合论.划分的定义} 中的第1条和第3条，
-也就是说，在这里我们只需要证明第2条：\(\Pi\)中的元素是互不重叠的.
-用反证法，设\(\EquivalenceClassBH{x}[\rel{R}] \neq \rel{R}[y]\ (x,y \in A)\)，
-而且存在\(t \in \EquivalenceClassBH{x}[\rel{R}] \cap \rel{R}[y]\)，
-于是有\begin{equation*}
-	x \rel{R} t \land y \rel{R} t,
-	\quad\text{即}\quad
-	x \rel{R} y,
-\end{equation*}
-再根据\cref{theorem:集合论.相等的等价类的代表等价}，
-必有\(\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]\)，
-即\(\EquivalenceClassBH{x}[\rel{R}],\rel{R}[y]\)是同一个元素，矛盾！
-\end{proof}
+    %@see: 《Elements of Set Theory》 P57 Theorem 3P
+    设\(\rel{R}\)是\(A\)上的等价关系，
+    那么由所有等价类组成的集合
+    \begin{align*}
+        \Pi&\defeq\Set{\EquivalenceClassBH{x}[\rel{R}]\given x\in A},
+    \end{align*}
+    是\(A\)的一个划分.
+    \begin{proof}
+        每个等价类都是\(A\)的子集，
+        因而可利用子集公理构造
+        \begin{align*}
+            \Pi&=\Set{C\in\Powerset A\given
+            (\exists x\in A)[C=\EquivalenceClassBH{x}[\rel{R}]]}.
+        \end{align*}
+        对每个\(x\in A\)，
+        自反性保证\(x\in\EquivalenceClassBH{x}[\rel{R}]\)，
+        所以每个成员非空，且\(A\subseteq\bigcup\Pi\).
+        又因每个成员包含于\(A\)，
+        所以\(\bigcup\Pi\subseteq A\).
+        因此\(\bigcup\Pi=A\).
+        根据前述性质，
+        两个不同的等价类互不相交.
+        这就验证了\cref{definition:集合论.划分的定义}中的全部条件.
+        若\(A=\emptyset\)，
+        则\(\Pi=\emptyset\)，
+        它仍然满足这三个条件.
+    \end{proof}
 \end{theorem}
 
 \begin{definition}\label{definition:集合论.商集的定义}
-%@see: 《Elements of Set Theory》 P58
-设\(\rel{R}\)是\(A\)上的一个等价关系.
-集合\begin{equation*}
-	\Set{ \EquivalenceClassBH{x}[\rel{R}] \given x \in A }
-\end{equation*}
-称为“\(A\)在\(\rel{R}\)下的\DefineConcept{划分}”，
-或称为“\(A\)对\(\rel{R}\)的\DefineConcept{商集}（quotient set）”，
-记作\(A/\rel{R}\)，
-读作“\(A\)余\(\rel{R}\)
-（\(A\) modulo \(\rel{R}\)）”.
-把映射\begin{equation*}
-	\phi\colon A \to A/\rel{R}, x \mapsto \EquivalenceClassBH{x}[\rel{R}]
-\end{equation*}
-称为\DefineConcept{自然映射}（natural map）
-% \DefineConcept{标准映射}
-或\DefineConcept{典范映射}（canonical map）.
+    %@see: 《Elements of Set Theory》 P58
+    设\(\rel{R}\)是\(A\)上的等价关系.
+    集合
+    \begin{align*}
+        A/\rel{R}&\defeq\Set{\EquivalenceClassBH{x}[\rel{R}]\given x\in A},
+    \end{align*}
+    称为“\(A\)在\(\rel{R}\)下的\DefineConcept{划分}”，
+    或“\(A\)对\(\rel{R}\)的\DefineConcept{商集}（quotient set）”.
+    \(A/\rel{R}\)读作“\(A\)余\(\rel{R}\)（\(A\) modulo \(\rel{R}\)）”.
+    映射
+    \begin{align*}
+        \phi\colon A\to A/\rel{R},\quad
+        x&\mapsto\EquivalenceClassBH{x}[\rel{R}],
+    \end{align*}
+    称为\DefineConcept{自然映射}（natural map）
+    或\DefineConcept{典范映射}（canonical map）.
 \end{definition}
-对于一个非空集合\(A\)，通过建立\(A\)上的一个等价关系\(\rel{R}\)，
-得到\(A\)对于\(\rel{R}\)的商集\(A/\rel{R}\)，
-进而研究商集\(A/\rel{R}\)的性质，
-这就是抽象代数的基本方法之一.
-
-一般地，典范映射不是单射.
+通过建立等价关系并研究相应的商集，
+可以把具有同一等价类的元素作为一个整体处理.
+一般而言，典范映射不是单射.
 
 \begin{proposition}\label{theorem:集合论.典范映射是满射}
-典范映射是满射.
-\begin{proof}
-设\(\rel{R}\)是\(A\)上的一个等价关系.
-下面证明典范映射\(
-	\phi\colon A \to A/\rel{R}, x \mapsto \EquivalenceClassBH{x}[\rel{R}]
-\)是满射.
-
-任取\(y \in A/\rel{R}\).
-根据商集的定义，\(A/\rel{R}\)的每一个元素都是\(A\)中某个元素在关系\(\rel{R}\)下的一个等价类.
-也就是说，存在\(a \in A\)，使得\(y = \EquivalenceClassBH{a}[\rel{R}]\).
-由典范映射的定义可知
-\(\phi(a) = \EquivalenceClassBH{a}[\rel{R}]\).
-因此\begin{equation*}
-	\ran\phi
-	= \Set{
-		y
-		\given
-		(\exists t)[\opair{t,y} \in \phi]
-	}
-	= \Set{
-		y
-		\given
-		(\exists t)
-		[
-			\EquivalenceClassBH{t}[\rel{R}]
-			= y
-		]
-	}
-	= A/\rel{R},
-\end{equation*}
-这就说明，典范映射\(\phi\)是满射.
-\end{proof}
+    典范映射是满射.
+    \begin{proof}
+        设\(\rel{R}\)是\(A\)上的等价关系，
+        \(\phi(x)=\EquivalenceClassBH{x}[\rel{R}]\).
+        任取\(C\in A/\rel{R}\).
+        根据商集的定义，
+        存在\(a\in A\)使\(C=\EquivalenceClassBH{a}[\rel{R}]\)，
+        因而\(\phi(a)=C\).
+        这就证明\(\phi\)是满射.
+        若\(A=\emptyset\)，
+        则商集也为空，
+        空映射\(\emptyset\to\emptyset\)同样是满射.
+    \end{proof}
 \end{proposition}
 
-%@see: 《Elements of Set Theory》 P59
-现在我们来研究如何在商集上定义映射.
-具体而言，设\(\rel{R}\)是\(A\)上的一个等价关系，
-映射\(F\colon A \to A\).
-我们想知道是否存在一个对应的映射\(\hat{F}\colon A/\rel{R} \to A/\rel{R}\)，
-使得对于任意\(x \in A\)，总有\begin{equation*}
-	\hat{F}(\EquivalenceClassBH{x}[\rel{R}]) = \rel{R}[F(x)].
-\end{equation*}
-这里我们可以尝试依靠在等价类\(\EquivalenceClassBH{x}[\rel{R}]\)中选择某个特定的元素\(x\)，
-定义等价类\(\EquivalenceClassBH{x}[\rel{R}]\)在映射\(\hat{F}\)下的值.
-不过，假如\(x_1,x_2\)都在同一个等价类中，
-那么除非\(F(x_1),F(x_2)\)也都在同一个等价类中，
-否则映射\(\hat{F}\)就不是良定的！
-
-%@see: 《Elements of Set Theory》 P60
-为了给出一个一般性结论，我们先了解这样一个概念：
-如果\begin{equation*}
-	(\forall x,y \in A)
-	[
-		x \rel{R} y
-		\implies
-		\opair{F(x),F(y)} \in \rel{R}
-	],
-\end{equation*}
-那么我们称“\(F\)和\(\rel{R}\) \DefineConcept{兼容}%
-（\(F\) is \emph{compatible} with \(\rel{R}\)）”.
+%@see: 《Elements of Set Theory》 P59--60
+现在研究如何在商集上定义映射.
+设\(\rel{R}\)是\(A\)上的等价关系，
+\(F\colon A\to A\)是映射.
+我们希望定义
+\begin{align*}
+    \hat{F}(\EquivalenceClassBH{x}[\rel{R}])
+    &=\EquivalenceClassBH{F(x)}[\rel{R}].
+\end{align*}
+为使这个规则不依赖代表的选取，
+同一等价类的两个代表在\(F\)下的像必须仍然等价.
+若
+\begin{align*}
+    (\forall x,y\in A)[x\rel{R}y\implies F(x)\rel{R}F(y)],
+\end{align*}
+则称“\(F\)和\(\rel{R}\)\DefineConcept{兼容}（compatible）”.
 
 \begin{theorem}\label{theorem:集合论.与等价关系兼容的映射的性质}
-%@see: 《Elements of Set Theory》 P60 Theorem 3Q
-设\(\rel{R}\)是\(A\)上的一个等价关系，映射\(F\colon A \to A\).
-如果\(F\)和\(\rel{R}\)兼容，
-那么存在一个唯一的映射\(\hat{F}\colon A/\rel{R} \to A/\rel{R}\)，使得\begin{equation*}
-	(\forall x \in A)
-	[
-		\hat{F}(\EquivalenceClassBH{x}[\rel{R}]) = \rel{R}[F(x)]
-	].
-\end{equation*}
-如果\(F\)和\(\rel{R}\)不兼容，
-那么不存在映射\(\hat{F}\)满足上述条件.
-\begin{proof}
-首先假设\(F\)和\(\rel{R}\)不兼容，即\begin{equation*}
-	(\exists x,y \in A)
-	[
-		x \rel{R} y
-		\land
-		\opair{F(x),F(y)} \notin \rel{R}
-	],
-\end{equation*}
-也即\begin{equation*}
-	(\exists x,y \in A)
-	[
-		\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]
-		\land
-		\rel{R}[F(x)] \neq \rel{R}[F(y)]
-	].
-\end{equation*}
-而要使\begin{equation*}
-	(\forall x \in A)
-	[
-		\hat{F}(\EquivalenceClassBH{x}[\rel{R}]) = \rel{R}[F(x)]
-	]
-\end{equation*}成立，
-必须有\begin{equation*}
-	\hat{F}(\EquivalenceClassBH{x}[\rel{R}])
-	= \rel{R}[F(x)]
-	\quad\text{和}\quad
-	\hat{F}(\rel{R}[y])
-	= \rel{R}[F(y)]
-\end{equation*}同时成立，
-但这是不可能的，
-毕竟上面两式的左边相等而右边不等.
+    %@see: 《Elements of Set Theory》 P60 Theorem 3Q
+    设\(\rel{R}\)是\(A\)上的等价关系，
+    \(F\colon A\to A\)是映射.
+    如果\(F\)和\(\rel{R}\)兼容，
+    则存在唯一的映射\(\hat{F}\colon A/\rel{R}\to A/\rel{R}\)，
+    使得
+    \begin{align*}
+        (\forall x\in A)\left[
+        \hat{F}(\EquivalenceClassBH{x}[\rel{R}])
+        =\EquivalenceClassBH{F(x)}[\rel{R}]\right].
+    \end{align*}
+    如果\(F\)和\(\rel{R}\)不兼容，
+    则不存在满足上述条件的映射.
+    \begin{proof}
+        先设\(F\)和\(\rel{R}\)兼容.
+        在集合\((A/\rel{R})\times(A/\rel{R})\)中使用子集公理，
+        构造关系
+        \begin{align*}
+            \hat{F}&\defeq\Set{
+            \opair{\EquivalenceClassBH{x}[\rel{R}],\EquivalenceClassBH{F(x)}[\rel{R}]}
+            \given x\in A}.
+        \end{align*}
+        每个\(C\in A/\rel{R}\)都有代表\(x\in A\)，
+        所以\(\dom\hat{F}=A/\rel{R}\).
+        若\(x,y\)代表同一个等价类，
+        则由\cref{theorem:集合论.相等的等价类的代表等价}和兼容性可得
+        \begin{align*}
+            \EquivalenceClassBH{x}[\rel{R}]=\EquivalenceClassBH{y}[\rel{R}]
+            &\implies x\rel{R}y\\
+            &\implies F(x)\rel{R}F(y)\\
+            &\implies\EquivalenceClassBH{F(x)}[\rel{R}]
+            =\EquivalenceClassBH{F(y)}[\rel{R}].
+        \end{align*}
+        因此\(\hat{F}\)是单值关系，
+        并且它的值域包含于\(A/\rel{R}\)，
+        故它是所要求的映射.
+        这种构造直接定义整个关系，
+        不需要同时为所有等价类选定代表.
 
-接下来，我们假设\(F\)和\(\rel{R}\)兼容.
-由于结论要求\(\opair{\EquivalenceClassBH{x}[\rel{R}],\rel{R}[F(x)]} \in \hat{F}\)，
-所以我们可以令\begin{equation*}
-	\hat{F} = \Set{ \opair{\EquivalenceClassBH{x}[\rel{R}],\rel{R}[F(x)]} \given x \in A }.
-\end{equation*}
-现在就需要证明关系\(\hat{F}\)是一个映射.
-考虑\(\opair{\EquivalenceClassBH{x}[\rel{R}],\rel{R}[F(x)]},
-\opair{\rel{R}[y],\rel{R}[F(y)]} \in \hat{F}\)，
-由于\begin{align*}
-	\EquivalenceClassBH{x}[\rel{R}] = \rel{R}[y]
-	&\implies
-	x \rel{R} y
-	\tag{\cref{theorem:集合论.相等的等价类的代表等价}} \\
-	&\implies
-	\opair{F(x),F(y)} \in \rel{R} \\
-	&\implies
-	\rel{R}[F(x)] = \rel{R}[F(y)],
-	\tag{\cref{theorem:集合论.相等的等价类的代表等价}}
-\end{align*}
-\(\hat{F}\)是单值的，
-可见\(\hat{F}\)确实是一个映射.
-显然有\(\dom \hat{F} = A/\rel{R}\)，\(\ran \hat{F} \subseteq A/\rel{R}\)，
-因此\(\hat{F}\)是从\(A/\rel{R}\)到\(A/\rel{R}\)的映射.
-%TODO 没有给出唯一性的证明
-\end{proof}
+        再证唯一性.
+        若映射\(G\colon A/\rel{R}\to A/\rel{R}\)也满足同样的条件，
+        任取\(C\in A/\rel{R}\)，
+        由商集的定义取\(x\in A\)使\(C=\EquivalenceClassBH{x}[\rel{R}]\).
+        则
+        \begin{align*}
+            G(C)&=G(\EquivalenceClassBH{x}[\rel{R}])
+            =\EquivalenceClassBH{F(x)}[\rel{R}]\\
+            &=\hat{F}(\EquivalenceClassBH{x}[\rel{R}])=\hat{F}(C).
+        \end{align*}
+        两个映射的定义域相同且在每一点取值相同，
+        所以\(G=\hat{F}\).
+
+        最后，若\(F\)和\(\rel{R}\)不兼容，
+        则存在\(x,y\in A\)使\(x\rel{R}y\)但\(F(x)\)与\(F(y)\)不等价.
+        因而输入的等价类相等，
+        要求输出的等价类却不相等，
+        与映射的单值性矛盾.
+        当\(A=\emptyset\)时，
+        唯一的\(F\)和\(\hat{F}\)均为空映射，
+        存在性与唯一性仍然成立.
+    \end{proof}
 \end{theorem}
-上述结论还可以推广到映射是\(F\colon A \times A \to A\)的情形.
+
+上述结论也可以推广到二元运算.
+\begin{proposition}
+    设\(\rel{R}\)是\(A\)上的等价关系，
+    \(F\colon A\times A\to A\)是映射.
+    存在唯一的映射\(\hat{F}\colon(A/\rel{R})\times(A/\rel{R})\to A/\rel{R}\)
+    满足
+    \begin{align*}
+        \hat{F}(\EquivalenceClassBH{x}[\rel{R}],\EquivalenceClassBH{y}[\rel{R}])
+        &=\EquivalenceClassBH{F(x,y)}[\rel{R}],
+    \end{align*}
+    的充分必要条件是
+    \begin{align*}
+        x\rel{R}x'\land y\rel{R}y'
+        &\implies F(x,y)\rel{R}F(x',y')
+        \quad(x,x',y,y'\in A).
+    \end{align*}
+    \begin{proof}
+        若这样的\(\hat{F}\)存在，
+        则\(x\rel{R}x'\)和\(y\rel{R}y'\)保证两次输入的有序对相等.
+        由\(\hat{F}\)的单值性，
+        输出的等价类相等，
+        再由\cref{theorem:集合论.相等的等价类的代表等价}得到所要求的兼容条件.
+
+        反之，若兼容条件成立，
+        对任意\(C,D\in A/\rel{R}\)，
+        由商集的定义分别取代表\(x\in C\)、\(y\in D\).
+        换用其他代表时，
+        兼容条件保证\(F\)的输出仍在同一个等价类中.
+        因此题设公式给出唯一的输出.
+        其图像可在\(((A/\rel{R})\times(A/\rel{R}))\times(A/\rel{R})\)中
+        按该公式使用子集公理分离得到，
+        所以它确实是一个映射.
+        任何满足该公式的映射在每个\((C,D)\)上都取同样的值，
+        因而映射唯一.
+        当\(A=\emptyset\)时，
+        输入集与输出集均为空，
+        唯一的空映射也满足要求.
+    \end{proof}
+\end{proposition}
