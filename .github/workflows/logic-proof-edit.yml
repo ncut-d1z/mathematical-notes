@@ -1,0 +1,67 @@
+name: Isolated logic proof edit
+on:
+  push:
+    branches: ['proofs/logic-complete-20260927']
+    paths: ['.github/workflows/logic-proof-edit.yml', '.logic-review/**']
+permissions:
+  contents: write
+jobs:
+  validate:
+    if: github.ref == 'refs/heads/proofs/logic-complete-20260927'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: proofs/logic-complete-20260927
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply guarded edits and run tests when payload is complete
+        id: edit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p validation
+          if test -f .logic-review/READY; then
+            python -m pip install numpy
+            python .logic-review/edit_logic.py 2>&1 | tee validation/edit.log
+            python tests/check_logic.py 2>&1 | tee validation/check.log
+            git diff --check
+            git diff -- '集合论/数理逻辑.tex' > validation/source.patch
+            echo 'applied=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Collect review sources and diagnostics
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p validation
+          python - <<'PY'
+          from pathlib import Path
+          import zipfile
+          files = list(Path('.').glob('*.sty'))
+          files += [Path('prompt.md'), Path('math.tex'), Path('集合论/数理逻辑.tex')]
+          files += list(Path('tests').glob('check_logic.*')) if Path('tests').exists() else []
+          files += list(Path('.logic-review').glob('*.py')) if Path('.logic-review').exists() else []
+          with zipfile.ZipFile('validation/sources.zip', 'w', zipfile.ZIP_DEFLATED) as z:
+              for p in files:
+                  if p.is_file():
+                      z.write(p, str(p))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logic-proof-validation
+          path: validation/
+          retention-days: 7
+      - name: Commit only validated changes to the review branch
+        if: steps.edit.outputs.applied == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = 'proofs/logic-complete-20260927'
+          git config user.name ncut-d1z
+          git config user.email dong1z@mail.ncut.edu.cn
+          git rm -r .logic-review .github/workflows/logic-proof-edit.yml
+          git add -- '集合论/数理逻辑.tex' tests/check_logic.py tests/check_logic.wl
+          git commit -m 'docs(logic): complete proofs, solutions and logical side conditions'
+          git push origin HEAD:refs/heads/proofs/logic-complete-20260927
