@@ -149,7 +149,7 @@
 	\caption{否定联结词的真值表}
 \end{table}
 
-\(\neg\)是仅有的一个一元逻辑运算符，
+\(\neg\)是本节采用的唯一一种一元逻辑运算符，
 下面讨论的都是二元逻辑运算符.
 
 \subsection{合取联结词}
@@ -386,7 +386,8 @@
 
 \subsection{括号的省略}
 我们解读形式语言的顺序和汉语、英语等常见人类语言一致.
-除非命题公式有括号，否则我们总是按照从左到右的顺序，分析理解形式语言的含义.
+运算次序由括号、联结词的优先顺序及下面的结合约定共同决定，
+不能仅根据从左向右的阅读顺序确定.
 
 严格按照命题公式的定义，就会出现很多的括号.
 一方面，这些括号使得命题公式的结构清晰、含义清除；
@@ -508,10 +509,28 @@
 
 \begin{example}
 \([(\neg p) \lor (q)]\)等同于\([\neg p \lor q]\).
+    \begin{solution}
+        否定的优先级高于析取，
+        所以先计算\(\neg p\)，
+        再与\(q\)作析取.
+        删去所示括号不改变公式的结构.
+    \end{solution}
 \end{example}
 
 \begin{example}
-\([p \limp q \land r \limp s]\)等同于\([(p \limp (q \land r)) \limp s]\).
+    \([p \limp q \land r \limp s]\)等同于\([p \limp ((q \land r) \limp s)]\).
+    \begin{solution}
+        先计算\(q\land r\)，
+        再按同级运算从右向左的约定计算\((q\land r)\limp s\)，
+        最后以\(p\)为前件计算整个条件式.
+        左右两种结合方式一般不等值.
+        例如在\((p,q,r,s)=(0,1,1,0)\)时，
+        有
+        \begin{align*}
+            p\limp((q\land r)\limp s) &= 0\limp0=1, \\
+            (p\limp(q\land r))\limp s &= 1\limp0=0.
+        \end{align*}
+    \end{solution}
 \end{example}
 
 \subsection{命题公式的类型}
@@ -541,14 +560,39 @@
 
 \begin{example}
 命题公式\(\neg p \lor q \limp r\)是中性式.
+    \begin{proof}
+        原式按优先级解释为\((\neg p\lor q)\limp r\).
+        在\((p,q,r)=(1,0,0)\)时，
+        前件为假，
+        所以原式为真.
+        在\((p,q,r)=(0,0,0)\)时，
+        前件为真而后件为假，
+        所以原式为假.
+        故原式既有成真指派又有成假指派，
+        是中性式.
+    \end{proof}
 \end{example}
 
 \begin{example}
 命题公式\(p \lor \neg p\)是永真式.
+    \begin{proof}
+        任取真值指派.
+        若\(p\)为真，
+        析取的第一项为真；若\(p\)为假，
+        \(\neg p\)为真.
+        两种情况下原式均为真，
+        所以它是永真式.
+    \end{proof}
 \end{example}
 
 \begin{example}
 命题公式\(p \land \neg p\)是永假式.
+    \begin{proof}
+        在任意真值指派下，
+        \(p\)与\(\neg p\)恰有一个为假，
+        所以它们的合取总为假.
+        故原式是永假式.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -711,7 +755,29 @@
 设命题公式\(A(\AutoTuple{p}{n})\)是永真式，
 则分别用命题公式\(\AutoTuple{B}{n}\)代换命题变元\(\AutoTuple{p}{n}\)，
 所得到的命题公式\(A(\AutoTuple{B}{n})\)也是永真式.
-%TODO proof
+    \begin{proof}
+        记\(v(F)\)为公式\(F\)在指派\(v\)下的真值.
+        任取代入后公式的指派\(v\)，
+        定义原公式变元上的指派\(w\)，
+        使\(w(p_i)=v(B_i)\).
+        按\(A\)的构造归纳可得
+        \begin{align*}
+            v\bigl(A(B_1,\dotsc,B_n)\bigr) &= w\bigl(A(p_1,\dotsc,p_n)\bigr).
+        \end{align*}
+        当\(A=p_i\)时，
+        等式由\(w\)的定义成立；当\(A\)是常量时，
+        两侧取同一常量.
+        若等式对直接子公式成立，
+        则对其真值施加同一个否定或二元联结词的真值函数后仍相等，
+        故归纳成立.
+        由于\(A\)永真，
+        右侧为\(1\)，
+        左侧也为\(1\).
+        指派\(v\)任意，
+        所以代入后的公式永真.
+        这里采用同时代入，
+        不要求各\(B_i\)之间不共享命题变元.
+    \end{proof}
 \end{theorem}
 % \DefineConcept{代入实例}（substitution instance）
 
@@ -735,7 +801,18 @@
 %@see: 《离散数学》（邓辉文） P91 定理3-2
 设\(A\)和\(B\)是命题公式，
 则\(A = B\)的充分必要条件是\(A \liff B\)是永真式.
-%TODO proof
+    \begin{proof}
+        等价联结词的真值为\(1\)，
+        当且仅当两个操作数的真值相同.
+        因此对于任意指派\(v\)，
+        有
+        \begin{align*}
+            v(A\liff B)=1 &\iff v(A)=v(B).
+        \end{align*}
+        对所有\(v\)要求上述条件成立，
+        左侧正是\(A\liff B\)永真，
+        右侧正是\(A=B\).
+    \end{proof}
 \end{theorem}
 
 \begin{example}
@@ -820,7 +897,8 @@
 %@Mathematica: TableForm[BooleanTable[{p, q, r, Xor[p, Xor[q, r]], Xor[Xor[p, q], r]}, {p, q, r}] // Boole, TableHeadings -> {None, {"p", "q", "r", "p\[Xor](q\[Xor]r)", "(p\[Xor]q)\[Xor]r"}}]
 
 \begin{example}
-证明：对于任意命题公式\(p,q,r\)，有\begin{equation*}
+    设\(p,q,r\)是互异的命题变元.
+    证明下列两个公式不逻辑等值：\begin{equation*}
 	p \limp (q \limp r)
 	\neq
 	(p \limp q) \limp r.
@@ -877,7 +955,8 @@
 \end{example}
 
 \begin{example}
-证明：对于任意命题公式\(p,q,r\)，有\begin{equation*}
+    设\(p,q,r\)是互异的命题变元.
+    证明下列两个公式不逻辑等值：\begin{equation*}
 	p \lnand (q \lnand r)
 	\neq
 	(p \lnand q) \lnand r.
@@ -906,7 +985,8 @@
 \end{example}
 
 \begin{example}
-证明：对于任意命题公式\(p,q,r\)，有\begin{equation*}
+    设\(p,q,r\)是互异的命题变元.
+    证明下列两个公式不逻辑等值：\begin{equation*}
 	p \lnor (q \lnor r)
 	\neq
 	(p \lnor q) \lnor r.
@@ -941,7 +1021,15 @@
 所得到的两个命题公式等值，即\begin{equation*}
 	A_1(\AutoTuple{B}{n}) = A_2(\AutoTuple{B}{n}).
 \end{equation*}
-%TODO proof
+    \begin{proof}
+        由假设及前一定理，
+        \(A_1(p_1,\dotsc,p_n)\liff A_2(p_1,\dotsc,p_n)\)永真.
+        同时将\(p_i\)代入\(B_i\)，
+        由永真式代入定理，
+        \(A_1(B_1,\dotsc,B_n)\liff A_2(B_1,\dotsc,B_n)\)仍永真.
+        再由逻辑等值与等价式永真的充分必要条件，
+        即得结论.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -951,7 +1039,20 @@
 	\item {\rm\bf 对称性}：若\(A = B\)，则\(B = A\).
 	\item {\rm\bf 传递性}：若\(A = B\)且\(B = C\)，则\(A = C\).
 \end{itemize}
-%TODO proof
+    \begin{proof}
+        任取指派\(v\).
+        因为\(v(A)=v(A)\)，
+        所以\(A=A\).
+        若\(A=B\)，
+        则\(v(A)=v(B)\)，
+        也就有\(v(B)=v(A)\)，
+        故\(B=A\).
+        若\(A=B\)且\(B=C\)，
+        则\(v(A)=v(B)=v(C)\)，
+        故\(A=C\).
+        这些结论对任意指派成立，
+        依次给出自反性、对称性和传递性.
+    \end{proof}
 \end{theorem}
 
 \subsection{基本等值式}
@@ -1011,6 +1112,54 @@
 		A \land 0 = 0 \land A = 0.
 	\end{gather}
 \end{itemize}
+    \begin{proof}
+        固定任意指派，
+        记\(A,B,C\)的真值分别为\(a,b,c\).
+        以下逐项验证各条等值式.
+
+        两次否定得到原真值，
+        即\(1-(1-a)=a\)，
+        所以对合律成立.
+        \(a\lor a\)与\(a\land a\)均等于\(a\)，
+        所以幂等律成立.
+        析取为真当且仅当至少一个操作数为真，
+        合取为真当且仅当两个操作数均为真.
+        这些条件与操作数次序无关，
+        所以交换律成立.
+        两种加括号方式的三项析取均在至少一项为真时取真，
+        三项合取均在三项全真时取真，
+        所以结合律成立.
+
+        当\(a=0\)时，
+        \(a\lor(a\land b)=0\)；当\(a=1\)时，
+        该式为\(1\).
+        同样，
+        \(a\land(a\lor b)\)在\(a=0\)时为\(0\)，
+        在\(a=1\)时为\(1\)，
+        所以两条吸收律成立.
+        第一条分配律在\(a=1\)时两侧均为\(1\)，
+        在\(a=0\)时两侧均为\(b\land c\).
+        第二条分配律在\(a=0\)时两侧均为\(0\)，
+        在\(a=1\)时两侧均为\(b\lor c\)，
+        所以两条分配律成立.
+
+        \(a\)与\(1-a\)恰有一个为真，
+        所以它们的析取为\(1\)，
+        合取为\(0\)，
+        得到互补律.
+        \(\neg(A\lor B)\)为真当且仅当\(A,B\)均假，
+        与\(\neg A\land\neg B\)为真的条件相同.
+        \(\neg(A\land B)\)为真当且仅当\(A,B\)至少一个为假，
+        与\(\neg A\lor\neg B\)为真的条件相同，
+        得到德摩根律.
+
+        与\(0\)析取或与\(1\)合取不改变\(a\)，
+        得到同一律；与\(1\)析取总得\(1\)，
+        与\(0\)合取总得\(0\)，
+        得到\(0\)-\(1\)律.
+        由于指派任意，
+        所有等值式均成立.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -1035,6 +1184,19 @@
 	= \neg(A \limp B).
 		\label{equation:数理逻辑.联结词等值式6}
 \end{gather}
+    \begin{proof}
+        任取指派.
+        异或为真恰在两个操作数真值不同时，
+        等价为真恰在二者真值相同时，
+        所以第一式成立.
+        条件式与\(\neg A\lor B\)均仅在\(A=1,B=0\)时为假，
+        所以第二式成立.
+        两个相反方向的条件式同时为真，
+        恰好排除了两个操作数取值不同的两种情况，
+        所以第三式成立.
+        与非、或非和条件否定的真值表分别由合取、析取和条件的真值表逐项取反得到，
+        故其余三式成立.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -1056,6 +1218,37 @@
 	A \liff B = \neg(A \lxor B), \\
 	A \liff B = (A \land B) \lor (\neg A \land \neg B).
 \end{gather}
+    \begin{proof}
+        固定任意指派.
+        异或仅判断两个真值是否不同，
+        所以异或可交换.
+        三项异或不论如何加括号，
+        都在三个操作数中有奇数个为真时取真，
+        所以异或可结合.
+        等价仅判断两个真值是否相同，
+        所以它也可交换.
+        若\(C\)为真，
+        两种三项等价式都归结为\(A\liff B\)；若\(C\)为假，
+        两种三项等价式都归结为\(A\lxor B\)，
+        所以等价可结合.
+        将一个操作数取反恰好交换“相同”和“不同”，
+        这同时证明\(\neg(A\liff B)=A\liff\neg B\)及等价与异或互为否定.
+        两个操作数真值相同，
+        恰指它们同时真或同时假，
+        所以最后一式成立.
+        由已证的基本等值式，
+        还得到
+        \begin{align*}
+            A\limp B &= \neg A\lor B=B\lor\neg A=\neg B\limp\neg A, \\
+            A\lnand A &= \neg(A\land A)=\neg A, \\
+            A\lnor A &= \neg(A\lor A)=\neg A, \\
+            (A\lnand B)\lnand(A\lnand B) &= \neg\neg(A\land B)=A\land B, \\
+            (A\lnor A)\lnor(B\lnor B) &= \neg(\neg A\lor\neg B)=A\land B, \\
+            (A\lnand A)\lnand(B\lnand B) &= \neg(\neg A\land\neg B)=A\lor B, \\
+            (A\lnor B)\lnor(A\lnor B) &= \neg\neg(A\lor B)=A\lor B.
+        \end{align*}
+        这就逐项证明了全部等值式.
+    \end{proof}
 \end{theorem}
 
 \subsection{等值演算法}
@@ -1067,7 +1260,22 @@
 \begin{theorem}
 设\(C\)是命题公式\(A\)的子公式，且\(C = D\)，
 则将\(A\)中的\(C\)部分或全部替换成\(D\)所得到的命题公式与\(A\)等值.
-%TODO proof
+    \begin{proof}
+        先只替换\(C\)的一处出现，
+        并固定任意指派.
+        由于\(C=D\)，
+        该位置替换前后的真值相同.
+        沿公式的构造从该位置逐层向外考察：若外层是否定，
+        相同真值取反后仍相同；若外层是二元联结词，
+        另一个操作数不变，
+        同一真值函数在相同输入上给出相同输出.
+        有限次向外考察到整个公式，
+        即知替换前后真值相同.
+        指派任意，
+        所以两式逻辑等值.
+        部分或全部替换是有限次单处替换，
+        再由等值关系的传递性即得结论.
+    \end{proof}
 \end{theorem}
 
 利用基本等值式和等值置换定理求解问题的方法称为\emph{等值演算法}.
@@ -1095,7 +1303,8 @@
 下面我们给出命题公式的对偶式的定义.
 \begin{definition}
 %@see: 《离散数学》（邓辉文） P94 定义3-4
-设命题公式\(A\)中至多含有3个逻辑联结词\(\neg,\land,\lor\).
+    设命题公式\(A\)只使用\(\neg,\land,\lor\)这三种联结词，
+    但不限制它们出现的次数.
 将\(A\)中\(\land\)换成\(\lor\)，\(\lor\)换成\(\land\)，\(1\)换成\(0\)，\(0\)换成\(1\)，
 所得到的命题公式称为“\(A\)的\DefineConcept{对偶式}（dual formula）”，记为\(A^*\).
 \end{definition}
@@ -1119,12 +1328,41 @@
 \end{example}
 
 \begin{theorem}[对偶原理]
-%@see: 《离散数学》（邓辉文） P94 定理3-8（对偶原理）
-设\(A\)和\(B\)是命题公式.
-若\(A = B\)，则\(A^* = B^*\).
-\begin{proof}
-利用德摩根律易证.
-\end{proof}
+    %@see: 《离散数学》（邓辉文） P94 定理3-8（对偶原理）
+    设\(A,B\)只使用\(\neg,\land,\lor\)及命题常量、命题变元.
+    若\(A=B\)，
+    则\(A^*=B^*\).
+    \begin{proof}
+        固定指派\(v\)，
+        定义互补指派\(\bar v\)，
+        使每个变元\(p\)满足\(\bar v(p)=1-v(p)\).
+        按公式\(F\)的构造归纳证明
+        \begin{align*}
+            v(F^*) &= 1-\bar v(F).
+        \end{align*}
+        对变元，
+        等式由互补指派的定义成立；对常量，
+        对偶交换\(0,1\)，
+        等式也成立.
+        若\(F=\neg G\)，
+        由归纳假设有
+        \begin{align*}
+            v(F^*) &= 1-v(G^*)=\bar v(G)=1-\bar v(\neg G).
+        \end{align*}
+        若\(F=G\land H\)，
+        则\(F^*=G^*\lor H^*\)，
+        归纳假设与德摩根律说明其真值为\(\bar v(G\land H)\)的否定.
+        若\(F=G\lor H\)，
+        同理由另一条德摩根律得到所需等式.
+        因此归纳完成.
+        由\(A=B\)可知\(\bar v(A)=\bar v(B)\)，
+        从而
+        \begin{align*}
+            v(A^*) &= 1-\bar v(A)=1-\bar v(B)=v(B^*).
+        \end{align*}
+        指派\(v\)任意，
+        所以\(A^*=B^*\).
+    \end{proof}
 \end{theorem}
 
 对偶原理有利于记忆\cref{theorem:数理逻辑.基本等值式}，
@@ -1158,7 +1396,28 @@
 \(A\)的\DefineConcept{合取范式}（conjunctive normal form）”.
 \end{definition}
 
-可以证明：任意一个命题公式都存在析取范式与合取范式.
+\begin{theorem}
+    任意命题公式都存在析取范式与合取范式.
+    \begin{proof}
+        先利用联结词等值式消去\(\neg,\land,\lor\)以外的联结词，
+        再利用德摩根律和对合律将否定移到命题变元前面.
+        常量\(1,0\)分别用\(p\lor\neg p\)、\(p\land\neg p\)表示；
+        若原式没有变元，
+        允许引入这个不影响真值的辅助变元\(p\).
+        于是只需处理由文字（命题变元或其否定）经合取、析取组成的公式.
+        单个文字本身同时是析取范式和合取范式.
+        两个析取范式的析取仍是析取范式，
+        它们的合取则用分配律展开为有限多个合取项的析取.
+        这按公式结构归纳给出析取范式的存在性.
+        对合取范式，
+        两个合取范式的合取仍是合取范式，
+        它们的析取则用另一条分配律展开为有限多个析取项的合取，
+        所以合取范式也存在.
+        原公式有限，
+        每次展开只涉及有限多个项，
+        因而构造在有限步后结束.
+    \end{proof}
+\end{theorem}
 
 计算析取范式、合取范式的步骤：\begin{enumerate}
 	\item 使用等值式，将命题公式中的联结词归约为\(\neg,\land,\lor\)；
@@ -1247,7 +1506,19 @@
 则称该合取式为“由所给命题变元产生的\DefineConcept{极小项}（minimal term）”.
 \end{definition}
 
-可以证明：对于每一个极小项，只有一种指派使其取\(1\).
+\begin{proposition}
+    对固定的有限非空变元表\(p_1,\dotsc,p_n\)，
+    每个极小项恰有一种指派使其取\(1\).
+    \begin{proof}
+        合取为真当且仅当每个文字都为真.
+        若第\(i\)个文字是\(p_i\)，
+        必须取\(p_i=1\)；若是\(\neg p_i\)，
+        必须取\(p_i=0\).
+        每个变元恰出现一次，
+        所以这些条件唯一确定全部取值，
+        且按此取值确实使每个文字为真.
+    \end{proof}
+\end{proposition}
 
 根据这个结论，我们可以对极小项编码：
 极小项用\(m_i\)表示，
@@ -1293,11 +1564,20 @@
 则把该析取式称为“\(A\)的\DefineConcept{主析取范式}（major disjunctive form）”.
 \end{definition}
 \begin{remark}
-对于命题公式\(A = A(\AutoTuple{p}{n})\)，
-它的所有极小项的析取是永真式\(1\)，
-它的0个极小项的析取是永假式\(0\)，
-在这两种极端情况下\(A\)的主析取范式均不存在.
-除了上述两种情况外，\(A\)均为中性式.
+    本节的主范式相对于一个固定的有限非空变元表定义.
+    讨论唯一性时约定各极小项或极大项不重复，
+    并按编号递增排列；实际书写可以改变各项次序.
+    “唯一”是在这种书写约定下而言；否则只能说忽略项的顺序和重复后唯一.
+    对不含变元的常量公式可先固定一个辅助变元.
+
+    全部\(2^n\)个极小项的析取是永真式\(1\)，
+    所以永真式也有主析取范式.
+    本节约定主范式至少含一项，
+    因此永假式没有主析取范式，
+    永真式没有主合取范式.
+    若另行允许空析取为\(0\)、空合取为\(1\)，
+    则这两个例外也可纳入，
+    但不可混用两种约定.
 \end{remark}
 
 %@see: 《离散数学》（邓辉文） P99
@@ -1321,7 +1601,19 @@
 则称该析取式为“由所给命题变元产生的\DefineConcept{极大项}（maximal term）”.
 \end{definition}
 
-可以证明：对于每一个极大项，只有一种指派使其取\(0\).
+\begin{proposition}
+    对固定的有限非空变元表\(p_1,\dotsc,p_n\)，
+    每个极大项恰有一种指派使其取\(0\).
+    \begin{proof}
+        析取为假当且仅当每个文字都为假.
+        若第\(i\)个文字是\(p_i\)，
+        必须取\(p_i=0\)；若是\(\neg p_i\)，
+        必须取\(p_i=1\).
+        每个变元恰出现一次，
+        所以这些条件唯一确定全部取值，
+        且按此取值确实使每个文字为假.
+    \end{proof}
+\end{proposition}
 
 根据这个结论，我们可以对极大项编码：
 极大项用\(M_i\)表示，
@@ -1420,10 +1712,56 @@
 %@see: 《离散数学》（邓辉文） P102 定理3-9
 任意非永假命题公式都存在唯一的主析取范式.
 任意非永真命题公式都存在唯一的主合取范式.
-%TODO proof
+    \begin{proof}
+        固定包含原公式全部变元的非空有序变元表，
+        采用前述无重复且按编号递增排列的约定.
+        记\(T\)为\(A\)的全部成真指派的集合，
+        \(F\)为全部成假指派的集合.
+        对每个指派\(a\)，
+        记\(m_a\)为仅在\(a\)下为真的极小项，
+        \(M_a\)为仅在\(a\)下为假的极大项.
+
+        若\(A\)非永假，
+        则\(T\)非空，
+        可以构造
+        \begin{align*}
+            D &= \bigvee_{a\in T}m_a.
+        \end{align*}
+        对于任何指派\(b\)，
+        \(D\)为真当且仅当\(b\in T\)，
+        这与\(A\)为真的条件相同，
+        所以\(D=A\).
+        任何与\(A\)等值的极小项析取都必须含有每个\(a\in T\)对应的\(m_a\)，
+        否则在\(a\)下为假；也不能含\(a\notin T\)对应的项，
+        否则在\(a\)下为真.
+        故所含项恰由\(T\)确定，
+        按约定排列后唯一.
+
+        若\(A\)非永真，
+        则\(F\)非空，
+        同样构造
+        \begin{align*}
+            C &= \bigwedge_{a\in F}M_a.
+        \end{align*}
+        \(C\)恰在\(F\)中的指派下为假，
+        故\(C=A\).
+        遗漏\(F\)中的某项会使相应指派错误地取真，
+        加入\(F\)外的某项会使相应指派错误地取假，
+        所以项集由\(F\)唯一确定.
+        这证明主合取范式的存在性和唯一性.
+    \end{proof}
 \end{theorem}
 
 \section{联结词汇集的功能完备性}
+本节用联结词集\(S\)表示公式时，
+只允许从命题变元出发有限次使用\(S\)中的联结词，
+不额外免费提供常量\(0,1\).
+目标公式可以含常量，
+但表示式必须构造出相应的恒定真值，
+必要时允许引入不影响结果的辅助变元.
+这个约定不可省略：若免费允许常量\(0\)，
+则\(\neg p=p\limp0\)，
+\(\{\land,\limp\}\)便不再是不完备的例子.
 \begin{definition}
 %@see: 《离散数学》（邓辉文） P106 定义3-11
 设\(S\)是由联结词组成的汇集.
@@ -1434,9 +1772,31 @@
 \begin{theorem}\label{theorem:数理逻辑.功能完备联结词集1}
 %@see: 《离散数学》（邓辉文） P106 定理3-10
 \(\{\neg,\land,\lor\}\)是功能完备联结词集.
+    \begin{proof}
+        本章各联结词均已表示为只含\(\neg,\land,\lor\)的等值式.
+        按公式的构造逐层进行这些替换，
+        由等值置换定理可得等值的表示式.
+        常量\(1,0\)分别用\(p\lor\neg p\)、\(p\land\neg p\)表示.
+        任意其他有限元真值联结词也能按真值表写成主析取范式，
+        恒定真值的情况使用上述两个常量表示式.
+        因此任意命题公式均可如此表示，
+        该联结词集功能完备.
+    \end{proof}
 \end{theorem}
 \begin{corollary}
 \(\{\lnor\}\)是功能完备联结词集.
+    \begin{proof}
+        由已证的等值式，
+        有
+        \begin{align*}
+            \neg A &= A\lnor A, \\
+            A\lor B &= (A\lnor B)\lnor(A\lnor B), \\
+            A\land B &= (A\lnor A)\lnor(B\lnor B).
+        \end{align*}
+        所以\(\neg,\land,\lor\)均可用\(\lnor\)表示.
+        将前一定理中的表示式逐层替换，
+        即得\(\{\lnor\}\)功能完备.
+    \end{proof}
 \end{corollary}
 \begin{corollary}
 \(\{\lnand\}\)是功能完备联结词集.
@@ -1462,6 +1822,15 @@
 \end{corollary}
 \begin{corollary}
 \(\{\neg,\land\}\)是功能完备联结词集.
+    \begin{proof}
+        由德摩根律，
+        有
+        \begin{align*}
+            A\lor B &= \neg(\neg A\land\neg B).
+        \end{align*}
+        故\(\neg,\land,\lor\)均能用\(\neg,\land\)表示，
+        由\cref{theorem:数理逻辑.功能完备联结词集1}及等值置换定理得到结论.
+    \end{proof}
 \end{corollary}
 \begin{corollary}\label{theorem:数理逻辑.功能完备联结词集5}
 \(\{\neg,\lor\}\)是功能完备联结词集.
@@ -1477,6 +1846,14 @@
 \end{corollary}
 \begin{corollary}
 \(\{\neg,\limp\}\)是功能完备联结词集.
+    \begin{proof}
+        条件式的析取表示及对合律给出
+        \begin{align*}
+            A\lor B &= \neg A\limp B.
+        \end{align*}
+        故\(\neg,\lor\)均能用\(\neg,\limp\)表示，
+        由\cref{theorem:数理逻辑.功能完备联结词集5}及等值置换定理得到结论.
+    \end{proof}
 \end{corollary}
 
 \begin{example}
@@ -1512,22 +1889,22 @@
 \end{example}
 
 \begin{example}
-%@see: 《离散数学》（邓辉文） P107 例3-28
-证明：\(\{\land,\limp\}\)不是功能完备联结词集.
-\begin{proof}
-对于只含有联结词\(\{\land,\limp\}\)的任意命题公式\(A\)，
-在所有命题变元均取\(1\)时，\(A\)的真值为\(1\).
-
-对\(A\)中所含的联结词个数\(n\)使用第二数学归纳法.
-当\(n=0\)时，显然成立.
-假设\(n = k\)时成立，当\(A\)含\(k+1\)个联结词时，
-\(A = B \land C\)或\(A = B \limp C\)，
-由归纳假设可知，在所有命题变元均取\(1\)时，\(B\)和\(C\)的真值为\(1\)，进而\(A\)的真值为\(1\).
-
-对于命题变元\(p\)，
-由上述讨论可知\(p \land \neg p\)不能用仅含联结词\(\{\land,\limp\}\)的命题公式等值表示，
-故\(\{\land,\limp\}\)不是功能完备联结词集.
-\end{proof}
+    %@see: 《离散数学》（邓辉文） P107 例3-28
+    在不免费使用命题常量的约定下，
+    证明\(\{\land,\limp\}\)不是功能完备联结词集.
+    \begin{proof}
+        对只含这两个联结词的公式作结构归纳，
+        证明在所有变元均取\(1\)时公式总取\(1\).
+        原子公式是命题变元，
+        结论成立.
+        若结论对\(B,C\)成立，
+        则全\(1\)指派下有\(B\land C=1\land1=1\)，
+        \(B\limp C=1\limp1=1\)，
+        所以归纳成立.
+        但\(\neg p\)在全\(1\)指派下为\(0\)，
+        不可能与上述任一公式等值，
+        因而该联结词集不完备.
+    \end{proof}
 \end{example}
 
 \begin{definition}
@@ -1546,6 +1923,26 @@
 	\item \(\{\neg,\lor\}\)；
 	\item \(\{\neg,\limp\}\).
 \end{itemize}
+    \begin{proof}
+        这五个集合的功能完备性已逐一证明.
+        \(\{\lnor\}\)和\(\{\lnand\}\)没有非空真子集，
+        符合定义中的极小性条件；即使检验空集，
+        空集也只能产生命题变元，
+        不能表示否定.
+
+        对于其余三个集合，
+        只需检验各自的两个单元素子集.
+        只用\(\neg\)得到的公式至多依赖一个变元，
+        不能表示同时实质依赖\(p,q\)的\(p\land q\)：固定\(p=1\)改变\(q\)，
+        或固定\(q=1\)改变\(p\)，
+        均能改变其取值.
+        只用\(\land\)、只用\(\lor\)或只用\(\limp\)的公式，
+        在全\(1\)指派下均取\(1\).
+        这一点由原子变元及\(1\land1=1\)、\(1\lor1=1\)、\(1\limp1=1\)作结构归纳即得.
+        所以这三个单元素集均不能表示\(\neg p\).
+        全部非空真子集都不完备，
+        因此所列集合均极小功能完备.
+    \end{proof}
 \end{theorem}
 
 \section{命题逻辑中的推理}
@@ -1591,12 +1988,12 @@
 %@see: 《离散数学》（邓辉文） P109 定理3-12
 设\(\AutoTuple{H}{n}\)和\(C\)是命题公式，
 则\(\AutoTuple{H}{n} \implies C\)的充分必要条件是
-\(H_1 \land \dotsb H_n \limp C\)是永真式.
+    \(H_1 \land \dotsb \land H_n \limp C\)是永真式.
 \begin{proof}
 命题公式由\(\AutoTuple{H}{n}\)全为真，
-可得出\(H_1 \land \dotsb H_n\)全为真.
+        可得出\(H_1 \land \dotsb \land H_n\)全为真.
 于是，由\(\AutoTuple{H}{n}\)全为真可得出\(C\)必然真的充分必要条件是
-\(H_1 \land \dotsb H_n \limp C\)是永真式.
+        \(H_1 \land \dotsb \land H_n \limp C\)是永真式.
 \end{proof}
 \end{theorem}
 \begin{remark}
@@ -1624,7 +2021,14 @@
 \end{proof}
 \end{theorem}
 
-可以证明：命题公式之间的永真蕴含关系是偏序关系.
+若将公式视为符号串，
+永真蕴含是自反且传递的预序关系，
+不满足关于符号串相等的反对称性.
+例如\(p\)与\(p\land p\)互相蕴含，
+却不是同一个符号串.
+下述定理中的\(A=B\)表示逻辑等值.
+只有在按逻辑等值识别公式以后，
+永真蕴含才给出偏序关系.
 \begin{theorem}
 %@see: 《离散数学》（邓辉文） P109 定理3-14
 设\(A,B,C\)都是命题公式，则\begin{itemize}
@@ -1632,6 +2036,19 @@
 	\item {\rm\bf 反对称性}：如果\(A \implies B\)且\(B \implies A\)，则\(A = B\)；
 	\item {\rm\bf 传递性}：如果\(A \implies B\)且\(B \implies C\)，则\(A \implies C\).
 \end{itemize}
+    \begin{proof}
+        任取指派.
+        \(A\)为真时\(A\)当然为真，
+        故\(A\implies A\).
+        若\(A\implies B\)且\(B\implies A\)，
+        则\(A\)为真当且仅当\(B\)为真，
+        所以二者真值相同，
+        即\(A=B\).
+        若\(A\implies B\)且\(B\implies C\)，
+        每个使\(A\)为真的指派先使\(B\)为真，
+        再使\(C\)为真，
+        故\(A\implies C\).
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}
@@ -1640,12 +2057,54 @@
 	\item 如果\(A \implies C\)且\(B \implies C\)，则\(A \lor B \implies C\)；
 	\item 如果\(C \implies A\)且\(C \implies B\)，则\(C \implies A \land B\).
 \end{itemize}
-%TODO proof \cref{theorem:数理逻辑.推理规则的充分必要条件}
+    \begin{proof}
+        任取使\(A\lor B\)为真的指派，
+        至少\(A,B\)之一为真.
+        若\(A\)为真，
+        由\(A\implies C\)得\(C\)为真；若\(B\)为真，
+        由\(B\implies C\)也得\(C\)为真.
+        所以第一条成立.
+        对于第二条，
+        任取使\(C\)为真的指派，
+        由两个假设分别得\(A\)为真、\(B\)为真，
+        故\(A\land B\)为真.
+    \end{proof}
 \end{theorem}
 
-%@see: 《离散数学》（邓辉文） P109 定理3-16
-% TODO 定理3-16 没有誊抄至此，原因是其内容包含 \sup 和 \inf 这两个符号
-% 而我在此之前在《离散数学》（邓辉文）中没有看到过这两个符号
+\begin{example}
+    解释永真蕴含关系中的上确界\(\sup\)、下确界\(\inf\)，
+    并求两个逻辑等值类的上确界和下确界.
+    % 针对原有符号疑问的独立补充，并非未经核实的教材定理3-16转录.
+    \begin{solution}
+        记\([A]\)为所有与\(A\)逻辑等值的公式组成的类，
+        定义\([A]\preccurlyeq[B]\)当且仅当\(A\implies B\).
+        替换成逻辑等值的代表不改变任何指派下的真值，
+        所以此关系与代表的选择无关.
+        前一定理给出自反性、反对称性和传递性，
+        因而它是偏序关系.
+
+        两个类的上界是同时位于它们之上的类，
+        上确界是其中不大于其他任何上界的类.
+        下界与下确界反向定义.
+        因为\(A\implies A\lor B\)、\(B\implies A\lor B\)，
+        \([A\lor B]\)是上界.
+        若\([C]\)是任一上界，
+        则\(A\implies C\)、\(B\implies C\)，
+        由前一定理得\(A\lor B\implies C\)，
+        所以它是最小上界.
+        同理\(A\land B\)同时蕴含\(A,B\)，
+        且任一同时蕴含\(A,B\)的公式也蕴含\(A\land B\)，
+        所以\([A\land B]\)是最大下界.
+        因此
+        \begin{align*}
+            \sup\{[A],[B]\} &= [A\lor B], \\
+            \inf\{[A],[B]\} &= [A\land B].
+        \end{align*}
+        若有两个最小上界，
+        则它们互相不大于对方，
+        由反对称性相等；最大下界的唯一性同理.
+    \end{solution}
+\end{example}
 
 \subsection{基本推理规则}
 下面举例说明，证明推理形式有效性的4种方法.
@@ -1675,7 +2134,7 @@
 \end{proof}
 \begin{proof}[证法二]
 取值法.
-假设\((p \limp q) \limp p\)取真，
+            假设\((p \limp q) \land p\)取真，
 则\(p \limp q\)及\(p\)均取真，
 进而\(q\)为真，
 因此\(((p \limp q) \land p) \limp q\)永真.
@@ -1733,6 +2192,30 @@
 	\end{tblr}
 	\caption{基本逻辑蕴含式I}
 \end{table}
+\begin{proof}[基本逻辑蕴含式的证明]
+    固定任意使每条规则全部前提为真的指派.
+    合取为真时每项均真，
+    得到化简规则；\(A\)为真时\(A\lor B\)为真，
+    得到附加规则；\(A,B\)均真时合取为真，
+    得到合取引入规则.
+    若\(A\lor B\)真而\(A\)假，
+    则\(B\)只能为真，
+    得到析取三段论.
+    若\(A\limp B\)及\(A\)均真，
+    则\(B\)不能为假，
+    得到假言推理.
+    若\(A\limp B\)真而\(B\)假，
+    则\(A\)只能为假，
+    得到拒取式.
+    若\(A\limp B\)、\(B\limp C\)均真，
+    则\(A\)真时依次有\(B,C\)真，
+    \(A\)假时\(A\limp C\)也真，
+    得到假言三段式.
+    最后，
+    若\(A\lor B\)、\(A\limp C\)、\(B\limp C\)均真，
+    则根据\(A,B\)中为真的那一项得到\(C\)为真，
+    得到二难推理.
+\end{proof}
 
 \subsection{命题逻辑的自然推理系统}
 自然推理的构造法是判定推理形式有效性的又一种方法，
@@ -1849,17 +2332,21 @@
 这就是采用\DefineConcept{条件证明规则}的证明方法，
 它是将\(A \limp C\)的前件\(A\)和后件\(C\)分离的一种证明方法.
 
-这个证明方法的道理是：\begin{align*}
-	&\AutoTuple{H}{n} \implies A \limp C \\
-	&= (H_1 \land \dotsb \land H_n) \limp (A \limp C) \\
-	&= \neg(H_1 \land \dotsb \land H_n) \lor (\neg A \lor C) \\
-	&= (\neg(H_1 \land \dotsb \land H_n) \lor \neg A) \lor C \\
-	&= \neg(H_1 \land \dotsb \land H_n \land A) \lor C \\
-	&= (H_1 \land \dotsb \land H_n \land A) \limp C \\
-	&= \AutoTuple{H}{n},A \implies C,
-\end{align*}
-也就是说，\(\AutoTuple{H}{n} \implies A \limp C\)永真的充分必要条件是
-\(\AutoTuple{H}{n},A \implies C\)永真.
+\begin{proof}[条件证明规则的依据]
+    记\(H=H_1\land\dotsb\land H_n\).
+    不把逻辑推出关系当作命题公式参与等值运算，
+    而只对条件式作以下计算：
+    \begin{align*}
+        H\limp(A\limp C) &= \neg H\lor(\neg A\lor C) \\
+        &= (\neg H\lor\neg A)\lor C \\
+        &= \neg(H\land A)\lor C \\
+        &= (H\land A)\limp C.
+    \end{align*}
+    所以左式永真当且仅当右式永真.
+    由\cref{theorem:数理逻辑.推理规则的充分必要条件}，
+    这正表示\(H_1,\dotsc,H_n\implies A\limp C\)
+    当且仅当\(H_1,\dotsc,H_n,A\implies C\).
+\end{proof}
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P114 例3-34
@@ -1928,7 +2415,8 @@
 在讨论个体时，通常要制定个体讨论的范围，
 称为\DefineConcept{个体域}（domain of individuals）
 或\DefineConcept{论域}（domain of discourse，universe），
-用\(D\)表示，一般假定\(D\)非空.
+用\(D\)表示，
+本章始终假定\(D\)非空.
 
 个体域可以是有限汇集，也可以是无限汇集.
 我们把人类能够反映、认知的一切事物的汇集，
@@ -2001,24 +2489,45 @@
 	[\neg\phi(x)]
 \).
 
-%TODO 由于一阶语言没有定义等号，所以下面的转化只是留作参考，不予展示
-% 我们可以把唯一量词转化为全称量词和存在量词，
-% 也就是说\(
-% 	(\exists! x)
-% 	[\phi(x)]
-% \)
-% 相当于\(
-% 	(\exists x)
-% 	[\phi(x)]
-% 	\land
-% 	(\forall x)
-% 	(\forall y)
-% 	[
-% 		(\phi(x) = \phi(y))
-% 		\limp
-% 		(x = y)
-% 	]
-% \).
+\begin{proof}[存在量词转换的证明]
+    固定论域、谓词解释和其余自由变元的取值.
+    存在一个个体使\(\phi(x)\)为真，
+    当且仅当并非每个个体都使\(\neg\phi(x)\)为真.
+    这恰是前述两个公式各自为真的条件，
+    所以它们逻辑等值.
+\end{proof}
+
+\begin{example}
+    在带等号的一阶语言中，
+    如何消去唯一量词\(\exists!\)？
+    \begin{solution}
+        此处\(x=y\)表示两个个体相同，
+        不是表示两个公式逻辑等值.
+        取未在\(\phi\)中出现的新变元\(y\)，
+        以\(y\)替换\(x\)的自由出现，
+        得到\(\phi(y)\).
+        所需的表示是
+        \begin{align*}
+            (\exists!x)[\phi(x)] &= (\exists x)[\phi(x)\land(\forall y)(\phi(y)\limp y=x)].
+        \end{align*}
+        若左侧为真，
+        取唯一满足\(\phi\)的个体作为\(x\)的见证，
+        每个满足\(\phi(y)\)的个体必与它相同，
+        故右侧为真.
+        若右侧为真，
+        则其见证满足\(\phi\)，
+        且所有满足\(\phi\)的个体都等于该见证，
+        所以存在性和唯一性同时成立.
+
+        不能用“\(\phi(x)\)与\(\phi(y)\)真值相同则\(x=y\)”代替唯一性条件.
+        例如取\(D=\{0,1,2\}\)，
+        令\(\phi\)仅对\(0\)成立.
+        唯一性成立，
+        但\(\phi(1),\phi(2)\)同为假而\(1\ne2\).
+        若原语言不含等号，
+        就不能直接使用\(x=y\)作为原子公式；上述表示用于加入个体同一关系的语言.
+    \end{solution}
+\end{example}
 
 由于在本章中，仅对个体进行量化，不对谓词进行量化，
 因此把本章介绍的谓词逻辑特别称为\DefineConcept{一阶谓词逻辑}.
@@ -2031,17 +2540,32 @@
 若将命题函数中的所有个体变元都进行了量化，则得到一个命题，否则不是命题.
 
 量词是对个体变元进行量化，所给的个体域\(D\)至关重要.
-同一个带量词的命题，
-例如\begin{equation*}
-	(\exists x)(\exists y)[G(x,y)],
-\end{equation*}
-其中\(G(x,y): x>y\)，
-它在自然数集\(\mathbb{N}\)中表示没有最小的自然数，是假命题；
-它在整数集\(\mathbb{Z}\)中表示没有最小的整数，是真命题.
+\begin{example}
+    令\(G(x,y)\)表示\(x>y\).
+    比较“没有最小的个体”在自然数域与整数域中的真值.
+    \begin{solution}
+        正确的量化形式是
+        \begin{align*}
+            (\forall x)(\exists y)[G(x,y)].
+        \end{align*}
+        在自然数域中，
+        取最小自然数作为\(x\)，
+        就不存在更小的自然数\(y\)，
+        所以该式为假.
+        在整数域中，
+        对每个\(x\)取\(y=x-1\)即可，
+        所以该式为真.
+        \((\exists x)(\exists y)G(x,y)\)仅表示存在一对大小不同的个体，
+        在两个域中都可取\(x=2,y=1\)，
+        并不表示没有最小个体.
+    \end{solution}
+\end{example}
 
 我们把量词\(\forall\)或\(\exists\)的作用范围
 称为它的\DefineConcept{作用域}或\DefineConcept{辖域}（scope），
-辖域内的个体变元称为\DefineConcept{约束变元}（bound variable）.
+其辖域内受这个量词约束的、与指导变元同名的出现称为约束出现，
+相应变元称为\DefineConcept{约束变元}（bound variable）.
+辖域内其他名字的变元不因此受到约束.
 
 若量词后有括号，则括号里面的部分是它的辖域.
 
@@ -2075,56 +2599,55 @@
 
 \section{谓词公式及命题的符号化}
 \subsection{谓词公式}
-%TODO 谓词公式的定义
+\begin{example}
+    给出一般一阶语言中项与合式谓词公式的递归定义，
+    并说明自由出现、约束出现和代入的限制.
+    \begin{solution}
+        固定个体变元、个体常量以及各元数的函词、谓词符号.
+        个体变元、个体常量都是\DefineConcept{项}；
+        若\(f\)是\(n\)元函词且\(t_1,\dotsc,t_n\)是项，
+        则\(f(t_1,\dotsc,t_n)\)是项.
+        项仅由上述规则有限次生成.
 
-我们将满足以下条件的公式称为\DefineConcept{合式谓词公式}（well-formed predicate formula），
-简称\DefineConcept{合式公式}（well-formed formula）：
-\begin{enumerate}
-	\item 如果\(a\)和\(b\)是自由变元，那么\([a \in b]\)是一个合式公式.
-	这样的合式公式又被称为是\DefineConcept{原子的}（atomic），
-	或者称这样的公式为\DefineConcept{原子公式}.
-	% If \(a\) and \(b\) are free variables, then \([a \in b]\) is a wff.
-	% Such formulas are called atomic.
+        若\(P\)是\(n\)元谓词且\(t_1,\dotsc,t_n\)是项，
+        则\(P(t_1,\dotsc,t_n)\)是\DefineConcept{原子公式}.
+        \(0\)元谓词对应命题变元；在带等号的语言中，
+        \(t_1=t_2\)也是原子公式.
+        每个原子公式都是\DefineConcept{合式谓词公式}.
+        若\(\phi,\psi\)为合式公式，
+        则下列各式也是合式公式：
+        \begin{align*}
+            (\neg\phi),\quad(\phi\land\psi),\quad(\phi\lor\psi),\quad
+            (\phi\limp\psi),\quad(\phi\liff\psi).
+        \end{align*}
+        其他联结词可以按已给出的等值式视为缩写.
+        若\(\phi\)为合式公式且\(x\)为任一个体变元，
+        则下列两式也为合式公式：
+        \begin{align*}
+            (\forall x)[\phi],\qquad(\exists x)[\phi].
+        \end{align*}
+        合式公式仅由这些规则有限次生成.
+        \(a\in b\)只是选取二元谓词\(\in\)所得的特例，
+        不能替代一般一阶语言的原子公式定义.
 
-	\item 如果\(\phi\)和\(\psi\)是合式公式，那么\begin{equation*}
-		\neg \phi, \qquad
-		[\phi \lor \psi], \qquad
-		[\phi \land \psi], \qquad
-		[\phi \limp \psi], \qquad
-		[\phi \liff \psi]
-	\end{equation*}
-	都是合式公式.
-	% If \(\phi\) and \(\psi\) are wffs, then \(
-	% 	\neg \phi,
-	% 	[\phi \lor \psi],
-	% 	[\phi \land \psi],
-	% 	[\phi \limp \psi],
-	% 	[\phi \liff \psi]
-	% \) are wffs.
+        自由或约束是某次出现的性质，
+        不是预先把变元划为两种互斥的名字类别.
+        量词\((\forall x)\)或\((\exists x)\)约束其辖域内原来自由的\(x\)，
+        不要求\(x\)在加量词之前已经是约束变元.
+        同一个名字在同一公式中可以有自由出现和约束出现.
 
-	\item 如果\(\phi\)是合式公式，\(x\)是约束变元，那么\begin{equation*}
-		(\forall x)[\phi(x)]
-		\quad\text{和}\quad
-		(\exists x)[\phi(x)]
-	\end{equation*}
-	都是合式公式，
-	其中，\(\phi(x)\)表示在合式公式\(\phi\)中，
-	用约束变元\(x\)代替某个自由变元\(a\)从而得到的公式.
-	我们将这两个公式分别称为
-	“通过\DefineConcept{全称量化}变元\(a\)，从\(\phi\)得到的公式
-	（the formula obtained from \(\phi\) by universally quantifying on the variable \(a\)）”
-	和“通过\DefineConcept{存在量化}变元\(a\)，从\(\phi\)得到的公式
-	（the formula obtained from \(\phi\) by existentially quantifying on the variable \(a\)）”.
-	% If \(\phi\) is a wff and x is a bound variable,
-	% then \((\forall x) \phi(x)\) and \((\exists x) \phi(x)\) are wffs,
-	% where \(\phi(x)\) is the formula obtained from the wff \(\phi\)
-	% by replacing each occurrence of some free variable \(a\) by the bound variable \(x\).
-	% We call \((\forall x) \phi(x)\) and \((\exists x) \phi(x)\) respectively,
-	% the formula obtained from \(\phi\) by universally, or existentially,
-	% quantifying on the variable \(a\).
-\end{enumerate}
-任意一条公式，当且仅当它可以由上述三条规则演绎推得时，我们才称其为合式公式.
-% A formula is well formed if and only if its being so is deducible from rules (1)-(3) above.
+        以项\(t\)替换\(x\)时，
+        只替换\(x\)的自由出现，
+        并要求\(t\)中的变元不会因此被同名量词捕获.
+        满足此条件称为\(t\)对\(x\)可自由代入.
+        若有冲突，
+        先将相应约束变元一致地改名为新变元.
+        例如将\((\forall y)R(x,y)\)中的自由\(x\)替换为\(y\)，
+        应先改名得到\((\forall z)R(y,z)\)，
+        而不是\((\forall y)R(y,y)\).
+        以下\(A(t)\)均表示这种无捕获的代入.
+    \end{solution}
+\end{example}
 
 %@see: 《离散数学》（邓辉文） P122
 不含自由变元的谓词公式，称为\DefineConcept{闭式}（closed forumla）；
@@ -2193,51 +2716,56 @@
 	(\exists x)[P(x)]
 	= \bigvee_{d \in D} P(d).
 \end{gather}
+\begin{proof}
+    将有限非空论域列为\(D=\{d_1,\dotsc,d_m\}\).
+    全称式为真当且仅当每个\(P(d_i)\)为真，
+    这恰是所列合取为真的条件.
+    存在式为真当且仅当至少一个\(P(d_i)\)为真，
+    这恰是所列析取为真的条件.
+    此处\(P(d_i)\)表示在该解释中将\(x\)赋值为个体\(d_i\)所得的真值.
+    若原语言没有为每个个体命名的常量，
+    这只是语义层面的简写，
+    并非声称每个\(d_i\)自动成为原语言中的符号.
+\end{proof}
 
 \subsection{谓词公式的类型}
 %@see: 《离散数学》（邓辉文） P127 定义4-1
 在任何解释下均为真的谓词公式称为\DefineConcept{永真式}或\DefineConcept{有效式}（valid）.
 
-\begin{example}
-%@see: 《离散数学》（邓辉文） P127 例4-9
-证明谓词公式\((\forall x)[A(x)] \limp A(t)\)永真.
-% \begin{proof}
-% 任意给定个体域\(D\)上的解释\(I\)，
-% 假定\((\forall x)[A(x)]\)在该解释下取\(1\)，
-% 则对于任意\(d \in D\)，
-% 总有\(A(d)\)取\(1\)，
-% 于是\(A(t)\)取\(1\).
-% \end{proof}
+\begin{example}\label{example:数理逻辑.全称实例化}
+    %@see: 《离散数学》（邓辉文） P127 例4-9
+    设项\(t\)对\(x\)在\(A\)中可自由代入.
+    证明\((\forall x)A(x)\limp A(t)\)永真.
+    \begin{proof}
+        固定任意解释及自由变元赋值，
+        记\(t\)表示的个体为\(d\).
+        若前件为假，
+        条件式为真.
+        若前件为真，
+        \(A\)在\(x\)取任意个体时为真，
+        特别在\(x=d\)时为真.
+        无捕获代入保证\(A(t)\)具有这个真值，
+        所以后件为真.
+        两种情况下条件式均真，
+        因而它永真.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《离散数学》（邓辉文） P127 例4-10
-证明谓词公式\(
-	(\forall x)[A(x)]
-	\lor
-	(\forall x)[B(x)]
-	\limp
-	(\forall x)
-	[
-		A(x) \lor B(x)
-	]
-\)永真.
-% \begin{proof}
-% 任意给定个体域\(D\)上的解释\(I\)，
-% 假定\((\forall x)[A(x)] \lor (\forall x)[B(x)]\)在该解释下取\(1\)，
-% 则\((\forall x)[A(x)]\)或\((\forall x)[B(x)]\)取\(1\)，
-% 这时\((\forall x)[A(x) \lor B(x)]\)取\(1\)，
-% 因此\(
-% 	(\forall x)[A(x)]
-% 	\lor
-% 	(\forall x)[B(x)]
-% 	\limp
-% 	(\forall x)
-% 	[
-% 		A(x) \lor B(x)
-% 	]
-% \)永真.
-% \end{proof}
+    %@see: 《离散数学》（邓辉文） P127 例4-10
+    证明\(((\forall x)A(x)\lor(\forall x)B(x))\limp(\forall x)[A(x)\lor B(x)]\)永真.
+    \begin{proof}
+        固定任意解释及其余自由变元赋值.
+        若前件为假，
+        条件式为真.
+        若前件为真，
+        至少有一个全称式为真.
+        若所有个体都满足\(A\)，
+        则每个个体都满足\(A\lor B\)；若所有个体都满足\(B\)，
+        结论相同.
+        因而后件为真，
+        整个条件式永真.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2251,6 +2779,17 @@
 	(\exists x)
 	[A(x,y)]
 \)永真.
+    \begin{proof}
+        固定任意解释及其余自由变元赋值.
+        若前件为真，
+        则存在同一个个体\(a\)，
+        使每个\(b\)均满足\(A(a,b)\).
+        对\(y\)的任意取值\(b\)，
+        选\(x=a\)即可，
+        所以后件为真.
+        前件为假时条件式也为真，
+        故原式永真.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2267,6 +2806,17 @@
 	(\exists x)
 	[B(x)]
 \)永真.
+    \begin{proof}
+        固定任意解释及其余自由变元赋值.
+        若前件为真，
+        取见证\(a\)，
+        则\(A(a)\)或\(B(a)\)为真.
+        前者使\((\exists x)A(x)\)为真，
+        后者使\((\exists x)B(x)\)为真，
+        所以后件的析取为真.
+        前件为假时条件式也为真，
+        故原式永真.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2278,6 +2828,17 @@
 	(\exists x)
 	[A(x)]
 \)永真.
+    \begin{proof}
+        固定任意解释.
+        论域非空，
+        可取其中一个个体\(a\).
+        若\((\forall x)A(x)\)为真，
+        则\(A(a)\)为真，
+        所以\((\exists x)A(x)\)为真.
+        前件为假时条件式也为真.
+        非空论域条件不可省略：若允许空域，
+        前件为真而后件为假.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2291,6 +2852,18 @@
 	(\exists y)
 	[A(x,y)]
 \)永真.
+    \begin{proof}
+        固定任意解释，
+        假定前件为真.
+        从非空论域中取一个\(b\).
+        对\(x\)的任意取值\(a\)，
+        前件保证\(A(a,b)\)为真，
+        故\((\exists y)A(a,y)\)为真.
+        由于\(a\)任意，
+        后件为真.
+        前件为假时条件式也真，
+        所以原式永真.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2304,6 +2877,16 @@
 	(\exists y)
 	[A(x,y)]
 \)永真.
+    \begin{proof}
+        固定任意解释，
+        假定前件为真.
+        从非空论域中取一个\(a\)，
+        由前件知存在\(b\)使\(A(a,b)\)为真.
+        这对\(a,b\)就是后件的见证，
+        所以后件为真.
+        前件为假时条件式也真，
+        故原式永真.
+    \end{proof}
 \end{example}
 
 %@see: 《离散数学》（邓辉文） P127 定义4-2
@@ -2313,11 +2896,51 @@
 既存在取\(1\)的解释，又存在取\(0\)的解释的谓词公式
 称为\DefineConcept{中性式}或\DefineConcept{偶然式}.
 
-\begin{theorem}
-%@see: 《离散数学》（邓辉文） P127
-% 1936年丘奇和图灵分别独立证明了：
-中性谓词公式无法在有限步内判定.
-永真谓词公式、永假谓词公式可以在有限步内判定.
+\begin{theorem}[半判定与判定的区别]
+    对可有效编码的一般经典一阶语言，
+    有效闭式与不可满足闭式均可半判定：对属于相应类别的输入，
+    过程在有限步后给出肯定答案，
+    对其余输入不保证停机.
+    这不等于存在一个对所有输入均停机的判定过程，
+    也不等于每个具体中性公式都无法判明.
+    \begin{proof}
+        这里调用一阶逻辑的可靠性与完备性定理：存在有限证明可有效检验的演算，
+        其可证闭式恰好是全部有效闭式.
+        按有限字符串长度及编码次序枚举所有候选证明，
+        逐个检验，
+        发现结论为给定闭式\(A\)的证明时即停机并报告“有效”.
+        可靠性保证不误报，
+        完备性保证每个有效\(A\)最终会被发现，
+        因而这是半判定过程.
+        又因为\(A\)不可满足当且仅当\(\neg A\)有效，
+        对\(\neg A\)使用该过程即可半判定不可满足性.
+
+        一般的一阶有效性没有通用判定算法，
+        这是这里引用的丘奇不可判定性定理，
+        不是从上述证明枚举直接得出的结论\footnote{
+        A. Church，
+        \emph{A note on the Entscheidungsproblem}，
+        Journal of Symbolic Logic 1 (1936)，
+        40--41，
+        DOI: \href{https://doi.org/10.2307/2269326}{10.2307/2269326}，
+        并参见同年勘误.
+        关于可靠性、完备性与不可判定性，
+        参见\href{https://slc.openlogicproject.org/}{\emph{Sets, Logic, Computation}}.
+        }.
+        若不可满足性可判定，
+        则用\(\neg A\)是否不可满足便能判定\(A\)是否有效，
+        同样与该定理矛盾.
+        这里讨论不限制一般公式输入的判定问题，
+        并不否认某些受限片段可判定.
+
+        另一方面，
+        取闭式\(P(c)\).
+        在单元素论域中把\(c\)解释为该元素，
+        分别令\(P\)成立和不成立，
+        就得到一真一假两个解释，
+        因而直接判明\(P(c)\)是中性式.
+        这反驳了“每个中性谓词公式都不能在有限步内判明”的说法.
+    \end{proof}
 \end{theorem}
 
 \section{逻辑等值的谓词公式}
@@ -2331,7 +2954,16 @@
 记为\(A=B\).
 \end{definition}
 
-显然，\(A=B\)的充分必要条件是谓词公式\(A \liff B\)永真.
+\begin{proposition}
+    \(A=B\)当且仅当\(A\liff B\)永真.
+    \begin{proof}
+        对每个解释及自由变元赋值，
+        \(A\liff B\)为真当且仅当\(A,B\)真值相同.
+        对全部解释及赋值要求此条件成立，
+        就分别得到永真与逻辑等值的定义，
+        故二者等价.
+    \end{proof}
+\end{proposition}
 
 根据命题逻辑中的等值式，容易得到一些谓词逻辑中的等值式.
 
@@ -2348,6 +2980,18 @@
 	= (\forall x)[\neg A(x)].
 	\label{equation:数理逻辑.量词转换2}
 \end{gather}
+\begin{proof}
+    固定论域、谓词解释和其余自由变元的赋值.
+    并非每个个体使\(A\)为真，
+    当且仅当至少一个个体使\(A\)为假，
+    所以第一式成立.
+    不存在使\(A\)为真的个体，
+    当且仅当每个个体使\(A\)为假，
+    所以第二式成立.
+    这些条件在所有解释及赋值下均等价，
+    故为逻辑等值式.
+\end{proof}
+
 
 \subsubsection{量词辖域的收缩与扩张}
 %@see: 《离散数学》（邓辉文） P129
@@ -2364,9 +3008,30 @@
 	(\exists x)[A(x) \lor B]
 	= (\exists x)[A(x)] \lor B.
 \end{gather}
+\begin{proof}
+    固定解释及除\(x\)外的自由变元赋值.
+    \(B\)没有自由的\(x\)，
+    所以其真值不随\(x\)改变.
+    若\(B\)真，
+    则\(A(x)\land B\)与\(A(x)\)真值相同，
+    而\(A(x)\lor B\)对每个个体均真.
+    此时两条合取等式直接成立，
+    两条析取等式两侧均真，
+    其中存在式为真用到了非空论域.
+    若\(B\)假，
+    则\(A(x)\lor B\)与\(A(x)\)真值相同，
+    而\(A(x)\land B\)对每个个体均假.
+    此时两条析取等式直接成立，
+    两条合取等式两侧均假，
+    其中全称式为假也用到了非空论域.
+    两种情况穷尽\(B\)的取值，
+    故四式均成立.
+\end{proof}
+
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P130 例4-13(1)
+    设\(B\)中没有自由的\(x\).
 证明：\begin{equation}
 	(\forall x)[A(x) \limp B]
 	= (\exists x)[A(x)] \limp B.
@@ -2385,6 +3050,7 @@
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P130 例4-13(2)
+    设\(B\)中没有自由的\(x\).
 证明：\begin{equation}
 	(\forall x)[B \limp A(x)]
 	= B \limp (\forall x)[A(x)].
@@ -2403,6 +3069,7 @@
 \begin{example}
 %@see: 《离散数学》（邓辉文） P130 例4-13(3)
 %@see: 《离散数学》（邓辉文） P131 习题4.4 3.(1)
+    设\(B\)中没有自由的\(x\).
 证明：\begin{equation}
 	(\exists x)[A(x) \limp B]
 	= (\forall x)[A(x)] \limp B.
@@ -2422,6 +3089,7 @@
 \begin{example}
 %@see: 《离散数学》（邓辉文） P130 例4-13(4)
 %@see: 《离散数学》（邓辉文） P131 习题4.4 3.(2)
+    设\(B\)中没有自由的\(x\).
 证明：\begin{equation}
 	(\exists x)[B \limp A(x)]
 	= B \limp (\exists x)[A(x)].
@@ -2447,6 +3115,19 @@
 	(\exists x)[A(x) \lor B(x)]
 	= (\exists x)[A(x)] \lor (\exists x)[B(x)].
 \end{gather}
+\begin{proof}
+    固定任意解释及其余自由变元赋值.
+    每个个体同时满足\(A,B\)，
+    当且仅当每个个体满足\(A\)并且每个个体满足\(B\)，
+    故第一式两个方向均成立.
+    若有个体满足\(A\lor B\)，
+    则这个见证至少满足\(A,B\)之一，
+    所以至少一个存在式为真.
+    反之，
+    任一存在式的见证都满足\(A\lor B\)，
+    所以第二式两个方向也成立.
+\end{proof}
+
 \begin{remark}
 量词\(\forall\)对\(\land\)可分配，
 但是\((\forall x)[A(x) \lor B(x)]
@@ -2462,6 +3143,23 @@
 但是\((\exists x)[A(x) \land B(x)]
 \neq (\exists x)[A(x)] \land (\exists x)[B(x)]\).
 \end{remark}
+\begin{example}
+    用有限论域说明全称量词一般不对析取分配，
+    存在量词一般不对合取分配.
+    \begin{solution}
+        取\(D=\{0,1\}\)，
+        令\(A\)仅对\(0\)为真，
+        \(B\)仅对\(1\)为真.
+        每个个体至少满足一个谓词，
+        但两个谓词都不是处处真，
+        所以\((\forall x)(A(x)\lor B(x))\)为真，
+        \((\forall x)A(x)\lor(\forall x)B(x)\)为假.
+        同时两个谓词各有见证却没有共同见证，
+        所以\((\exists x)(A(x)\land B(x))\)为假，
+        \((\exists x)A(x)\land(\exists x)B(x)\)为真.
+        这分别给出了反例.
+    \end{solution}
+\end{example}
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P131 习题4.4 5.
@@ -2490,13 +3188,36 @@
 	(\exists x)(\exists y)[A(x,y)]
 	= (\exists y)(\exists x)[A(x,y)].
 \end{gather}
+\begin{proof}
+    固定任意解释及其余自由变元赋值.
+    两个全称式均表示\(A\)对论域中的每一对个体\((a,b)\)为真，
+    枚举第一、第二坐标的先后不影响这一条件.
+    两个存在式均表示至少有一对\((a,b)\)使\(A(a,b)\)为真，
+    同一对个体可以按两种顺序作为见证.
+    所以两式成立.
+\end{proof}
+
 \begin{remark}
 \((\forall x)(\exists y)[A(x,y)]
 \neq (\exists y)(\forall x)[A(x,y)]\).
 \end{remark}
+\begin{example}
+    用有限论域说明不同种类的量词一般不能交换.
+    \begin{solution}
+        取\(D=\{0,1\}\)，
+        令\(A(x,y)\)表示\(x=y\).
+        每个\(x\)都可取\(y=x\)，
+        所以\((\forall x)(\exists y)A(x,y)\)为真.
+        但每个固定的\(y\)都有一个不同于它的个体\(x\)，
+        所以\((\exists y)(\forall x)A(x,y)\)为假.
+        因而这两个公式不逻辑等值.
+    \end{solution}
+\end{example}
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P130 例4-14
+    设\(A\)没有自由的\(y\)，
+    \(B\)没有自由的\(x\).
 证明：\begin{equation}
 	(\forall x)(\forall y)[A(x) \limp B(y)]
 	= (\exists x)[A(x)] \limp (\forall y)[B(y)].
@@ -2528,60 +3249,182 @@
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P131 习题4.4 6.(1)
+    设\(A\)没有自由的\(y\)，
+    \(B\)没有自由的\(x\).
 证明：\begin{equation}
 	(\forall x)(\forall y)[A(x) \lor B(y)]
 	= (\forall x)[A(x)] \lor (\forall y)[B(y)].
 \end{equation}
+    \begin{proof}
+        这里\(A\)没有自由的\(y\)，
+        \(B\)没有自由的\(x\).
+        固定解释及其余自由变元赋值.
+        若右侧真，
+        则\(A\)处处真或\(B\)处处真，
+        两种情况都使左侧真.
+        若右侧假，
+        则存在\(a\)使\(A(a)\)假，
+        也存在\(b\)使\(B(b)\)假.
+        这对\((a,b)\)使\(A(a)\lor B(b)\)假，
+        所以左侧也假.
+        故两侧总同真同假.
+    \end{proof}
 \end{example}
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P131 习题4.4 6.(2)
+    设\(A\)没有自由的\(y\)，
+    \(B\)没有自由的\(x\).
 证明：\begin{equation}
 	(\exists x)(\exists y)[A(x) \land B(y)]
 	= (\exists x)[A(x)] \land (\exists y)[B(y)].
 \end{equation}
+    \begin{proof}
+        这里\(A\)没有自由的\(y\)，
+        \(B\)没有自由的\(x\).
+        若左侧真，
+        取见证\((a,b)\)，
+        它们分别使\(A(a),B(b)\)为真，
+        所以右侧真.
+        若右侧真，
+        分别取两个存在式的见证\(a,b\)，
+        就使\(A(a)\land B(b)\)真，
+        所以左侧真.
+        两个见证不必相同，
+        这两个方向对任意解释成立，
+        故两式等值.
+    \end{proof}
 \end{example}
 
 \begin{example}
-%@see: 《离散数学》（邓辉文） P131 习题4.4 6.(3)
-证明：\begin{equation}
-	(\exists x)(\exists y)[A(x) \limp B(x)]
-	= (\forall)[A(x)] \limp (\exists y)[B(y)].
-\end{equation}
+    %@see: 《离散数学》（邓辉文） P131 习题4.4 6.(3)
+    设\(A\)没有自由的\(y\)，
+    \(B\)没有自由的\(x\).
+    证明下式（全称量词补上指导变元，
+    第二个谓词写作\(B(y)\)）：
+    \begin{align*}
+        (\exists x)(\exists y)[A(x)\limp B(y)] &= (\forall x)A(x)\limp(\exists y)B(y).
+    \end{align*}
+    \begin{proof}
+        利用条件式的析取表示、量词辖域变换和量词转换，
+        有
+        \begin{align*}
+            (\exists x)(\exists y)[A(x)\limp B(y)] &= (\exists x)(\exists y)[\neg A(x)\lor B(y)] \\
+            &= (\exists x)[\neg A(x)\lor(\exists y)B(y)] \\
+            &= (\exists x)\neg A(x)\lor(\exists y)B(y) \\
+            &= \neg(\forall x)A(x)\lor(\exists y)B(y) \\
+            &= (\forall x)A(x)\limp(\exists y)B(y).
+        \end{align*}
+        两次辖域变换均满足自由变元限制，
+        并使用了非空论域条件.
+    \end{proof}
 \end{example}
 
 \section{前束范式}
 \subsection{前束范式的概念}
 \begin{definition}
-%@see: 《离散数学》（邓辉文） P131 定义4-4
-设\(A\)是谓词公式.
-\def\Q{\raisebox{.6em}{\rotatebox{180}{Q}}}
-若\(A = (\Q_1 x_1)(\Q_2 x_2)\dotso(\Q_n x_n)[B]\ (n\geq0)\)，
-其中\(\Q_i\ (i=1,2,\dotsc,n)\)要么是\(\forall\)要么是\(\exists\)，
-\(B\)中不含量词，
-则称“\((\Q_1 x_1)(\Q_2 x_2)\dotso(\Q_n x_n)[B]\)是
-\(A\)的\DefineConcept{前束范式}（prenex normal form）”.
+    %@see: 《离散数学》（邓辉文） P131 定义4-4
+    设\(A\)是谓词公式.
+    若\(A=(Q_1x_1)(Q_2x_2)\dotsm(Q_nx_n)[B]\)，
+    其中\(n\geq0\)，
+    每个\(Q_i\)为\(\forall\)或\(\exists\)，
+    \(B\)不含量词，
+    则称右侧公式为\(A\)的\DefineConcept{前束范式}（prenex normal form）.
+    \(n=0\)时，
+    该式就是无量词公式\(B\).
 \end{definition}
 
 直观地说，谓词公式的前束范式是将它的所有量词放到最前面去作用整个\(B\).
 例如，\(A = (\forall x)[P(x)] \limp Q(x,y)\)不是\(A\)的前束范式.
 
 \subsection{前束范式的计算}
-前束范式的计算步骤如下：\begin{enumerate}
-	\item 将原本的谓词公式归约为只含\(\neg,\land,\lor\)的谓词公式；
-	\item 使用\cref{equation:数理逻辑.量词转换1,equation:数理逻辑.量词转换2}
-	这两个等值式，将否定联结词从外向里移动.
+前束范式的计算步骤如下：
+\begin{enumerate}
+    \item 消去\(\neg,\land,\lor\)以外的联结词.
+    \item 使用对合律、德摩根律和量词转换式，
+    把否定移到原子公式前面.
+    \item 一致地重命名约束变元，
+    使不同量词使用不同名字，
+    且这些名字不与任何自由变元冲突.
+    \item 使用量词辖域的收缩与扩张，
+    逐层把量词移到前面，
+    每次检查所移量词的变元在另一操作数中不自由出现.
+    每个原有量词前缀内部的相对次序必须保留.
 \end{enumerate}
+
+\begin{theorem}[前束范式的存在性]
+    在非空论域的一阶逻辑中，
+    每个公式都有逻辑等值的前束范式，
+    而且可保持自由变元不变.
+    \begin{proof}
+        消去其他联结词后，
+        反复使用德摩根律和量词转换式，
+        每次把否定推进一层，
+        因公式有限，
+        最终得到只由文字（原子公式或其否定）、合取、析取和量词组成的公式.
+        可用变元名无限而当前公式有限，
+        所以总能为每个量词选取互不相同且避开全部自由变元的新名字.
+        这种一致改名不改变真值：新、旧量词都逐一遍历同一论域，
+        被约束位置取得相同的个体.
+
+        对改名后的公式作结构归纳.
+        文字已经是前束范式.
+        若子公式已化为前束范式，
+        在它前面增加一个量词仍是前束范式.
+        若两个子公式分别具有前缀\(Q_1x_1,\dotsc,Q_mx_m\)
+        和\(R_1y_1,\dotsc,R_ny_n\)，
+        无量词部分分别为\(B,C\)，
+        考虑它们的合取或析取.
+        全部变元已标准化改名，
+        所以每个\(x_i\)都不在另一子公式中自由出现，
+        每个\(y_j\)也不在第一子公式中自由出现.
+        逐次应用已证的辖域等值式，
+        先提出第一前缀再提出第二前缀，
+        得到
+        \begin{align*}
+            (Q_1x_1)\dotsm(Q_mx_m)(R_1y_1)\dotsm(R_ny_n)[B\circ C],
+        \end{align*}
+        其中\(\circ\)为\(\land\)或\(\lor\).
+        这就是前束范式.
+        每次变换都不捕获自由变元，
+        因而自由变元保持不变.
+        归纳完成.
+        该构造不许可任意交换\(\forall\)和\(\exists\)，
+        只是在各步自由变元条件成立时扩张辖域.
+    \end{proof}
+\end{theorem}
+
+\begin{example}
+    求\((\forall x)P(x)\limp Q(x,y)\)的一个前束范式.
+    \begin{solution}
+        右侧\(Q(x,y)\)中的\(x\)是自由出现，
+        因此不能直接把左侧的\(\forall x\)移到整个公式前面.
+        先把左侧约束变元改名为新的\(z\)，
+        然后计算
+        \begin{align*}
+            (\forall x)P(x)\limp Q(x,y) &= (\forall z)P(z)\limp Q(x,y) \\
+            &= \neg(\forall z)P(z)\lor Q(x,y) \\
+            &= (\exists z)\neg P(z)\lor Q(x,y) \\
+            &= (\exists z)[\neg P(z)\lor Q(x,y)].
+        \end{align*}
+        最后一步合法，
+        因为\(z\)在\(Q(x,y)\)中不自由出现.
+        所得公式仍以\(x,y\)为自由变元.
+    \end{solution}
+\end{example}
 
 \section{谓词逻辑中的推理}
 \subsection{逻辑蕴含式}
 \begin{example}
-%@see: 《离散数学》（邓辉文） P133 例4-19
-证明：\((\forall x)[A(x)] \implies A(t)\).
-\begin{proof}
-%TODO 由例4-9可知，
-\((\forall x)[A(x)] \limp A(t)\)永真.
-\end{proof}
+    %@see: 《离散数学》（邓辉文） P133 例4-19
+    设项\(t\)对\(x\)在\(A\)中可自由代入.
+    证明\((\forall x)A(x)\implies A(t)\).
+    \begin{proof}
+        由\cref{example:数理逻辑.全称实例化}，
+        \((\forall x)A(x)\limp A(t)\)在所有解释及自由变元赋值下都为真.
+        因而任何使前件为真的解释及赋值都使后件为真，
+        这正是所需的逻辑蕴含.
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2605,10 +3448,12 @@
 \(A(x,y): x>y+3\)，
 则\((\forall x)(\exists y)[A(x,y)]\)表示
 “对于任意实数\(x\)，均存在实数\(y\)，使得\(x>y+3\)”，
-它是真命题；
+        取\(y=x-4\)即可，
+        所以它是真命题；
 而\((\exists y)(\forall x)[A(x,y)]\)表示
 “存在实数\(y\)，对于任意实数\(x\)，都有\(x>y+3\)”，
-它是假命题；
+        对每个候选\(y\)取\(x=y+3\)即可否定其全称要求，
+        所以它是假命题；
 所以\((\forall x)(\exists y)[A(x,y)] \limp (\exists y)(\forall x)[A(x,y)]\)不是永真式，
 因此\((\exists y)(\forall x)[A(x,y)]\)不是\((\forall x)(\exists y)[A(x,y)]\)的有效结论.
 \end{proof}
@@ -2627,6 +3472,22 @@
 	(\exists x)[A(x) \land B(x)]
 	\implies (\exists x)[A(x)] \land (\exists x)[B(x)].
 \end{gather}
+    \begin{proof}
+        固定任意解释及其余自由变元赋值.
+        对于第一条，
+        若前提为真，
+        则至少一个全称式为真.
+        无论是所有个体满足\(A\)，
+        还是所有个体满足\(B\)，
+        每个个体均满足\(A\lor B\)，
+        所以结论为真.
+        对于第二条，
+        前提的一个见证同时满足\(A,B\)，
+        因而它可以分别作为两个存在式的见证，
+        所以结论的合取为真.
+        两条规则都把真前提保留为真结论，
+        故成立.
+    \end{proof}
 \end{theorem}
 
 \begin{example}
@@ -2657,7 +3518,7 @@
 举例说明\begin{equation*}
 	(\exists x)[A(x) \limp B(x)] \implies (\exists x)[A(x)] \limp (\exists x)[B(x)]
 \end{equation*}不成立.
-\begin{proof}
+    \begin{solution}
 取个体域\(D = \{1,2\}\)，
 解释\(
 	\frac{A(1)}1,
@@ -2672,7 +3533,7 @@
 但\((\exists x)[B(x)]\)为假；
 所以\((\exists x)[A(x)] \limp (\exists x)[B(x)]\)在上述解释下为假，
 因此\((\exists x)[A(x) \limp B(x)] \implies (\exists x)[A(x)] \limp (\exists x)[B(x)]\)不成立.
-\end{proof}
+    \end{solution}
 \end{example}
 
 \subsection{自然推理系统}
@@ -2682,23 +3543,82 @@
 新建了谓词公式的形成规则；
 依然没有公理；
 基本推理规则除了\cref{theorem:一阶逻辑.基本推理规则} 引入的两个逻辑蕴含式以外，
-还有以下4个与量词有关的基本推理规则：\begin{enumerate}
-	\item {\rm\bf 全称量词消去规则（universal quantifier specification, US）}：\begin{equation*}
-		(\forall x)[A(x)] \implies A(c)\ (\text{$c$是个体域中任意个体}).
-	\end{equation*}
+还有以下4个与量词有关的基本推理规则.
+记\(\Gamma\)为尚未解除的前提，
+\(\Gamma\vdash C\)表示存在由这些前提推出\(C\)的形式推导，
+不同于表示语义蕴含的\(\Gamma\models C\).
+这里的\(c\)可以是为当前子推导临时引入的新参数，
+不是预先指定、具有特殊性质的个体.
 
-	\item {\rm\bf 全称量词产生规则（universal quantifier generalization, UG）}：\begin{equation*}
-		A(c)\ (\text{$c$是个体域中任意个体}) \implies (\forall x)[A(x)].
-	\end{equation*}
+\begin{enumerate}
+    \item \textbf{全称量词消去（US）}：
+    由\((\forall x)A(x)\)可推出\(A(t)\)，
+    其中\(t\)对\(x\)在\(A\)中可自由代入.
+    \begin{proof}
+        全称式为真时，
+        \(A\)对每个个体都真，
+        特别对项\(t\)表示的个体为真，
+        无捕获代入保证得到\(A(t)\).
+    \end{proof}
 
-	\item {\rm\bf 存在量词消去规则（existential quantifier specification, ES）}：\begin{equation*}
-		(\exists x)[A(x)] \implies A(c)\ (\text{$c$是个体域中某个体，且$c$与其他自由变元无关}).
-	\end{equation*}
+    \item \textbf{全称量词产生（UG）}：
+    若\(\Gamma\vdash A(c)\)，
+    且\(c\)是没有出现在\(\Gamma\)及原公式\(A\)中的新参数，
+    则可得\(\Gamma\vdash(\forall x)A(x)\).
+    \begin{proof}
+        固定任意使\(\Gamma\)为真的解释及赋值.
+        由于\(c\)未出现在这些前提中，
+        可将\(c\)解释为论域中的任意个体而不改变前提真值.
+        已得子推导保证每种扩充解释都使\(A(c)\)为真，
+        所以\(A\)对每个个体都真，
+        即全称式为真.
+        因而这条规则在子推导可靠时保持可靠性.
+    \end{proof}
 
-	\item {\rm\bf 存在量词产生规则（existential quantifier generalization, EG）}：\begin{equation*}
-		A(c)\ (\text{$c$是个体域中某个体}) \implies (\exists x)[A(x)].
-	\end{equation*}
+    \item \textbf{存在量词消去（ES）}：
+    已有\(\Gamma\vdash(\exists x)A(x)\)时，
+    取未在\(\Gamma,A,C\)中出现的新参数\(c\)，
+    在临时假设\(A(c)\)下推出\(C\).
+    若\(C\)不含\(c\)，
+    则解除该临时假设并得到\(\Gamma\vdash C\).
+    \begin{proof}
+        固定任意使\(\Gamma\)为真的解释及赋值.
+        存在式为真，
+        所以有见证\(d\).
+        把新参数\(c\)解释为\(d\)，
+        不改变\(\Gamma\)的真值，
+        且使临时假设\(A(c)\)为真.
+        子推导于是使\(C\)为真.
+        \(C\)不含\(c\)，
+        所以退回原解释后\(C\)仍真，
+        故可以解除临时见证假设.
+        这不是无条件的逻辑蕴含\((\exists x)A(x)\implies A(c)\).
+    \end{proof}
+
+    \item \textbf{存在量词产生（EG）}：
+    由\(A(t)\)可推出\((\exists x)A(x)\)，
+    其中\(t\)对\(x\)在\(A\)中可自由代入.
+    \begin{proof}
+        \(A(t)\)为真时，
+        项\(t\)表示的个体就是存在式的见证，
+        所以结论为真.
+    \end{proof}
 \end{enumerate}
+
+\begin{example}
+    说明为什么不能把UG和ES写成不带条件的普通逻辑蕴含.
+    \begin{solution}
+        取\(D=\{0,1\}\)，
+        令\(A\)仅对\(0\)成立.
+        若把已有常量\(c\)解释为\(0\)，
+        则\(A(c)\)真而\((\forall x)A(x)\)假，
+        所以不能从某个特定个体满足\(A\)就全称推广.
+        若把\(c\)解释为\(1\)，
+        则\((\exists x)A(x)\)真而\(A(c)\)假，
+        所以不能把存在见证任意指定为已有常量.
+        新参数条件和临时假设的解除正是为排除这些错误.
+    \end{solution}
+\end{example}
 
 \begin{example}
 %@see: 《离散数学》（邓辉文） P134 例4-23
@@ -2728,24 +3648,19 @@ D(x): \text{$x$是要死的}\)，
 \end{example}
 
 \begin{example}
-%@see: 《离散数学》（邓辉文） P134 例4-24
-证明：\((\forall x)[F(x) \limp G(x)],
-(\exists x)[F(x)]
-\implies
-(\exists x)[G(x)]\).
-\begin{proof}
-用构造法.
-\begin{center}
-	\begin{tblr}{cp{4cm}l}
-		(1) & \((\exists x)[F(x)]\) & P \\
-		(2) & \(F(c)\) & ES(1) \\
-		(3) & \((\forall x)[F(x) \limp G(x)]\) & P \\
-		(4) & \(F(c) \limp G(c)\) & US(3) \\
-		(5) & \(G(c)\) & T(2)(4)I \\
-		(6) & \((\exists x)[G(x)]\) & EG(5) \\
-	\end{tblr}
-\end{center}
-\end{proof}
+    %@see: 《离散数学》（邓辉文） P134 例4-24
+    证明\((\forall x)[F(x)\limp G(x)],(\exists x)F(x)\implies(\exists x)G(x)\).
+    \begin{proof}
+        取没有出现在前提及目标结论中的新参数\(c\)，
+        开启一个以\(F(c)\)为临时假设的子推导.
+        对全称前提使用US，
+        得\(F(c)\limp G(c)\)；结合\(F(c)\)用假言推理得\(G(c)\)，
+        再用EG得\((\exists x)G(x)\).
+        这个结论不含\(c\)，
+        因而可对前提\((\exists x)F(x)\)使用ES，
+        解除临时假设\(F(c)\)，
+        得到只依赖两个原前提的结论\((\exists x)G(x)\).
+    \end{proof}
 \end{example}
 
 \begin{example}
@@ -2756,6 +3671,9 @@ D(x): \text{$x$是要死的}\)，
 (\forall x)[G(x) \limp \neg F(x)]\).
 \begin{proof}
 用构造法.
+        取未在前提及原公式中出现的新参数\(c\)，
+        其解释可为论域中的任意个体，
+        所以最后一步满足UG的新参数条件.
 \begin{center}
 	\begin{tblr}{cp{4cm}l}
 		(1) & \(\neg(\exists x)[F(x) \land H(x)]\) & P \\
