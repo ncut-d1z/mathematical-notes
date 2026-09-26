@@ -88,12 +88,14 @@
 
 我们对相等性的直观理解源于同一性.
 对于相等性，我们期望的一个基本性质是“两个相等的事物可以用另外两个相等的事物互相替代”.
-也就是说，如果\(a=b\)，那么对于任意事物，可以断言关于\(a\)的任何事情也可以断言关于\(b\)
+也就是说，如果\(a=b\)，那么对于任意事物，可以断言关于\(a\)的任何事情也可以断言关于\(b\).
 特别地，如果某个合式公式对\(a\)成立，那么它也应对\(b\)成立，并且反之亦然，即\begin{equation*}
 	(a=b)\implies[\phi(a)\iff\phi(b)],
 \end{equation*}
 其中\(\phi(a)\)和\(\phi(b)\)是%
-用受限变元\(a\)和\(b\)代替合式公式\(\phi\)中的某个相同的自由变元而取得的.
+用\(a\)和\(b\)分别代换合式公式\(\phi(x)\)中自由出现的\(x\)而取得的.
+代换前须在必要时改名约束变元，
+避免代入的变元被量词约束.
 
 \begin{axiom}[外延公理II]
 %@see: 《Introduction to Axiomatic Set Theory》 P8 Extensionality Axiom
@@ -112,7 +114,58 @@
 \end{property}
 
 \begin{theorem}
-\(a=b \implies [\phi(a)\iff\phi(b)]\).
+    设\(\phi(x)\)是只以\(\in\)和\(=\)为原子关系的集合论一阶公式，
+    允许含有固定的其他参数.
+    其中\(\phi(a)\)、\(\phi(b)\)均由不发生变元捕获的自由代换得到.
+    那么
+    \begin{align*}
+        a=b &\implies [\phi(a)\iff\phi(b)].
+    \end{align*}
+    \begin{proof}
+        假设\(a=b\).
+        对\(\phi\)的构造作结构归纳，
+        并将其中的约束变元预先改名，
+        使其不同于被代换的变元及代入的变元.
+
+        首先考虑原子公式.
+        对任意集合\(c\)，
+        外延公理I以及外延公理II与相等的对称性分别给出
+        \begin{align*}
+            c\in a &\iff c\in b, \\
+            a\in c &\iff b\in c.
+        \end{align*}
+        若被代换的变元同时出现在所属关系的两端，
+        则依次代换两端，
+        得到
+        \begin{align*}
+            a\in a &\iff b\in a \\
+            &\iff b\in b.
+        \end{align*}
+        相等的对称性和传递性又给出
+        \begin{align*}
+            a=c &\iff b=c, \\
+            c=a &\iff c=b.
+        \end{align*}
+        公式\(a=a\)与\(b=b\)均由自反性成立.
+        不含被代换变元的原子公式不发生变化.
+        因而结论对所有原子公式成立.
+
+        其次，
+        假设结论已对公式\(\psi(x)\)、\(\chi(x)\)成立.
+        否定、合取、析取、蕴含和等价联结词的真值仅取决于其子公式的真值，
+        所以结论也对由这些联结词构成的复合公式成立.
+
+        最后考虑量词.
+        设\(y\)是已经改名的约束变元.
+        归纳假设对\(y\)的每个取值均给出\(\psi(a,y)\iff\psi(b,y)\)，
+        因而
+        \begin{align*}
+            (\forall y)\psi(a,y) &\iff (\forall y)\psi(b,y), \\
+            (\exists y)\psi(a,y) &\iff (\exists y)\psi(b,y).
+        \end{align*}
+        结构归纳完成，
+        因此\(a=b\implies[\phi(a)\iff\phi(b)]\).
+    \end{proof}
 \end{theorem}
 
 外延公理说明一个集合完全由它的元素确定.
@@ -147,7 +200,7 @@
 再用空着的右手在猎物堆里扒拉，随意地拎出一只猎物.
 你举起双臂，扭动翻转手腕、手肘，
 仔细查看这两只猎物，比较它们的特征是否一致.
-如果两者不同，右手上的猎物没有尖喙尖爪，
+如果两者不同，右手的猎物没有尖喙尖爪，
 就把它放到身体右侧，和原本堆在地上的猎物隔开一段距离，
 再用右手重新抓一只猎物进行下一轮比较；
 如果两者相同，右手的猎物也有尖喙尖爪，
@@ -348,59 +401,67 @@
 
 为了确保“系的并”这样的集合存在，我们需要改进并集公理，如下：
 \begin{axiom}[并集公理II]
-对于任意集合\(A\)，总存在一个集合\(B\)，
-使得集合\(B\)中的元素恰好是集合\(A\)中的元素的元素，即\begin{equation*}
-	(\forall x)[
-		x \in B
-		\iff
-		(\exists b)[b \in A \implies x \in b]
-	].
-\end{equation*}
+    对于任意集合\(A\)，
+    总存在一个集合\(B\)，
+    使得\(B\)的元素恰好是\(A\)的元素的元素，
+    即
+    \begin{align*}
+        (\forall A)(\exists B)(\forall x)
+        [x\in B &\iff (\exists b)(b\in A\land x\in b)].
+    \end{align*}
 \end{axiom}
 
-我们可以将\(\bigcup A\)的定义表述为如下形式：\begin{equation*}
-	x \in \bigcup A
-	\defiff
-	(\exists b)[b \in A \implies x \in b].
-\end{equation*}
+我们可以将\(\bigcup A\)的定义表述为如下形式：
+\begin{align*}
+    x\in\bigcup A &\defiff (\exists b)(b\in A\land x\in b).
+\end{align*}
 原有的对于“集的并”的定义可以修改为\begin{equation*}
 	a \cup b \defeq \bigcup\Set{a,b}.
 \end{equation*}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P26 Example
-如果\(b \in A\)，那么必有\(b \subseteq \bigcup A\)，
-这是因为对于\(\forall x, \forall b\)，总有\begin{equation*}
-	x \in b \in A
-	\implies
-	x \in \bigcup A;
-\end{equation*}
-反之则不然，例如\begin{equation*}
-	A = \Set{\Set{1,2,3},\Set{1,4}}
-	\implies
-	\bigcup A = \Set{1,2,3,4},
-\end{equation*}
-容易看出\(b = \Set{2,3,4} \subseteq \bigcup A\)，但是\(b \notin A\).
+    %@see: 《Elements of Set Theory》 P26 Example
+    证明：如果\(b\in A\)，
+    那么\(b\subseteq\bigcup A\)；并举例说明逆命题不成立.
+    \begin{proof}
+        任取\(x\in b\).
+        因为\(b\in A\)，
+        所以\(b\)是存在命题\((\exists c)(c\in A\land x\in c)\)的一个见证.
+        由并集的定义可知\(x\in\bigcup A\)，
+        因而\(b\subseteq\bigcup A\).
+    \end{proof}
+    \begin{solution}
+        取
+        \begin{align*}
+            A &= \Set{\Set{1,2,3},\Set{1,4}}, \\
+            b &= \Set{2,3,4}.
+        \end{align*}
+        此时\(\bigcup A=\Set{1,2,3,4}\)，
+        所以\(b\subseteq\bigcup A\).
+        但是\(b\)既不等于\(\Set{1,2,3}\)，
+        也不等于\(\Set{1,4}\)，
+        因而\(b\notin A\).
+        %@Mathematica: fam = {{1, 2, 3}, {1, 4}}; b = {2, 3, 4};
+        %@Mathematica: {Complement[b, Union @@ fam] == {}, MemberQ[fam, b]}
+    \end{solution}
 \end{example}
 
 \begin{example}\label{example:集合论.有序对各坐标的取值范围}
-%@see: 《Elements of Set Theory》 P26 Example
-%@see: 《Elements of Set Theory》 P38 Lemma 3D
-如果有\(\Set{ \Set{x}, \Set{x,y} } \in A\)，
-考虑到\(\Set{x,y} \in \Set{ \Set{x}, \Set{x,y} }\)，
-那么有\begin{equation*}
-	\Set{x,y} \in \bigcup A;
-\end{equation*}
-再考虑到\(x,y \in \Set{x,y}\)，
-进而有\begin{equation*}
-	x,y \in \bigcup\bigcup A.
-\end{equation*}
-综上所述，我们有
-\begin{equation}
-	\Set{ \Set{x}, \Set{x,y} } \in A
-	\implies
-	x,y \in \bigcup\bigcup A.
-\end{equation}
+    %@see: 《Elements of Set Theory》 P26 Example
+    %@see: 《Elements of Set Theory》 P38 Lemma 3D
+    证明：
+    \begin{align*}
+        \Set{\Set{x},\Set{x,y}}\in A
+        &\implies x,y\in\bigcup\bigcup A.
+    \end{align*}
+    \begin{proof}
+        因为\(\Set{x,y}\in\Set{\Set{x},\Set{x,y}}\)，
+        由假设与并集的定义可得\(\Set{x,y}\in\bigcup A\).
+        又因为\(x\in\Set{x,y}\)且\(y\in\Set{x,y}\)，
+        再应用一次并集的定义，
+        就有\(x,y\in\bigcup\bigcup A\).
+        这里不需要假设\(x\neq y\).
+    \end{proof}
 \end{example}
 
 例如，
@@ -430,21 +491,23 @@
 \begin{equation}\label{equation:集合论.集的幂集的并等于集}
 	\bigcup \Powerset A = A.
 \end{equation}
-\begin{proof}
-不难得到
-\begin{align*}
-	x \in \bigcup \Powerset A
-	&\iff
-	(\exists b \in \Powerset A)
-	[x \in b] \\
-	&\iff
-	(\exists b \subseteq A)
-	[x \in b] \\
-	&\iff
-	x \in A.
-	\qedhere
-\end{align*}
-\end{proof}
+    \begin{proof}
+        任取\(x\in\bigcup\Powerset A\).
+        由并集的定义，
+        存在\(b\in\Powerset A\)使得\(x\in b\).
+        因为\(b\subseteq A\)，
+        所以\(x\in A\)，
+        从而\(\bigcup\Powerset A\subseteq A\).
+
+        反之，
+        若\(x\in A\)，
+        则由\(A\subseteq A\)可知\(A\in\Powerset A\).
+        在并集定义中取\(b=A\)作为见证，
+        便得到\(x\in\bigcup\Powerset A\).
+        因此\(A\subseteq\bigcup\Powerset A\)，
+        再由外延公理得\(\bigcup\Powerset A=A\).
+        两个方向均不要求\(A\)非空.
+    \end{proof}
 \end{example}
 
 \subsection{子集公理}
@@ -458,48 +521,68 @@
 子集公理有时候也称作\DefineConcept{分离公理}，
 它在英语中称作Subset Axioms，
 在德语中称作Axiom der Aussonderung.
-正如其名，该定理的作用就是从集合\(A\)中取出适合命题公式\(\lambda\)的元素，组合成新的集合\(B\).
+正如其名，该公理的作用就是从集合\(A\)中取出适合命题公式\(\lambda\)的元素，组合成新的集合\(B\).
 
 可以看出，子集公理是保障我们采用“描述法”表示集合这一方法论的正当性的基础.
-也就是说，\begin{equation*}
-	(\forall A)(\exists B)(\forall x)
-	[x \in B \iff x \in A \land \lambda]
-	\quad\iff\quad
-	B = \Set{ x \in A \given \lambda }.
-\end{equation*}
+也就是说，
+对于给定的\(A\)及不含\(B\)为自由变元的公式\(\lambda(x)\)，
+子集公理保证可以定义
+\begin{align*}
+    B &\defeq \Set{x\in A\given\lambda(x)}.
+\end{align*}
+这里\(x\in B\iff x\in A\land\lambda(x)\)，
+而外延公理保证满足这一条件的\(B\)唯一.
 
 \begin{example}
-以空集为元素构成的集合\(\Set{\emptyset}\)不是空集，即\(\Set{\emptyset} \neq \emptyset\).
-这是因为\(\emptyset \in \Set{\emptyset}\)但\(\emptyset \notin \emptyset\).
+    证明：以空集为元素构成的集合不是空集，
+    即\(\Set{\emptyset}\neq\emptyset\).
+    \begin{proof}
+        对集公理保证单元素集\(\Set{\emptyset}\)存在.
+        由单元素集的定义有\(\emptyset\in\Set{\emptyset}\)，
+        但由空集的定义有\(\emptyset\notin\emptyset\).
+        两个集合的元素不同，
+        所以由外延公理可知\(\Set{\emptyset}\neq\emptyset\).
+    \end{proof}
 \end{example}
 
 现在我们可以利用子集公理和罗素悖论的论据来证明%
 “包括所有集合的类\(V\)本身不是一个集合”.
 \begin{theorem}\label{theorem:集合论.以所有集合为元素组成的集合不存在}
-%@see: 《Elements of Set Theory》 P22 Theorem 2A
-以所有集合为元素组成的集合不存在.
-\begin{proof}
-设\(A\)是一个集合.
-令\begin{equation*}
-B = \Set{ x \in A \given x \notin x }.
-\end{equation*}那么有\begin{equation*}
-B \in B
-\iff
-B \in A \land B \notin B.
-\eqno(1)
-\end{equation*}
+    %@see: 《Elements of Set Theory》 P22 Theorem 2A
+    以所有集合为元素组成的集合不存在.
+    \begin{proof}
+        设\(A\)是任意集合.
+        由子集公理可以构造集合
+        \begin{align*}
+            B &= \Set{x\in A\given x\notin x}.
+        \end{align*}
+        将\(x=B\)代入其成员条件，
+        得到
+        \begin{align*}
+            B\in B &\iff B\in A\land B\notin B.
+        \end{align*}
+        假设\(B\in A\).
+        若\(B\in B\)，
+        则由上式得到\(B\notin B\)，
+        矛盾.
+        因而\(B\notin B\).
+        但此时\(B\in A\land B\notin B\)成立，
+        上式反过来又给出\(B\in B\)，
+        仍然矛盾.
+        所以\(B\notin A\).
 
-假设\(B \in A\)，那么(1)式化为\begin{equation*}
-B \in B \iff B \notin B,
-\end{equation*}矛盾，故\(B \notin A\).
-
-综上所述，我们总可构造出一个不属于\(A\)的集合\(B\)，因此不存在“以所有集合为元素组成的集合”.
-\end{proof}
+        对任意集合\(A\)都存在一个不属于它的集合\(B\)，
+        因此没有以所有集合为元素的集合.
+        这一证明不需要预先假设任何集合都不属于自身.
+    \end{proof}
 \end{theorem}
-有的人可能会对是否存在以其本身为元素的集合抱有疑问，我们将在后面证明这是不可能的.
-而根据这个结论，在上面的证明中，集合\(B\)实际上与集合\(A\)完全相同.
+关于集合是否可以属于自身的问题，
+需要区分这里已使用的公理与另行加入的正则公理.
+若再由正则公理推出每个集合\(x\)都满足\(x\notin x\)，
+那么上述集合\(B\)才可进一步写成\(B=A\).
+这不是上述罗素论证的前提.
 
-利用子集定理，我们可以进一步定义子集、真子集、交集等概念.
+利用子集公理，我们可以进一步定义子集、真子集、交集等概念.
 \begin{definition}\label{definition:集合论.子集的定义}
 设\(A\)、\(B\)是两个集合，
 如果集合\(A\)的元素都是集合\(B\)的元素，
@@ -560,18 +643,49 @@ B \in B \iff B \notin B,
 \end{definition}
 
 \begin{theorem}
-任意集合都是其本身的子集，即\begin{equation*}
-	(\forall A)[A \subseteq A].
-\end{equation*}
+    任意集合都是其本身的子集，
+    即
+    \begin{align*}
+        &(\forall A)[A\subseteq A].
+    \end{align*}
+    \begin{proof}
+        固定任意集合\(A\).
+        对每个\(x\)，
+        蕴含式\(x\in A\implies x\in A\)恒真.
+        因而\((\forall x)(x\in A\implies x\in A)\)成立，
+        按子集的定义有\(A\subseteq A\).
+        由于\(A\)任意，
+        结论成立.
+    \end{proof}
 \end{theorem}
 
 \begin{theorem}\label{theorem:子集公理.空集是任何集合的子集}
-空集\(\emptyset\)是任何集合的子集，即\begin{equation*}
-	(\forall A)[\emptyset \subseteq A];
-\end{equation*}
-还是任何非空集合的真子集，即\begin{equation*}
-	(\forall A)[A \neq \emptyset \iff \emptyset \subset A].
-\end{equation*}
+    空集\(\emptyset\)是任何集合的子集，
+    即
+    \begin{align*}
+        &(\forall A)[\emptyset\subseteq A];
+    \end{align*}
+    还是任何非空集合的真子集，
+    即
+    \begin{align*}
+        &(\forall A)[A\neq\emptyset\iff\emptyset\subset A].
+    \end{align*}
+    \begin{proof}
+        固定任意集合\(A\).
+        对每个\(x\)，
+        由于\(x\in\emptyset\)为假，
+        蕴含式\(x\in\emptyset\implies x\in A\)恒真.
+        按子集的定义有\(\emptyset\subseteq A\).
+
+        根据真子集的定义以及刚得到的包含关系，
+        有
+        \begin{align*}
+            \emptyset\subset A
+            &\iff \emptyset\subseteq A\land\emptyset\neq A \\
+            &\iff A\neq\emptyset.
+        \end{align*}
+        这同时证明了第二个结论的两个方向.
+    \end{proof}
 \end{theorem}
 
 在学习了从属关系（\(\in\)）和包含关系（\(\subseteq\)）以后，切莫将两者搞混.
@@ -579,16 +693,49 @@ B \in B \iff B \notin B,
 在讨论\(A \subseteq B\)是否成立时，我们要将\(A\)打开，检查它里面的所有元素是不是都是\(B\)中的元素.
 
 \begin{theorem}
-如果集合\(A\)与集合\(B\)互为子集，那么集合\(A\)与集合\(B\)相等，即\begin{equation*}
-	A \subseteq B \land B \subseteq A
-	\iff
-	A = B.
-\end{equation*}
+    两个集合相等当且仅当它们互为子集，
+    即
+    \begin{align*}
+        A\subseteq B\land B\subseteq A &\iff A=B.
+    \end{align*}
+    \begin{proof}
+        假设\(A\subseteq B\)且\(B\subseteq A\).
+        对任意\(x\)，
+        两个包含关系分别给出\(x\in A\implies x\in B\)
+        和\(x\in B\implies x\in A\)，
+        因而\(x\in A\iff x\in B\).
+        由外延公理可知\(A=B\).
+
+        反之，
+        若\(A=B\)，
+        则外延公理给出\((\forall x)(x\in A\iff x\in B)\).
+        分别取等价式的两个方向，
+        按子集的定义得到\(A\subseteq B\)和\(B\subseteq A\).
+    \end{proof}
 \end{theorem}
 
 \begin{example}
-\(\Powerset \emptyset = \{ \emptyset \},%
-\Powerset \Set{ \emptyset } = \{ \emptyset, \{ \emptyset \} \}\).
+    求\(\Powerset\emptyset\)和\(\Powerset\Set{\emptyset}\).
+    \begin{solution}
+        若\(X\subseteq\emptyset\)，
+        则\(X\)不含任何元素，
+        由外延公理得\(X=\emptyset\).
+        又有\(\emptyset\subseteq\emptyset\)，
+        所以
+        \begin{align*}
+            \Powerset\emptyset &= \Set{\emptyset}.
+        \end{align*}
+        若\(X\subseteq\Set{\emptyset}\)，
+        则\(X\)中的元素只能是\(\emptyset\).
+        当\(X\)非空时，
+        必有\(\emptyset\in X\)，
+        从而\(X=\Set{\emptyset}\)；当\(X\)为空时则\(X=\emptyset\).
+        这两个集合也确实都是\(\Set{\emptyset}\)的子集，
+        因此
+        \begin{align*}
+            \Powerset\Set{\emptyset} &= \Set{\emptyset,\Set{\emptyset}}.
+        \end{align*}
+    \end{solution}
 \end{example}
 
 \begin{example}
@@ -684,23 +831,35 @@ B \in B \iff B \notin B,
 \end{theorem}
 
 \begin{example}
-%@see: 《Elements of Set Theory》 P26 Example
-因为\begin{equation*}
-	\bigcap\Set{\Set{a},\Set{a,b}}
-	= \Set{a}\cap\Set{a,b}
-	= \Set{a},
-\end{equation*}
-所以\begin{equation*}
-	\bigcup\bigcap\Set{\Set{a},\Set{a,b}}
-	= \bigcup\Set{a}
-	= a.
-\end{equation*}
-
-类似有\begin{equation*}
-	\bigcap\bigcup\Set{\Set{a},\Set{a,b}}
-	= \bigcap\Set{a,b}
-	= a \cap b.
-\end{equation*}
+    %@see: 《Elements of Set Theory》 P26 Example
+    求\(\bigcup\bigcap\Set{\Set{a},\Set{a,b}}\)
+    和\(\bigcap\bigcup\Set{\Set{a},\Set{a,b}}\).
+    \begin{solution}
+        由\cref{theorem:集合论.系的交的唯一存在性}，
+        以下非空集合族的交均有定义.
+        对任意\(x\)，
+        有
+        \begin{align*}
+            x\in\bigcap\Set{\Set{a},\Set{a,b}}
+            &\iff x=a\land(x=a\lor x=b) \\
+            &\iff x=a.
+        \end{align*}
+        所以该交集等于\(\Set{a}\)，
+        从而
+        \begin{align*}
+            \bigcup\bigcap\Set{\Set{a},\Set{a,b}}
+            &= \bigcup\Set{a}=a.
+        \end{align*}
+        另一方面，
+        由并集的定义有\(\bigcup\Set{\Set{a},\Set{a,b}}=\Set{a,b}\).
+        因为\(\Set{a,b}\)非空，
+        所以
+        \begin{align*}
+            \bigcap\bigcup\Set{\Set{a},\Set{a,b}}
+            &= \bigcap\Set{a,b}=a\cap b.
+        \end{align*}
+        这些结论对\(a=b\)以及\(a\)或\(b\)为空集的情形同样成立.
+    \end{solution}
 \end{example}
 
 \begin{definition}
@@ -729,11 +888,26 @@ B \in B \iff B \notin B,
 \end{remark}
 
 \begin{example}
-因为\(\bigcap\Set{ \Set{a}, \Set{a,b} } = \Set{a} \cap \Set{a,b} = \Set{a}\)，
-所以\begin{gather*}
-	\bigcup \bigcap \Set{ \Set{a}, \Set{a,b} } = \bigcup \Set{a} = a; \\
-	\bigcap \bigcup \Set{ \Set{a}, \Set{a,b} } = \bigcap \Set{a,b} = a \cap b.
-\end{gather*}
+    证明：
+    \begin{align*}
+        \bigcup\bigcap\Set{\Set{a},\Set{a,b}} &= a, \\
+        \bigcap\bigcup\Set{\Set{a},\Set{a,b}} &= a\cap b.
+    \end{align*}
+    \begin{proof}
+        因为\(\Set{a}\subseteq\Set{a,b}\)，
+        两个集合的交为\(\Set{a}\)，
+        并为\(\Set{a,b}\).
+        再分别取并与交，
+        得到
+        \begin{align*}
+            \bigcup\bigcap\Set{\Set{a},\Set{a,b}}
+            &= \bigcup\Set{a}=a, \\
+            \bigcap\bigcup\Set{\Set{a},\Set{a,b}}
+            &= \bigcap\Set{a,b}=a\cap b.
+        \end{align*}
+        所涉及的集合族都非空，
+        故两式中的交集均有定义.
+    \end{proof}
 \end{example}
 
 \subsection{差集}
@@ -1148,28 +1322,78 @@ B \cup C = B,
 	A \subseteq \Powerset \bigcup A;
 \end{equation}
 并找出使得\(A = \Powerset \bigcup A\)成立的条件.
-\begin{proof}
-因为对于\(\forall a\)，
-总有\begin{equation*}
-	a \in A
-	\implies
-	a \subseteq \bigcup A
-	\iff
-	a \in \Powerset \bigcup A,
-\end{equation*}
-所以\(A \subseteq \Powerset \bigcup A\).
+    \begin{proof}
+        任取\(a\in A\).
+        对每个\(x\in a\)，
+        由并集的定义有\(x\in\bigcup A\).
+        所以\(a\subseteq\bigcup A\)，
+        从而\(a\in\Powerset(\bigcup A)\).
+        因此\(A\subseteq\Powerset(\bigcup A)\).
+        当\(A=\emptyset\)时该包含关系也成立.
+    \end{proof}
+    \begin{solution}
+        等号成立的一个充要条件是：存在集合\(X\)使得\(A=\Powerset X\).
+        事实上，
+        若\(A=\Powerset(\bigcup A)\)，
+        则取\(X=\bigcup A\)即可.
+        反之，
+        若\(A=\Powerset X\)，
+        由\cref{equation:集合论.集的幂集的并等于集}可得
+        \begin{align*}
+            \Powerset(\bigcup A)
+            &= \Powerset(\bigcup\Powerset X) \\
+            &= \Powerset X=A.
+        \end{align*}
+        此时\(X\)必为\(\bigcup A\)，
+        因而也是唯一的.
 
-从上面的证明过程可以看出，
-当\((\forall a)
-[a \subseteq \bigcup A \iff a \in A]\)时，
-就有\(A = \Powerset \bigcup A\)成立.
+        还可以将充要条件写成以下两项同时成立：
+        \begin{align*}
+            &\bigcup A\in A, \\
+            &(\forall a\in A)(\forall b)[b\subseteq a\implies b\in A].
+        \end{align*}
+        第二项表示：\(A\)含有其每个成员的所有子集.
+        为证明必要性，
+        假设\(A=\Powerset(\bigcup A)\).
+        因为\(\bigcup A\subseteq\bigcup A\)，
+        所以\(\bigcup A\in A\).
+        若\(a\in A\)且\(b\subseteq a\)，
+        则\(a\subseteq\bigcup A\)，
+        从而\(b\subseteq\bigcup A\)，
+        于是\(b\in A\).
 
-在\(a \subseteq \bigcup A \implies a \in A\)的前提下，
-由于总有\(\emptyset \subseteq \bigcup A\)成立，
-所以\(\emptyset \in A\)恒成立.
-考虑当\(A = \Set{\emptyset}\)成立时，
-必有\(\bigcup A = \bigcup\Set{\emptyset} = \emptyset\)，
-因此\(\Powerset \bigcup A = \Powerset \emptyset = \Set{\emptyset} = A\).
-%TODO
-\end{proof}
+        为证明充分性，
+        假设上述两项成立.
+        任取\(b\in\Powerset(\bigcup A)\)，
+        则\(b\subseteq\bigcup A\).
+        将第二项中的\(a\)取为第一项保证属于\(A\)的\(\bigcup A\)，
+        得到\(b\in A\).
+        因此\(\Powerset(\bigcup A)\subseteq A\)，
+        与已经证明的反向包含关系合并，
+        即得\(A=\Powerset(\bigcup A)\).
+
+        仅有\(\emptyset\in A\)并不足以保证等号成立.
+        例如取
+        \begin{align*}
+            s &= \emptyset, \\
+            t &= \Set{\emptyset}, \\
+            A &= \Set{\emptyset,\Set{s,t}}.
+        \end{align*}
+        因为\(s\neq t\)，
+        所以\(\Set{s}\)非空且不等于\(\Set{s,t}\)，
+        因而\(\Set{s}\notin A\).
+        但是\(\bigcup A=\Set{s,t}\)，
+        所以\(\Set{s}\in\Powerset(\bigcup A)\).
+        此例满足\(\emptyset\in A\)和\(\bigcup A\in A\)，
+        却不满足第二项条件，
+        因而等号不成立.
+        %@Mathematica: ss = {}; tt = {{}}; fam = {{}, {ss, tt}};
+        %@Mathematica: {MemberQ[fam, {}], MemberQ[fam, {ss}], MemberQ[Subsets[Union @@ fam], {ss}]}
+
+        最后，
+        当\(A=\emptyset\)时，
+        有\(\Powerset(\bigcup A)=\Set{\emptyset}\neq A\)；
+        当\(A=\Set{\emptyset}=\Powerset\emptyset\)时等号成立.
+        这也说明\(A=\Set{\emptyset}\)只是全部解中的一个特例.
+    \end{solution}
 \end{example}
